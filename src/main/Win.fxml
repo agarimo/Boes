@@ -34,7 +34,7 @@
                         <DatePicker fx:id="dpFecha" layoutX="61.0" layoutY="10.0" prefHeight="25.0" prefWidth="400.0" />
                         <TextField fx:id="tfLink" layoutX="14.0" layoutY="84.0" prefHeight="25.0" prefWidth="449.0" />
                         <Label layoutX="18.0" layoutY="59.0" text="Link:" />
-                        <Button fx:id="btDescargar" layoutX="16.0" layoutY="162.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="449.0" text="Descargar" />
+                        <Button fx:id="btDescargar" layoutX="16.0" layoutY="162.0" mnemonicParsing="false" onAction="#descargaBoes" prefHeight="25.0" prefWidth="449.0" text="Descargar" />
                         <Label layoutX="12.0" layoutY="14.0" text="Fecha:" />
                         <Button fx:id="btAbrirCarpeta" layoutX="378.0" layoutY="193.0" mnemonicParsing="false" text="Abrir Carpeta" />
                      </children>
