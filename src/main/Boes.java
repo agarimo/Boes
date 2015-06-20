@@ -16,13 +16,15 @@ import javafx.stage.Stage;
  * @author Agarimo
  */
 public class Boes extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
+        Variables.inicializar();
+
         Parent root = FXMLLoader.load(getClass().getResource("Win.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.show();
     }
@@ -33,5 +35,5 @@ public class Boes extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

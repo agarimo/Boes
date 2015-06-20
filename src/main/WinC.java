@@ -13,14 +13,14 @@ import javafx.scene.control.TextField;
  *
  * @author Agarimo
  */
-public class WinController implements Initializable {
+public class WinC implements Initializable {
 
     @FXML
     private Button btDescargar;
     
     @FXML
-    private TextField btAbrirCarpeta;
-
+    private Button btAbrirCarpeta;
+    
     @FXML
     private DatePicker dpFecha;
 
@@ -35,6 +35,11 @@ public class WinController implements Initializable {
     
       @FXML
     void descargaBoes(ActionEvent event) {
+        
+    }
+    
+      @FXML
+    void abrirCarpetaData(ActionEvent event) {
         
     }
 
