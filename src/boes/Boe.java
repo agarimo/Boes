@@ -25,6 +25,7 @@ public class Boe {
     public Boe(Date fecha, String link) {
         this.fecha = fecha;
         this.link = link;
+        pb=new ArrayList();
     }
 
     public void getBoletines() {
@@ -100,4 +101,14 @@ public class Boe {
         }
         return aux;
     }
+
+    public List getPb() {
+        return pb;
+    }
+
+    public void setPb(List pb) {
+        this.pb = pb;
+    }
+    
+    
 }

@@ -138,42 +138,4 @@ public class Publicacion {
     public void setPdfs(List pdfs) {
         this.pdfs = pdfs;
     }
-
-    private static void descargaPDF(Pdf aux) throws MalformedURLException, IOException, SQLException {
-        File fichero = new File(aux.getCodigo() + ".pdf");
-
-        URL link = new URL(aux.getLink());
-        URLConnection connection = link.openConnection();
-
-        OutputStream out;
-        try (InputStream in = connection.getInputStream()) {
-            out = new DataOutputStream(new FileOutputStream(fichero));
-            byte[] buffer = new byte[1024];
-            int sizeRead;
-            while ((sizeRead = in.read(buffer)) >= 0) {
-                out.write(buffer, 0, sizeRead);
-            }
-        }
-        out.close();
-    }
-
-    public static void convertirPDF(String src, String desc) {
-        try {
-            FileWriter fw = new FileWriter(desc);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PdfReader pr = new PdfReader(src);
-            int pNum = pr.getNumberOfPages();
-            for (int page = 1; page <= pNum; page++) {
-                String text = PdfTextExtractor.getTextFromPage(pr, page);
-                bw.write(text);
-                bw.newLine();
-            }
-            bw.flush();
-            bw.close();
-
-        } catch (Exception ex) {
-            Logger.getLogger(Publicacion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 }
