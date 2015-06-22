@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.Variables;
+import util.Dates;
+import util.Varios;
 
 /**
  *
@@ -18,14 +21,29 @@ import java.util.logging.Logger;
  */
 public class Boe {
 
+    int id;
     Date fecha;
     String link;
     List pb;
 
+    public Boe() {
+
+    }
+
+    public Boe(Date fecha) {
+        this.fecha=fecha;
+    }
+
     public Boe(Date fecha, String link) {
         this.fecha = fecha;
         this.link = link;
-        pb=new ArrayList();
+        pb = new ArrayList();
+    }
+
+    public Boe(int id, Date fecha, String link) {
+        this.id = id;
+        this.fecha = fecha;
+        this.link = link;
     }
 
     public void getBoletines() {
@@ -110,5 +128,15 @@ public class Boe {
         this.pb = pb;
     }
     
+    public String SQLCrear(){
+        return "INSERT into "+Variables.nombreBD+".boe (fecha,link) values("
+                + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ","
+                + Varios.entrecomillar(this.link)
+                + ");";
+    }
     
+    public String SQLBuscar(){
+        return "SELECT * FROM "+Variables.nombreBD+".boe WHERE fecha=" + util.Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
+    }
+
 }

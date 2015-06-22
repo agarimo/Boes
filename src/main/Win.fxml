@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.media.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
 <?import java.lang.*?>
@@ -8,39 +9,45 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.WinC">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.WinC">
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Boes">
             <items>
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
+          <Menu mnemonicParsing="false" text="Descarga">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
         </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.19063545150501673" prefHeight="380.0" prefWidth="600.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+      <StackPane prefHeight="375.0" prefWidth="800.0">
+         <children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ToggleButton disable="true" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="111.0" selected="true" text="Descargar Boes" />
+                  <DatePicker fx:id="dpFecha" layoutX="312.0" layoutY="104.0" promptText="yyyy-MM-dd" />
+                  <TextField fx:id="tfLink" alignment="CENTER" layoutX="11.0" layoutY="175.0" prefHeight="25.0" prefWidth="776.0" promptText="...Link de descarga..." />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="19.0" prefHeight="52.0" prefWidth="776.0" text="DESCARGA DE BOE" underline="true">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="381.0" layoutY="77.0" text="Fecha:" />
+                  <Label layoutX="351.0" layoutY="151.0" text="Enlace de los BOE" />
+                  <Button fx:id="btDescargar" layoutX="316.0" layoutY="220.0" mnemonicParsing="false" onAction="#descargaBoes" prefHeight="25.0" prefWidth="174.0" text="Descargar" />
+                  <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="336.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="776.0" text="Abrir Carpeta Contenedora" />
                </children>
             </AnchorPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="249.0" prefWidth="417.0">
-                     <children>
-                        <DatePicker fx:id="dpFecha" layoutX="61.0" layoutY="10.0" prefHeight="25.0" prefWidth="235.0" />
-                        <TextField fx:id="tfLink" layoutX="14.0" layoutY="84.0" prefHeight="25.0" prefWidth="449.0" />
-                        <Label layoutX="18.0" layoutY="59.0" text="Link:" />
-                        <Button fx:id="btDescargar" layoutX="16.0" layoutY="162.0" mnemonicParsing="false" onAction="#descargaBoes" prefHeight="25.0" prefWidth="449.0" text="Descargar" />
-                        <Label layoutX="12.0" layoutY="14.0" text="Fecha:" />
-                        <Button fx:id="btAbrirCarpeta" layoutX="347.0" layoutY="193.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="120.0" text="Abrir Carpeta" />
-                     </children>
-                  </AnchorPane>
-               </children>
-            </StackPane>
-        </items>
-      </SplitPane>
+         </children>
+      </StackPane>
    </children>
 </VBox>

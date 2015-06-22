@@ -1,6 +1,9 @@
 package main;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import util.Conexion;
 
 /**
  *
@@ -8,13 +11,17 @@ import java.io.File;
  */
 public class Variables {
 
+    public static Conexion con;
+    public static String nombreBD = "boes";
     public static File ficheroPdf;
     public static File ficheroTxt;
 
     public static void inicializar() {
+        driver();
         ficheroPdf = new File(new File("data"), "pdfData");
         ficheroTxt = new File(new File("data"), "txtData");
         initFiles();
+        setConexion();
     }
 
     private static void initFiles() {
@@ -24,5 +31,21 @@ public class Variables {
         if (!ficheroTxt.exists()) {
             ficheroTxt.mkdirs();
         }
+    }
+    
+     private static void driver() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Variables.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void setConexion() {
+        con = new Conexion();
+        con.setDireccion("192.168.1.40");
+        con.setUsuario("admin");
+        con.setPass("IkuinenK@@m.s84");
+        con.setPuerto("3306");
     }
 }

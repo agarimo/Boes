@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import util.Dates;
+import util.Sql;
 
 /**
  *
@@ -56,7 +57,9 @@ public class WinC implements Initializable {
 
         Boe boe = new Boe(fecha, link);
         boe.getBoletines();
+        BDCreaBoe(boe);
 
+        
         it = boe.getPb().iterator();
 
         while (it.hasNext()) {
@@ -71,7 +74,6 @@ public class WinC implements Initializable {
                 } catch (IOException | SQLException ex) {
                     Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
         }
 
@@ -82,9 +84,22 @@ public class WinC implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText("DESCARGA Y CONVERSIÓN FINALIZADA");
         alert.showAndWait();
-        
+
         tfLink.setText("");
         dpFecha.setValue(null);
+    }
+
+    private void BDCreaBoe(Boe aux) {
+        try {
+            Sql bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLCrear());
+        } catch (SQLException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("SQL ERROR");
+            alert.setHeaderText(ex.getSQLState());
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML
