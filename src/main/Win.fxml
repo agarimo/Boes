@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.media.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
@@ -32,7 +33,7 @@
       </MenuBar>
       <StackPane prefHeight="375.0" prefWidth="800.0">
          <children>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <DatePicker fx:id="dpFecha" layoutX="312.0" layoutY="104.0" promptText="yyyy-MM-dd" />
                   <TextField fx:id="tfLink" alignment="CENTER" layoutX="11.0" layoutY="175.0" prefHeight="25.0" prefWidth="776.0" promptText="...Link de descarga..." />
@@ -45,6 +46,23 @@
                   <Label layoutX="351.0" layoutY="151.0" text="Enlace de los BOE" />
                   <Button fx:id="btDescargar" layoutX="316.0" layoutY="220.0" mnemonicParsing="false" onAction="#descargaBoes" prefHeight="25.0" prefWidth="174.0" text="Descargar" />
                   <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="336.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="776.0" text="Abrir Carpeta Contenedora" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TableView layoutX="14.0" layoutY="50.0" prefHeight="200.0" prefWidth="776.0" rotate="-0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                    <columns>
+                      <TableColumn prefWidth="238.0" text="ORIGEN" />
+                      <TableColumn prefWidth="98.0" text="CODIGO" />
+                        <TableColumn prefWidth="443.0" text="DESCRIPCION" />
+                    </columns>
+                  </TableView>
+                  <DatePicker layoutX="14.0" layoutY="14.0" AnchorPane.leftAnchor="10.0" />
+                  <ToolBar layoutX="14.0" layoutY="250.0" prefHeight="40.0" prefWidth="780.0" AnchorPane.leftAnchor="10.0">
+                    <items>
+                      <Button mnemonicParsing="false" text="Button" />
+                    </items>
+                  </ToolBar>
                </children>
             </AnchorPane>
          </children>

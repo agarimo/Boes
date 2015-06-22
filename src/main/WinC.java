@@ -48,18 +48,32 @@ public class WinC implements Initializable {
 
     @FXML
     void descargaBoes(ActionEvent event) {
-        Iterator it;
-        Iterator it2;
-        Publicacion pb;
-        Pdf pd;
         Date fecha = Dates.asDate(dpFecha.getValue());
         String link = tfLink.getText();
 
         Boe boe = new Boe(fecha, link);
         boe.getBoletines();
-        BDCreaBoe(boe);
 
-        
+        if (BDCreaBoe(boe)) {
+            if (DWBoe(boe)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("COMPLETADO");
+                alert.setHeaderText(null);
+                alert.setContentText("DESCARGA Y CONVERSIÓN FINALIZADA");
+                alert.showAndWait();
+
+                tfLink.setText("");
+                dpFecha.setValue(null);
+            }
+        }
+    }
+
+    private boolean DWBoe(Boe boe) {
+        Iterator it;
+        Iterator it2;
+        Publicacion pb;
+        Pdf pd;
+
         it = boe.getPb().iterator();
 
         while (it.hasNext()) {
@@ -72,33 +86,25 @@ public class WinC implements Initializable {
                     pd.descargaPDF();
                     pd.convertirPDF();
                 } catch (IOException | SQLException ex) {
-                    Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+                    return false;
                 }
             }
         }
-
-        System.out.println("Finalizado");
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("COMPLETADO");
-        alert.setHeaderText(null);
-        alert.setContentText("DESCARGA Y CONVERSIÓN FINALIZADA");
-        alert.showAndWait();
-
-        tfLink.setText("");
-        dpFecha.setValue(null);
+        return true;
     }
 
-    private void BDCreaBoe(Boe aux) {
+    private boolean BDCreaBoe(Boe aux) {
         try {
             Sql bd = new Sql(Variables.con);
             bd.ejecutar(aux.SQLCrear());
+            return true;
         } catch (SQLException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("SQL ERROR");
             alert.setHeaderText(ex.getSQLState());
             alert.setContentText(ex.getMessage());
             alert.showAndWait();
+            return false;
         }
     }
 
