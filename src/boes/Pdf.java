@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.Variables;
 import util.Dates;
+import util.Files;
 
 /**
  *
@@ -165,10 +166,16 @@ public class Pdf {
             }
             bw.flush();
             bw.close();
+            fixTxt(fileD);
 
         } catch (Exception ex) {
             Logger.getLogger(Publicacion.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void fixTxt(File txt){
+        String datos=Files.leeArchivo(txt);
+        Files.escribeArchivo(txt, datos);
     }
     
     
