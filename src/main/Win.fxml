@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.media.*?>
 <?import javafx.scene.text.*?>
@@ -10,18 +12,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.WinC">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.WinC">
    <children>
       <MenuBar>
         <menus>
           <Menu mnemonicParsing="false" text="Boes">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" text="Salir" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Descarga">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" text="Enlaces" />
+                  <MenuItem mnemonicParsing="false" text="Clasificación y Descarga" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -31,38 +34,50 @@
           </Menu>
         </menus>
       </MenuBar>
-      <StackPane prefHeight="375.0" prefWidth="800.0">
+      <StackPane prefHeight="575.0" prefWidth="1000.0">
          <children>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false">
+            <AnchorPane fx:id="panelDescarga1" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
-                  <DatePicker fx:id="dpFecha" layoutX="312.0" layoutY="104.0" promptText="yyyy-MM-dd" />
-                  <TextField fx:id="tfLink" alignment="CENTER" layoutX="11.0" layoutY="175.0" prefHeight="25.0" prefWidth="776.0" promptText="...Link de descarga..." />
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="19.0" prefHeight="52.0" prefWidth="776.0" text="DESCARGA DE BOE" underline="true">
+                  <DatePicker fx:id="dpFecha" layoutX="413.0" layoutY="178.0" promptText="yyyy-MM-dd" />
+                  <TextField fx:id="tfLink" alignment="CENTER" layoutX="112.0" layoutY="249.0" prefHeight="25.0" prefWidth="776.0" promptText="...Link de descarga..." />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="111.0" layoutY="93.0" prefHeight="52.0" prefWidth="776.0" text="DESCARGA DE BOE" underline="true">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Label layoutX="381.0" layoutY="77.0" text="Fecha:" />
-                  <Label layoutX="351.0" layoutY="151.0" text="Enlace de los BOE" />
-                  <Button fx:id="btDescargar" layoutX="316.0" layoutY="220.0" mnemonicParsing="false" onAction="#descargaBoes" prefHeight="25.0" prefWidth="174.0" text="Descargar" />
-                  <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="336.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="776.0" text="Abrir Carpeta Contenedora" />
+                  <Label layoutX="482.0" layoutY="151.0" text="Fecha:" />
+                  <Label layoutX="452.0" layoutY="225.0" text="Enlace de los BOE" />
+                  <Button fx:id="btContinuar1" layoutX="417.0" layoutY="294.0" mnemonicParsing="false" onAction="#continuarDescarga" prefHeight="40.0" prefWidth="174.0" text="CONTINUAR" />
+                  <Button fx:id="btAbrirCarpeta" layoutX="113.0" layoutY="458.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="776.0" text="Abrir Carpeta Contenedora" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="panelDescarga2" prefHeight="403.0" prefWidth="800.0">
                <children>
-                  <TableView layoutY="40.0" prefHeight="245.0" prefWidth="800.0" rotate="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <TableView fx:id="tvBoes" layoutY="40.0" prefHeight="349.0" prefWidth="1000.0" rotate="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
-                      <TableColumn prefWidth="313.0" text="ORIGEN" />
-                      <TableColumn prefWidth="75.0" text="CODIGO" />
-                        <TableColumn prefWidth="411.0" text="DESCRIPCION" />
+                      <TableColumn fx:id="codigoCL" prefWidth="115.0" resizable="false" text="CODIGO" />
+                      <TableColumn fx:id="origenCL" prefWidth="250.0" resizable="false" text="ORIGEN" />
+                        <TableColumn fx:id="descripcionCL" prefWidth="633.0" resizable="false" text="DESCRIPCION" />
                     </columns>
                   </TableView>
-                  <ToolBar prefHeight="40.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0">
+                  <ToolBar prefHeight="40.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0">
                     <items>
                         <DatePicker />
-                      <Button mnemonicParsing="false" text="Button" />
+                      <Button mnemonicParsing="false" text="Seleccionar" />
+                        <Button mnemonicParsing="false" text="Descartar" />
+                        <Button mnemonicParsing="false" text="Ver Web" />
                     </items>
                   </ToolBar>
+                  <Button layoutX="858.0" layoutY="521.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="128.0" text="CONTINUAR" />
+                  <ListView fx:id="lvSeleccionados" layoutX="615.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
+                  <Label layoutX="480.0" layoutY="402.0" text="Boletines seleccionados:" />
+                  <Label layoutX="14.0" layoutY="402.0" text="Boletines Descartados:" />
+                  <ListView layoutX="148.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
+                  <Separator layoutX="360.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="120.0" />
+                  <Button layoutX="14.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Recuperar" />
+                  <Separator layoutX="819.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="34.0" />
+                  <Button layoutX="480.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="128.0" text="Recuperar" />
+                  <Button layoutX="858.0" layoutY="482.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="128.0" text="Volver" />
                </children>
             </AnchorPane>
          </children>

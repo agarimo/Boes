@@ -177,7 +177,9 @@ public class Pdf {
         String datos=Files.leeArchivo(txt);
         Files.escribeArchivo(txt, datos);
     }
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return codigo;
+    }
 }

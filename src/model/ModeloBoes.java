@@ -11,15 +11,15 @@ public class ModeloBoes {
     public SimpleStringProperty codigo = new SimpleStringProperty();
     public SimpleStringProperty descripcion = new SimpleStringProperty();
 
-    public SimpleStringProperty getOrigen() {
-        return origen;
+    public String getOrigen() {
+        return origen.get();
     }
 
-    public SimpleStringProperty getCodigo() {
-        return codigo;
+    public String getCodigo() {
+        return codigo.get();
     }
 
-    public SimpleStringProperty getDescripcion() {
-        return descripcion;
+    public String getDescripcion() {
+        return descripcion.get();
     }
 }
