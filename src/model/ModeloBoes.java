@@ -10,6 +10,7 @@ public class ModeloBoes {
     public SimpleStringProperty origen = new SimpleStringProperty();
     public SimpleStringProperty codigo = new SimpleStringProperty();
     public SimpleStringProperty descripcion = new SimpleStringProperty();
+    public SimpleStringProperty link = new SimpleStringProperty();
 
     public String getOrigen() {
         return origen.get();
@@ -21,5 +22,9 @@ public class ModeloBoes {
 
     public String getDescripcion() {
         return descripcion.get();
+    }
+    
+    public String getLink(){
+        return link.get();
     }
 }

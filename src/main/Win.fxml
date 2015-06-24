@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
@@ -23,8 +24,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Descarga">
             <items>
-              <MenuItem mnemonicParsing="false" text="Enlaces" />
-                  <MenuItem mnemonicParsing="false" text="Clasificación y Descarga" />
+              <MenuItem mnemonicParsing="false" onAction="#iniciaEnlaces" text="Enlaces" />
+                  <MenuItem mnemonicParsing="false" onAction="#iniciaClasificacion" text="Clasificación y Descarga" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -36,22 +37,7 @@
       </MenuBar>
       <StackPane prefHeight="575.0" prefWidth="1000.0">
          <children>
-            <AnchorPane fx:id="panelDescarga1" prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <DatePicker fx:id="dpFecha" layoutX="413.0" layoutY="178.0" promptText="yyyy-MM-dd" />
-                  <TextField fx:id="tfLink" alignment="CENTER" layoutX="112.0" layoutY="249.0" prefHeight="25.0" prefWidth="776.0" promptText="...Link de descarga..." />
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="111.0" layoutY="93.0" prefHeight="52.0" prefWidth="776.0" text="DESCARGA DE BOE" underline="true">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="482.0" layoutY="151.0" text="Fecha:" />
-                  <Label layoutX="452.0" layoutY="225.0" text="Enlace de los BOE" />
-                  <Button fx:id="btContinuar1" layoutX="417.0" layoutY="294.0" mnemonicParsing="false" onAction="#continuarDescarga" prefHeight="40.0" prefWidth="174.0" text="CONTINUAR" />
-                  <Button fx:id="btAbrirCarpeta" layoutX="113.0" layoutY="458.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="776.0" text="Abrir Carpeta Contenedora" />
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="panelDescarga2" prefHeight="403.0" prefWidth="800.0" visible="false">
+            <AnchorPane fx:id="panelClasificacion" prefHeight="403.0" prefWidth="800.0">
                <children>
                   <TableView fx:id="tvBoes" layoutY="53.0" prefHeight="336.0" prefWidth="1000.0" rotate="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
@@ -62,22 +48,58 @@
                   </TableView>
                   <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0">
                     <items>
-                        <DatePicker prefHeight="30.0" prefWidth="150.0" />
-                      <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Seleccionar" />
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Descartar" />
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Ver Web" />
+                        <DatePicker fx:id="dpFechaC" prefHeight="30.0" prefWidth="150.0" />
+                      <Button fx:id="btSelect" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Seleccionar" />
+                        <Button fx:id="btDiscard" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Descartar" />
+                        <Button mnemonicParsing="false" onAction="#abrirWeb" prefHeight="30.0" prefWidth="150.0" text="Ver Web" />
                     </items>
                   </ToolBar>
-                  <Button layoutX="833.0" layoutY="521.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="153.0" text="CONTINUAR" />
-                  <ListView fx:id="lvSeleccionados" layoutX="558.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
+                  <Button fx:id="btFinClas" layoutX="833.0" layoutY="521.0" mnemonicParsing="false" onAction="#finalizaClas" prefHeight="40.0" prefWidth="153.0" text="CONTINUAR" />
+                  <ListView fx:id="lvSelected" layoutX="558.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
                   <Label layoutX="423.0" layoutY="402.0" text="Boletines seleccionados:" />
                   <Label layoutX="14.0" layoutY="402.0" text="Boletines Descartados:" />
-                  <ListView layoutX="148.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
+                  <ListView fx:id="lvDiscard" layoutX="148.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
                   <Separator layoutX="360.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="55.0" />
-                  <Button layoutX="14.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Recuperar" />
+                  <Button fx:id="btRecoverD" layoutX="14.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverD" prefHeight="25.0" prefWidth="120.0" text="Recuperar" />
                   <Separator layoutX="759.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="66.0" />
-                  <Button layoutX="423.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="128.0" text="Recuperar" />
-                  <Button layoutX="833.0" layoutY="482.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="153.0" text="Volver" />
+                  <Button fx:id="btRecoverS" layoutX="423.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverS" prefHeight="25.0" prefWidth="128.0" text="Recuperar" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="panelEnlaces" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <ListView fx:id="lvBoe" layoutX="53.0" layoutY="99.0" prefHeight="326.0" prefWidth="153.0" />
+                  <Pane layoutX="218.0" layoutY="99.0" prefHeight="200.0" prefWidth="725.0" style="-fx-border-color: black;">
+                     <children>
+                        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="694.0" text="Añadir BOE">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="53.0" prefHeight="25.0" prefWidth="66.0" text="Fecha:" />
+                        <DatePicker fx:id="dpFecha" layoutX="80.0" layoutY="53.0" promptText="yyyy-MM-dd" />
+                        <Label layoutX="14.0" layoutY="100.0" prefHeight="25.0" prefWidth="66.0" text="Enlace:" />
+                        <TextField fx:id="tfLink" alignment="CENTER" layoutX="80.0" layoutY="100.0" prefHeight="25.0" prefWidth="631.0" promptText="...Link de descarga..." />
+                        <Button fx:id="btAddBoe" layoutX="288.0" layoutY="149.0" mnemonicParsing="false" onAction="#addBoe" prefHeight="25.0" prefWidth="150.0" text="Añadir" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="218.0" layoutY="303.0" prefHeight="122.0" prefWidth="725.0">
+                     <children>
+                        <Button fx:id="btClasificar" layoutX="591.0" layoutY="83.0" mnemonicParsing="false" onAction="#clasificarBoe" prefHeight="25.0" prefWidth="120.0" text="CLASIFICAR" />
+                        <Button fx:id="btAbrirCarpeta" layoutX="591.0" layoutY="14.0" mnemonicParsing="false" onAction="#abrirCarpetaData" prefHeight="25.0" prefWidth="120.0" text="Abrir Carpeta" />
+                        <Button fx:id="btDescargaTodos" layoutX="591.0" layoutY="49.0" mnemonicParsing="false" onAction="#descargaTodosBoe" prefHeight="25.0" prefWidth="120.0" text="DESCARGA TODOS" />
+                        <Label layoutX="14.0" layoutY="18.0" prefHeight="17.0" prefWidth="95.0" text="Fecha: " />
+                        <Label layoutX="14.0" layoutY="53.0" prefHeight="17.0" prefWidth="95.0" text="Enlace:" />
+                        <TextField fx:id="tfFechaV" alignment="CENTER" editable="false" layoutX="109.0" layoutY="14.0" />
+                        <TextField fx:id="tfLinkV" editable="false" layoutX="109.0" layoutY="49.0" prefHeight="25.0" prefWidth="459.0" />
+                        <Label layoutX="14.0" layoutY="87.0" text="Está Clasificado: " />
+                        <TextField fx:id="tfIsClas" alignment="CENTER" editable="false" layoutX="109.0" layoutY="83.0" />
+                     </children>
+                  </Pane>
+                  <Label alignment="CENTER" layoutX="53.0" layoutY="45.0" prefHeight="52.0" prefWidth="890.0" text="CAPTURA DE ENLACES" underline="true">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </children>

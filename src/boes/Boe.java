@@ -24,6 +24,7 @@ public class Boe {
     int id;
     Date fecha;
     String link;
+    boolean isClas;
     List pb;
 
     public Boe() {
@@ -31,19 +32,23 @@ public class Boe {
     }
 
     public Boe(Date fecha) {
-        this.fecha=fecha;
+        this.fecha = fecha;
+        pb = new ArrayList();
     }
 
     public Boe(Date fecha, String link) {
         this.fecha = fecha;
         this.link = link;
+        this.isClas = false;
         pb = new ArrayList();
     }
 
-    public Boe(int id, Date fecha, String link) {
+    public Boe(int id, Date fecha, String link, boolean isProc) {
         this.id = id;
         this.fecha = fecha;
         this.link = link;
+        this.isClas = isProc;
+        pb = new ArrayList();
     }
 
     public void getBoletines() {
@@ -127,16 +132,34 @@ public class Boe {
     public void setPb(List pb) {
         this.pb = pb;
     }
-    
-    public String SQLCrear(){
-        return "INSERT into "+Variables.nombreBD+".boe (fecha,link) values("
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public boolean isIsClas() {
+        return isClas;
+    }
+
+    @Override
+    public String toString() {
+        return Dates.imprimeFecha(fecha);
+    }
+
+    public String SQLCrear() {
+        return "INSERT into " + Variables.nombreBD + ".boe (fecha,link,isClas) values("
                 + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ","
-                + Varios.entrecomillar(this.link)
+                + Varios.entrecomillar(this.link) + ","
+                + this.isClas
                 + ");";
     }
-    
-    public String SQLBuscar(){
-        return "SELECT * FROM "+Variables.nombreBD+".boe WHERE fecha=" + util.Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
+
+    public String SQLBuscar() {
+        return "SELECT * FROM " + Variables.nombreBD + ".boe WHERE fecha=" + util.Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
     }
 
 }
