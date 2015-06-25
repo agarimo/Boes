@@ -11,6 +11,7 @@ import javafx.stage.Stage;
  * @author Agarimo
  */
 public class Boes extends Application {
+    
 
     @Override
     public void start(Stage stage) throws Exception {

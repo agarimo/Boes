@@ -27,19 +27,21 @@ import util.Files;
  */
 public class Pdf {
 
-    String preLink="http://www.boe.es";
+    int id;
     String codigo;
     Date fecha;
+    String entidad;
     String origen;
     String descripcion;
     String link;
     File ficheroPDF;
     File ficheroTXT;
-    
+    String preLink = "http://www.boe.es";
 
-    public Pdf(String datos, String origen, Date fecha) {
-        this.fecha=fecha;
-        this.origen=origen;
+    public Pdf(String datos,String entidad, String origen, Date fecha) {
+        this.fecha = fecha;
+        this.entidad=entidad;
+        this.origen = origen;
 
         String[] split = datos.split(System.getProperty("line.separator"));
 
@@ -56,34 +58,32 @@ public class Pdf {
         splitCodigo(this.link);
         checkFicheros();
     }
-    
-    private void checkFicheros(){
-        ficheroPDF=new File(Variables.ficheroPdf,Dates.imprimeFecha(fecha));
+
+    private void checkFicheros() {
+        ficheroPDF = new File(Variables.ficheroPdf, Dates.imprimeFecha(fecha));
         ficheroPDF.mkdirs();
-        ficheroTXT=new File(Variables.ficheroTxt,Dates.imprimeFecha(fecha));
+        ficheroTXT = new File(Variables.ficheroTxt, Dates.imprimeFecha(fecha));
         ficheroTXT.mkdirs();
     }
-    
-    
 
     private void splitDescripcion(String descripcion) {
         descripcion = descripcion.replace("<p>", "");
         descripcion = descripcion.replace("</p>", "");
         this.descripcion = descripcion.trim();
     }
-    
-    private void splitLink(String link){
-        String[] split=link.split("title=");
-        
-        link=split[0];
-        link=link.replace("<a href=\"", "");
-        link=link.replace("\"", "");
-        this.link=link.trim();
+
+    private void splitLink(String link) {
+        String[] split = link.split("title=");
+
+        link = split[0];
+        link = link.replace("<a href=\"", "");
+        link = link.replace("\"", "");
+        this.link = link.trim();
     }
-    
-    private void splitCodigo(String codigo){
-        String[] split=codigo.split("id=");
-        this.codigo=split[1].trim();
+
+    private void splitCodigo(String codigo) {
+        String[] split = codigo.split("id=");
+        this.codigo = split[1].trim();
     }
 
     public String getCodigo() {
@@ -119,15 +119,23 @@ public class Pdf {
     }
 
     public String getLink() {
-        return preLink+link;
+        return preLink + link;
     }
 
     public void setLink(String link) {
         this.link = link;
     }
-    
+
+    public String getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(String entidad) {
+        this.entidad = entidad;
+    }
+
     public void descargaPDF() throws MalformedURLException, IOException, SQLException {
-        File fichero = new File(this.ficheroPDF,this.codigo + ".pdf");
+        File fichero = new File(this.ficheroPDF, this.codigo + ".pdf");
 
         URL enlace = new URL(this.getLink());
         URLConnection connection = enlace.openConnection();
@@ -145,15 +153,15 @@ public class Pdf {
     }
 
     public void convertirPDF() {
-        File fileO=new File(this.ficheroPDF,this.codigo + ".pdf");
-        File fileD=new File(this.ficheroTXT,this.codigo + ".txt");
-        
+        File fileO = new File(this.ficheroPDF, this.codigo + ".pdf");
+        File fileD = new File(this.ficheroTXT, this.codigo + ".txt");
+
         try {
             fileD.createNewFile();
         } catch (IOException ex) {
             Logger.getLogger(Pdf.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         try {
             FileWriter fw = new FileWriter(fileD.getAbsolutePath());
             BufferedWriter bw = new BufferedWriter(fw);
@@ -172,9 +180,9 @@ public class Pdf {
             Logger.getLogger(Publicacion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void fixTxt(File txt){
-        String datos=Files.leeArchivo(txt);
+
+    private void fixTxt(File txt) {
+        String datos = Files.leeArchivo(txt);
         Files.escribeArchivo(txt, datos);
     }
 

@@ -52,13 +52,15 @@ public class Boe {
     }
 
     public void getBoletines() {
+        DataCnt aux;
         Publicacion pl;
         Iterator it;
 
         it = separaObjetos(getDatosBoe(link)).iterator();
 
         while (it.hasNext()) {
-            pl = new Publicacion((String) it.next(), fecha);
+            aux=(DataCnt) it.next();
+            pl = new Publicacion(aux.getEntidad(),aux.getDatos(), fecha);
             pb.add(pl);
         }
     }
@@ -97,14 +99,32 @@ public class Boe {
 
     private List separaObjetos(String datos) {
         List aux = new ArrayList();
+        DataCnt dc = new DataCnt();
+        String entidad = "";
         boolean print = false;
+        boolean printP = false;
         StringBuilder buffer = new StringBuilder();
-        String linea;
+        StringBuilder bufferP = new StringBuilder();
         String[] a;
 
         a = datos.split(System.getProperty("line.separator"));
 
         for (String a1 : a) {
+
+            if (a1.contains("<h5>")) {
+                printP = true;
+            }
+
+            if (printP) {
+                bufferP.append(a1);
+                bufferP.append(System.getProperty("line.separator"));
+            }
+
+            if (a1.contains("</h5>")) {
+                printP = false;
+                entidad=bufferP.toString();
+                bufferP= new StringBuilder();
+            }
 
             if (a1.contains("<h6>")) {
                 print = true;
@@ -117,8 +137,10 @@ public class Boe {
 
             if (a1.contains("</ul>")) {
                 print = false;
-                linea = buffer.toString();
-                aux.add(linea);
+                dc.setDatos(buffer.toString());
+                dc.setEntidad(entidad);
+                aux.add(dc);
+                dc=new DataCnt();
                 buffer = new StringBuilder();
             }
         }

@@ -11,14 +11,16 @@ import java.util.List;
  */
 public class Publicacion {
 
+    String entidad;
     String origen;
     String datos;
     List boletines;
     Date fecha;
     List pdfs;
 
-    public Publicacion(String datos, Date fecha) {
+    public Publicacion(String entidad,String datos, Date fecha) {
         this.fecha = fecha;
+        this.entidad=entidad;
         boletines = new ArrayList();
         pdfs = new ArrayList();
         StringBuilder buffer = new StringBuilder();
@@ -48,8 +50,23 @@ public class Publicacion {
                 buffer = new StringBuilder();
             }
         }
-
+        splitEntidad();
         splitPdf();
+    }
+    
+    private void splitEntidad(){
+        String enty="";
+        String[] split=this.entidad.split(System.getProperty("line.separator"));
+        
+        for (String split1 : split) {
+            if(split1.contains("<a name=\"\">")){
+                enty=split1;
+            }
+        }
+        enty=enty.replace("<a name=\"\">", "");
+        enty=enty.replace("</a>", "");
+        
+        this.entidad=enty;
     }
 
     private void splitOrigen(String origen) {
@@ -63,7 +80,7 @@ public class Publicacion {
         Iterator it = boletines.iterator();
 
         while (it.hasNext()) {
-            pdf = new Pdf((String) it.next(), this.origen, this.fecha);
+            pdf = new Pdf((String) it.next(),this.entidad, this.origen, this.fecha);
             pdfs.add(pdf);
         }
     }
@@ -75,6 +92,7 @@ public class Publicacion {
         while (it.hasNext()) {
             pd = (Pdf) it.next();
             System.out.println(pd.getCodigo());
+            System.out.println();
             System.out.println(pd.getOrigen());
             System.out.println(pd.getDescripcion());
             System.out.println(pd.getLink());

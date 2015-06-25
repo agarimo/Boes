@@ -15,11 +15,13 @@ public class Variables {
     public static String nombreBD = "boes";
     public static File ficheroPdf;
     public static File ficheroTxt;
+    public static boolean isClasificando;
 
     public static void inicializar() {
         driver();
         ficheroPdf = new File(new File("data"), "pdfData");
         ficheroTxt = new File(new File("data"), "txtData");
+        isClasificando=false;
         initFiles();
         setConexion();
     }

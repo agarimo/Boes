@@ -4,7 +4,6 @@ import boes.Boe;
 import boes.Pdf;
 import boes.Publicacion;
 import java.awt.Desktop;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -30,10 +29,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import model.ModeloBoes;
@@ -47,6 +48,9 @@ import util.Sql;
 public class WinC implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="FXML Var">
+    @FXML
+    private VBox rootPane;
+
     @FXML
     private TableColumn<ModeloBoes, String> origenCL;
 
@@ -97,10 +101,36 @@ public class WinC implements Initializable {
 
     @FXML
     private ListView<Boe> lvBoe;
+
+    @FXML
+    private DatePicker dpFechaC;
+
+    @FXML
+    private Button btSelect;
+
+    @FXML
+    private Button btDiscard;
+
+    @FXML
+    private ListView<ModeloBoes> lvDiscard;
+
+    @FXML
+    private ListView<ModeloBoes> lvSelect;
+
+    @FXML
+    private Button btRecoverS;
+
+    @FXML
+    private Button btRecoverD;
+
+    @FXML
+    private Button btFinClas;
 //</editor-fold>
 
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
+    ObservableList<ModeloBoes> selectedList;
+    ObservableList<ModeloBoes> discartedList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -114,6 +144,10 @@ public class WinC implements Initializable {
     private void mostrarPanel(int panel) {
 
         switch (panel) {
+
+            case 0:
+                //TODO panel inicial
+                break;
             case 1:
                 panelEnlaces.setVisible(true);
                 panelClasificacion.setVisible(false);
@@ -142,7 +176,7 @@ public class WinC implements Initializable {
     }
 
     private void cargaListaBoe() {
-        boesList.addAll(SqlBoe.listaMultas("SELECT * FROM boes.boe"));
+        boesList.addAll(SqlBoe.listaBoe("SELECT * FROM boes.boe"));
     }
 
     @FXML
@@ -189,9 +223,16 @@ public class WinC implements Initializable {
 
     @FXML
     void clasificarBoe(ActionEvent event) {
-        mostrarPanel(2);
-        cargarBoes((Boe) lvBoe.getSelectionModel().getSelectedItem());
-        
+        try {
+            dpFechaC.setValue(Dates.asLocalDate(lvBoe.getSelectionModel().getSelectedItem().getFecha()));
+            mostrarPanel(2);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ERROR");
+            alert.setHeaderText(null);
+            alert.setContentText("Debes seleccionar una fecha");
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -205,6 +246,7 @@ public class WinC implements Initializable {
 
     @FXML
     void descargaTodosBoe(ActionEvent event) {
+        //TODO ejecutar este método en hilo secundario y buscar forma de mostrar un progreso en el hilo principal.
         tfLinkV.setText("DESCARGANDO TODOS LOS BOES");
 
         Boe boe = lvBoe.getSelectionModel().getSelectedItem();
@@ -302,6 +344,10 @@ public class WinC implements Initializable {
 
         publicacion = FXCollections.observableArrayList();
         tvBoes.setItems(publicacion);
+        selectedList = FXCollections.observableArrayList();
+        lvSelect.setItems(selectedList);
+        discartedList = FXCollections.observableArrayList();
+        lvDiscard.setItems(discartedList);
     }
 
     private void cargarBoes(Boe boe) {
@@ -337,11 +383,99 @@ public class WinC implements Initializable {
             aux = (Pdf) it.next();
             model = new ModeloBoes();
             model.origen.set(aux.getOrigen());
+            model.fecha.set(Dates.imprimeFecha(aux.getFecha()));
             model.codigo.set(aux.getCodigo());
             model.descripcion.set(aux.getDescripcion());
             model.link.set(aux.getLink());
 
             publicacion.add(model);
+        }
+        getFocusTablaBoes();
+    }
+
+    private void getFocusTablaBoes() {
+        tvBoes.getSelectionModel().select(0);
+        tvBoes.focusModelProperty().get().focus(new TablePosition(tvBoes, 0, null));
+        tvBoes.requestFocus();
+    }
+
+    @FXML
+    void cambioEnDatePicker() {
+        publicacion.clear();
+        selectedList.clear();
+        discartedList.clear();
+        Date aux = Dates.asDate(dpFechaC.getValue());
+        cargarBoes(SqlBoe.cargaBoe(aux));
+        Variables.isClasificando = true;
+    }
+
+    @FXML
+    void selectPdf() {
+        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            selectedList.add(0, aux);
+            publicacion.remove(aux);
+            getFocusTablaBoes();
+        }
+
+    }
+
+    @FXML
+    void discardPdf() {
+        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            discartedList.add(0, aux);
+            publicacion.remove(aux);
+            getFocusTablaBoes();
+        }
+    }
+
+    @FXML
+    void recoverS() {
+        ModeloBoes aux = lvSelect.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            publicacion.add(0, aux);
+            selectedList.remove(aux);
+            getFocusTablaBoes();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ERROR");
+            alert.setHeaderText(null);
+            alert.setContentText("Debes seleccionar un elemento.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    void recoverD() {
+        ModeloBoes aux = lvDiscard.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            publicacion.add(0, aux);
+            discartedList.remove(aux);
+            getFocusTablaBoes();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ERROR");
+            alert.setHeaderText(null);
+            alert.setContentText("Debes seleccionar un elemento.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    void finalizaClas() {
+        if (publicacion.isEmpty()) {
+            Variables.isClasificando = false;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ERROR");
+            alert.setHeaderText(null);
+            alert.setContentText("Todavía quedan Boletines sin clasificar");
+            alert.showAndWait();
         }
     }
 
