@@ -9,9 +9,10 @@ import util.Varios;
  */
 public class Origen {
 
-    int id;
-    String nombre;
-    String codigo;
+    private int id;
+    private int idEntidad;
+    private String nombre;
+    private String codigo;
 
     public Origen() {
     }
@@ -20,8 +21,9 @@ public class Origen {
         this.nombre = nombre;
     }
 
-    public Origen(int id, String nombre, String codigo) {
+    public Origen(int id,int idEntidad, String nombre, String codigo) {
         this.id = id;
+        this.idEntidad=idEntidad;
         this.nombre = nombre;
         this.codigo = codigo;
     }
@@ -32,6 +34,14 @@ public class Origen {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIdEntidad() {
+        return idEntidad;
+    }
+
+    public void setIdEntidad(int idEntidad) {
+        this.idEntidad = idEntidad;
     }
 
     public String getNombre() {
@@ -54,19 +64,24 @@ public class Origen {
     public String toString() {
         return codigo;
     }
-    
-    public String SQLCrear(){
-        return "INSERT into "+Variables.nombreBD+".origen (nombre) values("
+
+    public String SQLCrear() {
+        return "INSERT into " + Variables.nombreBD + ".origen (idEntidad ,nombre) values("
+                + this.idEntidad + ","
                 + Varios.entrecomillar(this.nombre)
                 + ");";
     }
     
-    public String SQLBuscarNombre(){
-        return "SELECT * FROM "+Variables.nombreBD+".origen WHERE nombre=" + util.Varios.entrecomillar(this.nombre);
+    public String SQLBuscar(){
+        return "SELECT * FROM "+ Variables.nombreBD + ".origen WHERE nombre="+ Varios.entrecomillar(this.nombre)+" "
+                + "and idEntidad="+this.idEntidad;
     }
-    
-    public String SQLBuscarCodigo(){
-        return "SELECT * FROM "+Variables.nombreBD+".origen WHERE codigo=" + util.Varios.entrecomillar(this.codigo);
+
+    public String SQLBuscarNombre() {
+        return "SELECT * FROM " + Variables.nombreBD + ".origen WHERE nombre=" + util.Varios.entrecomillar(this.nombre);
     }
-    
+
+    public String SQLBuscarCodigo() {
+        return "SELECT * FROM " + Variables.nombreBD + ".origen WHERE codigo=" + util.Varios.entrecomillar(this.codigo);
+    }
 }

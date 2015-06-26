@@ -92,7 +92,6 @@ public class Publicacion {
         while (it.hasNext()) {
             pd = (Pdf) it.next();
             System.out.println(pd.getCodigo());
-            System.out.println();
             System.out.println(pd.getOrigen());
             System.out.println(pd.getDescripcion());
             System.out.println(pd.getLink());

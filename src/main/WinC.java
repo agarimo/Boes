@@ -1,6 +1,7 @@
 package main;
 
 import boes.Boe;
+import boes.Insercion;
 import boes.Pdf;
 import boes.Publicacion;
 import java.awt.Desktop;
@@ -383,6 +384,7 @@ public class WinC implements Initializable {
             aux = (Pdf) it.next();
             model = new ModeloBoes();
             model.origen.set(aux.getOrigen());
+            model.entidad.set(aux.getEntidad());
             model.fecha.set(Dates.imprimeFecha(aux.getFecha()));
             model.codigo.set(aux.getCodigo());
             model.descripcion.set(aux.getDescripcion());
@@ -395,7 +397,8 @@ public class WinC implements Initializable {
 
     private void getFocusTablaBoes() {
         tvBoes.getSelectionModel().select(0);
-        tvBoes.focusModelProperty().get().focus(new TablePosition(tvBoes, 0, null));
+        tvBoes.scrollTo(0);
+//        tvBoes.focusModelProperty().get().focus(new TablePosition(tvBoes, 0, null));
         tvBoes.requestFocus();
     }
 
@@ -418,7 +421,6 @@ public class WinC implements Initializable {
             publicacion.remove(aux);
             getFocusTablaBoes();
         }
-
     }
 
     @FXML
@@ -437,7 +439,7 @@ public class WinC implements Initializable {
         ModeloBoes aux = lvSelect.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
-            publicacion.add(0, aux);
+            publicacion.add(0,aux);
             selectedList.remove(aux);
             getFocusTablaBoes();
         } else {
@@ -454,7 +456,7 @@ public class WinC implements Initializable {
         ModeloBoes aux = lvDiscard.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
-            publicacion.add(0, aux);
+            publicacion.add(0,aux);
             discartedList.remove(aux);
             getFocusTablaBoes();
         } else {
@@ -470,6 +472,8 @@ public class WinC implements Initializable {
     void finalizaClas() {
         if (publicacion.isEmpty()) {
             Variables.isClasificando = false;
+            Insercion in = new Insercion(this.selectedList,this.discartedList);
+            in.run();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR");

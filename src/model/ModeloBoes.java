@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class ModeloBoes {
 
+    public SimpleStringProperty entidad = new SimpleStringProperty();
     public SimpleStringProperty origen = new SimpleStringProperty();
     public SimpleStringProperty codigo = new SimpleStringProperty();
     public SimpleStringProperty descripcion = new SimpleStringProperty();
@@ -24,6 +25,10 @@ public class ModeloBoes {
 
     public String getDescripcion() {
         return descripcion.get();
+    }
+
+    public String getEntidad(){
+        return entidad.get();
     }
 
     public String getLink() {
