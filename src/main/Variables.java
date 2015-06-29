@@ -16,12 +16,14 @@ public class Variables {
     public static File ficheroPdf;
     public static File ficheroTxt;
     public static boolean isClasificando;
+    public static boolean isDownloading;
 
     public static void inicializar() {
         driver();
         ficheroPdf = new File(new File("data"), "pdfData");
         ficheroTxt = new File(new File("data"), "txtData");
-        isClasificando=false;
+        isClasificando = false;
+        isDownloading = false;
         initFiles();
         setConexion();
     }
@@ -34,8 +36,8 @@ public class Variables {
             ficheroTxt.mkdirs();
         }
     }
-    
-     private static void driver() {
+
+    private static void driver() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {

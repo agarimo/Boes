@@ -1,6 +1,7 @@
 package main;
 
 import boes.Boe;
+import boes.Download;
 import boes.Insercion;
 import boes.Pdf;
 import boes.Publicacion;
@@ -27,10 +28,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -57,6 +58,9 @@ public class WinC implements Initializable {
 
     @FXML
     private AnchorPane panelEnlaces;
+
+    @FXML
+    private AnchorPane panelInicio;
 
     @FXML
     private TableColumn<ModeloBoes, String> descripcionCL;
@@ -126,6 +130,17 @@ public class WinC implements Initializable {
 
     @FXML
     private Button btFinClas;
+
+    @FXML
+    private Button btDescargar;
+
+    @FXML
+    private Label label;
+    
+    
+    public void setLabel(String datos){
+        label.setText("una pruega");
+    }
 //</editor-fold>
 
     ObservableList<ModeloBoes> publicacion;
@@ -136,28 +151,43 @@ public class WinC implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         iniciaTablaBoes();
-
+        
         final ObservableList<Boe> aux1 = lvBoe.getSelectionModel().getSelectedItems();
         aux1.addListener(selectorListaBoe);
     }
 
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
+    @FXML
+    void iniciaInicio() {
+        mostrarPanel(0);
+    }
+
     private void mostrarPanel(int panel) {
 
         switch (panel) {
 
             case 0:
-                //TODO panel inicial
+                panelInicio.setVisible(true);
+                panelEnlaces.setVisible(false);
+                panelClasificacion.setVisible(false);
                 break;
             case 1:
+                panelInicio.setVisible(false);
                 panelEnlaces.setVisible(true);
                 panelClasificacion.setVisible(false);
                 break;
             case 2:
+                panelInicio.setVisible(false);
                 panelEnlaces.setVisible(false);
                 panelClasificacion.setVisible(true);
                 break;
         }
+    }
+
+    @FXML
+    void descargaPendientes(ActionEvent event) {
+        Download dw = new Download();
+        dw.start();
     }
 //</editor-fold>
 
@@ -439,7 +469,7 @@ public class WinC implements Initializable {
         ModeloBoes aux = lvSelect.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
-            publicacion.add(0,aux);
+            publicacion.add(0, aux);
             selectedList.remove(aux);
             getFocusTablaBoes();
         } else {
@@ -456,7 +486,7 @@ public class WinC implements Initializable {
         ModeloBoes aux = lvDiscard.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
-            publicacion.add(0,aux);
+            publicacion.add(0, aux);
             discartedList.remove(aux);
             getFocusTablaBoes();
         } else {
@@ -468,12 +498,20 @@ public class WinC implements Initializable {
         }
     }
 
+    void limpiarClasificacion() {
+        publicacion.clear();
+        discartedList.clear();
+        selectedList.clear();
+        dpFechaC.setValue(null);
+    }
+
     @FXML
     void finalizaClas() {
         if (publicacion.isEmpty()) {
             Variables.isClasificando = false;
-            Insercion in = new Insercion(this.selectedList,this.discartedList);
+            Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
             in.run();
+            limpiarClasificacion();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR");

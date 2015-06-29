@@ -183,5 +183,9 @@ public class Boe {
     public String SQLBuscar() {
         return "SELECT * FROM " + Variables.nombreBD + ".boe WHERE fecha=" + util.Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
     }
+    
+    public String SQLSetClas(){
+        return "UPDATE "+Variables.nombreBD + ".boe SET isClas=1 where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha));
+    }
 
 }

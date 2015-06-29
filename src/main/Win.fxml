@@ -19,6 +19,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Boes">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#iniciaInicio" text="Unspecified Action" />
               <MenuItem mnemonicParsing="false" text="Cerrar Aplicación" />
             </items>
           </Menu>
@@ -100,6 +101,12 @@
                         <Font size="27.0" />
                      </font>
                   </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="panelInicio" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="btDescargar" layoutX="459.0" layoutY="275.0" mnemonicParsing="false" onAction="#descargaPendientes" text="DESCARGAR" />
+                  <Label fx:id="label" layoutX="307.0" layoutY="330.0" prefHeight="52.0" prefWidth="429.0" text="Label" />
                </children>
             </AnchorPane>
          </children>

@@ -1,7 +1,6 @@
 package enty;
 
 import main.Variables;
-import util.Dates;
 import util.Varios;
 
 /**
@@ -93,8 +92,7 @@ public class Boletin {
     }
     
     public String SQLEditar(){
-        String query="";
-        return query;
+        return "";
     }
     
     public String SQLBuscar(){

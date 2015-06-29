@@ -2,6 +2,7 @@ package boes;
 
 import enty.Boletin;
 import enty.Boletines_publicados;
+import enty.Descarga;
 import enty.Entidad;
 import enty.Origen;
 import java.sql.SQLException;
@@ -23,15 +24,31 @@ public class Insercion {
 
     List select;
     List discard;
+    Date fecha;
 
-    public Insercion(List select, List discard) {
+    public Insercion(List select, List discard, Date fecha) {
         this.select = select;
         this.discard = discard;
+        this.fecha = fecha;
     }
 
     public void run() {
         runSelect();
         runDiscard();
+        runClear();
+    }
+
+    private void runClear() {
+        Boe boe = new Boe(this.fecha);
+        Sql bd;
+
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(boe.SQLSetClas());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void runSelect() {
@@ -78,6 +95,7 @@ public class Insercion {
 
         bl.setIdOrigen(insertaOrigen(aux.getEntidad(), aux.getOrigen()));
         bl.setIdBoe(getBoe(aux.getFecha()));
+        bl.setIdDescarga(insertaDescarga(aux.getLink()));
         bl.setCodigo(aux.getCodigo());
         bl.setFase("");
 
@@ -91,64 +109,79 @@ public class Insercion {
     }
 
     private int insertaOrigen(String entidad, String origen) {
-        int aux=0;
+        int aux = 0;
         Sql bd;
-        Origen or= new Origen();
+        Origen or = new Origen();
         or.setIdEntidad(insertaEntidad(entidad));
         or.setNombre(origen);
-        
+
         try {
-            bd=new Sql(Variables.con);
-            aux=bd.buscar(or.SQLBuscar());
-            
-            if(aux==-1){
+            bd = new Sql(Variables.con);
+            aux = bd.buscar(or.SQLBuscar());
+
+            if (aux == -1) {
                 bd.ejecutar(or.SQLCrear());
-                aux=bd.ultimoRegistro();
+                aux = bd.ultimoRegistro();
             }
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return aux;
     }
 
     private int insertaEntidad(String nombre) {
-        int aux=0;
+        int aux = 0;
         Sql bd;
-        Entidad en=new Entidad();
+        Entidad en = new Entidad();
         en.setNombre(nombre);
-        
+
         try {
-            bd=new Sql(Variables.con);
-            aux=bd.buscar(en.SQLBuscar());
-            
-            if(aux==-1){
+            bd = new Sql(Variables.con);
+            aux = bd.buscar(en.SQLBuscar());
+
+            if (aux == -1) {
                 bd.ejecutar(en.SQLCrear());
-                aux=bd.ultimoRegistro();
+                aux = bd.ultimoRegistro();
             }
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return aux;
     }
 
     private int getBoe(String fecha) {
-        int aux=0;
+        int aux = 0;
         Sql bd;
-        
+
         try {
-            bd=new Sql(Variables.con);
-            aux=bd.getInt("SELECT * FROM boes.boe where fecha="+Varios.entrecomillar(fecha));
+            bd = new Sql(Variables.con);
+            aux = bd.getInt("SELECT * FROM boes.boe where fecha=" + Varios.entrecomillar(fecha));
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return aux;
     }
 
-    private int insertaDescarga(String datos) {
-        return 0;
+    private int insertaDescarga(String link) {
+        int aux = 0;
+        Descarga ds = new Descarga();
+        ds.setLink(link);
+        Sql bd;
+
+        try {
+            bd = new Sql(Variables.con);
+            aux = bd.buscar(ds.SQLBuscar());
+
+            if (aux == -1) {
+                bd.ejecutar(ds.SQLCrear());
+                aux = bd.ultimoRegistro();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
     }
 
     private void runDiscard() {

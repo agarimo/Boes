@@ -18,7 +18,6 @@ public class Boes extends Application {
         Variables.inicializar();
 
         Parent root = FXMLLoader.load(getClass().getResource("Win.fxml"));
-
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
@@ -31,5 +30,5 @@ public class Boes extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    
 }

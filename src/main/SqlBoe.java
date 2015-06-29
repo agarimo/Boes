@@ -1,6 +1,7 @@
 package main;
 
 import boes.Boe;
+import enty.Descarga;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -62,6 +63,30 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Boe(rs.getInt("id"), rs.getDate("fecha"), rs.getString("link"), rs.getBoolean("isClas"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<Descarga> listaDescargaPendiente() {
+        String query="SELECT * FROM boes.descarga where datos='null'";
+        List<Descarga> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Descarga aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Descarga(rs.getInt("id"), rs.getString("link"), rs.getString("datos"));
                 list.add(aux);
             }
             rs.close();
