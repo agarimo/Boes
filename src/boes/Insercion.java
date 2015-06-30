@@ -97,7 +97,9 @@ public class Insercion {
         bl.setIdBoe(getBoe(aux.getFecha()));
         bl.setIdDescarga(insertaDescarga(aux.getLink()));
         bl.setCodigo(aux.getCodigo());
-        bl.setFase("");
+        bl.setTipo("*711*");
+        bl.setFase("Pendiente");
+        bl.setEstado(0);
 
         try {
             bd = new Sql(Variables.con);

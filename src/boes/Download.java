@@ -20,10 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Boes;
 import main.SqlBoe;
 import main.Variables;
-import main.WinC;
 import util.Files;
 import util.Sql;
 
@@ -140,5 +138,4 @@ public class Download extends Thread {
         String datos = Files.leeArchivo(txt);
         Files.escribeArchivo(txt, datos);
     }
-
 }

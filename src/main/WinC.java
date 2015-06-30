@@ -28,7 +28,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -40,6 +39,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import model.ModeloBoes;
+import model.ModeloBoletines;
 import util.Dates;
 import util.Sql;
 
@@ -78,6 +78,12 @@ public class WinC implements Initializable {
     private AnchorPane panelClasificacion;
 
     @FXML
+    private AnchorPane panelBoletines;
+
+    @FXML
+    private AnchorPane panelFases;
+
+    @FXML
     private Button btClasificar;
 
     @FXML
@@ -86,8 +92,8 @@ public class WinC implements Initializable {
     @FXML
     private Button btAddBoe;
 
-    @FXML
-    private ListView<Pdf> lvSeleccionados;
+//    @FXML
+//    private ListView<Pdf> lvSeleccionados;
 
     @FXML
     private TableView<ModeloBoes> tvBoes;
@@ -135,14 +141,24 @@ public class WinC implements Initializable {
     private Button btDescargar;
 
     @FXML
-    private Label label;
+    private TableView<ModeloBoletines> tvBoletines;
     
+    @FXML
+    private TableColumn<ModeloBoletines, String> codigoCLB;
     
-    public void setLabel(String datos){
-        label.setText("una pruega");
-    }
-//</editor-fold>
+    @FXML
+    private TableColumn<ModeloBoletines, String> origenCLB;
+    
+    @FXML
+    private TableColumn<ModeloBoletines, String> fechaCLB;
+    
+    @FXML
+    private TableColumn<ModeloBoletines, String> tipoCLB;
+    
+    @FXML
+    private TableColumn<ModeloBoletines, String> estadoCLB;
 
+//</editor-fold>
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
     ObservableList<ModeloBoes> selectedList;
@@ -151,7 +167,7 @@ public class WinC implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         iniciaTablaBoes();
-        
+
         final ObservableList<Boe> aux1 = lvBoe.getSelectionModel().getSelectedItems();
         aux1.addListener(selectorListaBoe);
     }
@@ -170,16 +186,37 @@ public class WinC implements Initializable {
                 panelInicio.setVisible(true);
                 panelEnlaces.setVisible(false);
                 panelClasificacion.setVisible(false);
+                panelBoletines.setVisible(false);
+                panelFases.setVisible(false);
                 break;
             case 1:
                 panelInicio.setVisible(false);
                 panelEnlaces.setVisible(true);
                 panelClasificacion.setVisible(false);
+                panelBoletines.setVisible(false);
+                panelFases.setVisible(false);
                 break;
             case 2:
                 panelInicio.setVisible(false);
                 panelEnlaces.setVisible(false);
                 panelClasificacion.setVisible(true);
+                panelBoletines.setVisible(false);
+                panelFases.setVisible(false);
+                break;
+            case 3:
+                panelInicio.setVisible(false);
+                panelEnlaces.setVisible(false);
+                panelClasificacion.setVisible(false);
+                panelBoletines.setVisible(true);
+                panelFases.setVisible(false);
+                break;
+
+            case 4:
+                panelInicio.setVisible(false);
+                panelEnlaces.setVisible(false);
+                panelClasificacion.setVisible(false);
+                panelBoletines.setVisible(false);
+                panelFases.setVisible(true);
                 break;
         }
     }
@@ -531,6 +568,20 @@ public class WinC implements Initializable {
         }
     }
 //</editor-fold>
+//</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="BOLETINES">
+    @FXML
+    void iniciaBoletines(ActionEvent event) {
+        mostrarPanel(3);
+    }
+//</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="FASES">
+    @FXML
+    void iniciaFases(ActionEvent event) {
+        mostrarPanel(4);
+    }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="LISTENERS">

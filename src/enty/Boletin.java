@@ -14,18 +14,22 @@ public class Boletin {
     private int idBoe;
     private int idDescarga;
     private String codigo;
+    private String tipo;
     private String fase;
+    private int estado;
 
     public Boletin() {
     }
 
-    public Boletin(int id, int idOrigen, int idBoe, int idDescarga, String codigo, String fase) {
+    public Boletin(int id, int idOrigen, int idBoe, int idDescarga, String codigo,String tipo, String fase,int estado) {
         this.id = id;
         this.idOrigen = idOrigen;
         this.idBoe = idBoe;
         this.idDescarga = idDescarga;
         this.codigo = codigo;
+        this.tipo=tipo;
         this.fase = fase;
+        this.estado=estado;
     }
 
     public String getFase() {
@@ -76,23 +80,45 @@ public class Boletin {
         this.codigo = codigo;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
     @Override
     public String toString() {
         return codigo;
     }
     
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,fase) values("
+        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,estado) values("
                 + this.idOrigen + ","
                 + this.idBoe + ","
                 + this.idDescarga + ","
                 + Varios.entrecomillar(this.codigo) + ","
-                + Varios.entrecomillar(this.fase)
+                + Varios.entrecomillar(this.tipo) + ","
+                + Varios.entrecomillar(this.fase) + ","
+                + this.estado
                 + ");";
     }
     
     public String SQLEditar(){
-        return "";
+        return "UPDATE " + Variables.nombreBD + ".boletin SET "
+                + "tipo=" + Varios.entrecomillar(this.tipo) + ","
+                + "fase=" + Varios.entrecomillar(this.fase) + ","
+                + "estado=" + this.estado
+                + "WHERE id=" + this.id;
     }
     
     public String SQLBuscar(){

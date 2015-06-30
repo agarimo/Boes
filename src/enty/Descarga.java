@@ -9,16 +9,16 @@ import util.Varios;
  */
 public class Descarga {
 
-    int id;
-    String link;
-    String datos;
+    private int id;
+    private String link;
+    private String datos;
 
     public Descarga() {
     }
 
     public Descarga(String link) {
         this.link = link;
-        this.datos = "PD";
+        this.datos = "null";
     }
 
     public Descarga(int id, String link, String datos) {
@@ -57,9 +57,9 @@ public class Descarga {
                 + Varios.entrecomillar(this.datos)
                 + ");";
     }
-    
-    public String SQLSetDatos(){
-        return "UPDATE boes.descarga SET "
+
+    public String SQLSetDatos() {
+        return "UPDATE " + Variables.nombreBD + ".descarga SET "
                 + "datos=" + Varios.entrecomillar(this.datos) + " "
                 + "WHERE id=" + this.id;
     }
