@@ -16,6 +16,7 @@ public class Variables {
     public static String nombreBD = "boes";
     public static File ficheroPdf;
     public static File ficheroTxt;
+    public static File ficheroBoe;
     public static boolean isClasificando;
     public static boolean isDownloading;
 
@@ -23,6 +24,7 @@ public class Variables {
         driver();
         ficheroPdf = new File(new File("data"), "pdfData");
         ficheroTxt = new File(new File("data"), "txtData");
+        ficheroBoe = new File(new File("data"), "boeData");
         isClasificando = false;
         isDownloading = false;
         initFiles();

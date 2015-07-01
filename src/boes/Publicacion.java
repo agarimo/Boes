@@ -66,7 +66,7 @@ public class Publicacion {
         enty=enty.replace("<a name=\"\">", "");
         enty=enty.replace("</a>", "");
         
-        this.entidad=enty;
+        this.entidad=enty.trim();
     }
 
     private void splitOrigen(String origen) {

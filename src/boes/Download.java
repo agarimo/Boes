@@ -31,6 +31,7 @@ import util.Sql;
  */
 public class Download extends Thread {
 
+    int modo;
     List list;
 
     public Download() {

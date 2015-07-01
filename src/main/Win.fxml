@@ -90,7 +90,7 @@
                         <TableColumn fx:id="descripcionCL" prefWidth="633.0" resizable="false" text="DESCRIPCION" />
                     </columns>
                   </TableView>
-                  <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0">
+                  <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <items>
                         <DatePicker fx:id="dpFechaC" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" />
                       <Button fx:id="btSelect" mnemonicParsing="false" onAction="#selectPdf" prefHeight="30.0" prefWidth="150.0" text="Seleccionar" />
@@ -109,20 +109,24 @@
                   <Button fx:id="btRecoverS" layoutX="423.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverS" prefHeight="25.0" prefWidth="128.0" text="Recuperar" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelBoletines" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="panelBoletines" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
-                  <ToolBar prefHeight="40.0" prefWidth="1000.0">
+                  <ToolBar prefHeight="52.0" prefWidth="1000.0">
                     <items>
-                      <Button mnemonicParsing="false" text="Button" />
+                        <DatePicker fx:id="dpFechaB" onAction="#cambioEnDatePickerBoletines" prefHeight="30.0" prefWidth="150.0" />
+                        <Button fx:id="btDescargaBoletines" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" />
+                        <Button fx:id="btComprobarFases" mnemonicParsing="false" onAction="#comprobarFases" prefHeight="30.0" prefWidth="150.0" text="Comprobar FASES" />
+                        <Button fx:id="btGenerarArchivos" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
+                        <Button fx:id="btAbrirCarpetaBoletines" mnemonicParsing="false" onAction="#abrirCarpetaBoletines" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
                     </items>
                   </ToolBar>
-                  <TableView fx:id="tvBoletines" layoutY="40.0" prefHeight="326.0" prefWidth="1000.0">
+                  <TableView fx:id="tvBoletines" layoutY="51.0" prefHeight="524.0" prefWidth="1000.0">
                     <columns>
-                      <TableColumn fx:id="codigoCLB" prefWidth="75.0" text="CODIGO" />
-                      <TableColumn fx:id="origenCLB" prefWidth="75.0" text="ORIGEN" />
-                        <TableColumn fx:id="fechaCLB" prefWidth="75.0" text="FECHA" />
-                        <TableColumn fx:id="tipoCLB" prefWidth="75.0" text="TIPO" />
-                        <TableColumn fx:id="estadoCLB" prefWidth="75.0" text="ESTADO" />
+                      <TableColumn fx:id="codigoCLB" prefWidth="130.0" resizable="false" text="CODIGO" />
+                      <TableColumn fx:id="origenCLB" prefWidth="558.0" resizable="false" text="ORIGEN" />
+                        <TableColumn fx:id="fechaCLB" prefWidth="92.0" resizable="false" text="FECHA" />
+                        <TableColumn fx:id="tipoCLB" prefWidth="71.0" resizable="false" text="TIPO" />
+                        <TableColumn fx:id="estadoCLB" prefWidth="148.0" resizable="false" text="ESTADO" />
                     </columns>
                   </TableView>
                </children>

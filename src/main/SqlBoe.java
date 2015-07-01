@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
+import model.ModeloBoletines;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -33,7 +34,7 @@ public class SqlBoe {
         Sql bd;
         ResultSet rs;
         Boe aux = null;
-        String query="SELECT * from boes.boe where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        String query = "SELECT * from boes.boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
 
         try {
             bd = new Sql(Variables.con);
@@ -73,9 +74,9 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<Descarga> listaDescargaPendiente() {
-        String query="SELECT * FROM boes.descarga where datos='null'";
+        String query = "SELECT * FROM boes.descarga where datos='null'";
         List<Descarga> list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -87,6 +88,38 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Descarga(rs.getInt("id"), rs.getString("link"), rs.getString("datos"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public static List<ModeloBoletines> listaVistaBoletin(String query) {
+        List<ModeloBoletines> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloBoletines aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloBoletines();
+                aux.codigo.set(rs.getString("codigo"));
+                aux.entidad.set(rs.getString("entidad"));
+                aux.origen.set(rs.getString("origen"));
+                aux.fecha.set(Dates.imprimeFecha(rs.getDate("fecha")));
+                aux.tipo.set(rs.getString("tipo"));
+                aux.fase.set(rs.getString("fase"));
+                aux.estado.set(rs.getInt("estado"));
+                aux.idDescarga.set(rs.getInt("idDescarga"));
+                aux.link.set(rs.getString("link"));
                 list.add(aux);
             }
             rs.close();

@@ -5,6 +5,7 @@ import boes.Download;
 import boes.Insercion;
 import boes.Pdf;
 import boes.Publicacion;
+import boletines.Archivos;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,7 @@ import model.ModeloBoes;
 import model.ModeloBoletines;
 import util.Dates;
 import util.Sql;
+import util.Varios;
 
 /**
  *
@@ -94,7 +96,6 @@ public class WinC implements Initializable {
 
 //    @FXML
 //    private ListView<Pdf> lvSeleccionados;
-
     @FXML
     private TableView<ModeloBoes> tvBoes;
 
@@ -142,27 +143,43 @@ public class WinC implements Initializable {
 
     @FXML
     private TableView<ModeloBoletines> tvBoletines;
-    
+
     @FXML
     private TableColumn<ModeloBoletines, String> codigoCLB;
-    
+
     @FXML
     private TableColumn<ModeloBoletines, String> origenCLB;
-    
+
     @FXML
     private TableColumn<ModeloBoletines, String> fechaCLB;
-    
+
     @FXML
     private TableColumn<ModeloBoletines, String> tipoCLB;
-    
+
     @FXML
     private TableColumn<ModeloBoletines, String> estadoCLB;
+
+    @FXML
+    private DatePicker dpFechaB;
+
+    @FXML
+    private Button btDescargaBoletines;
+
+    @FXML
+    private Button btGenerarArchivos;
+
+    @FXML
+    private Button btComprobarFases;
+
+    @FXML
+    private Button btAbrirCarpetaBoletines;
 
 //</editor-fold>
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
     ObservableList<ModeloBoes> selectedList;
     ObservableList<ModeloBoes> discartedList;
+    ObservableList<ModeloBoletines> boletinesList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -574,6 +591,61 @@ public class WinC implements Initializable {
     @FXML
     void iniciaBoletines(ActionEvent event) {
         mostrarPanel(3);
+        iniciaTablaBoletines();
+    }
+
+    void iniciaTablaBoletines() {
+        codigoCLB.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        origenCLB.setCellValueFactory(new PropertyValueFactory<>("origen"));
+        fechaCLB.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        tipoCLB.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        estadoCLB.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        boletinesList = FXCollections.observableArrayList();
+        tvBoletines.setItems(boletinesList);
+    }
+
+    void cargaDatosTablaBoletines(Date fecha) {
+        ModeloBoletines aux;
+        String query = "SELECT * FROM " + Variables.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        Iterator it = SqlBoe.listaVistaBoletin(query).iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloBoletines) it.next();
+            boletinesList.add(aux);
+        }
+    }
+
+    @FXML
+    void cambioEnDatePickerBoletines(ActionEvent event) {
+        boletinesList.clear();
+        Date aux = Dates.asDate(dpFechaB.getValue());
+        cargaDatosTablaBoletines(aux);
+    }
+
+    @FXML
+    void descargarBoletines(ActionEvent event) {
+
+    }
+
+    @FXML
+    void generarArchivos(ActionEvent event) {
+        Archivos ar = new Archivos(Dates.asDate(dpFechaB.getValue()));
+        ar.creaArchivos();
+    }
+
+    @FXML
+    void comprobarFases(ActionEvent event) {
+
+    }
+
+    @FXML
+    void abrirCarpetaBoletines(ActionEvent event) {
+        try {
+            Desktop.getDesktop().browse(new File("data").toURI());
+        } catch (IOException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 //</editor-fold>
 
