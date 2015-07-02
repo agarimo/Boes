@@ -96,22 +96,23 @@
                       <Button fx:id="btSelect" mnemonicParsing="false" onAction="#selectPdf" prefHeight="30.0" prefWidth="150.0" text="Seleccionar" />
                         <Button fx:id="btDiscard" mnemonicParsing="false" onAction="#discardPdf" prefHeight="30.0" prefWidth="150.0" text="Descartar" />
                         <Button mnemonicParsing="false" onAction="#abrirWeb" prefHeight="30.0" prefWidth="150.0" text="Ver Web" />
+                        <Button fx:id="btDescartaOrigen" mnemonicParsing="false" onAction="#descartaOrigen" prefHeight="30.0" prefWidth="150.0" text="DESCARTA origen" />
                     </items>
                   </ToolBar>
-                  <Button fx:id="btFinClas" layoutX="833.0" layoutY="521.0" mnemonicParsing="false" onAction="#finalizaClas" prefHeight="40.0" prefWidth="153.0" text="CONTINUAR" />
-                  <ListView fx:id="lvSelect" layoutX="558.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
-                  <Label layoutX="423.0" layoutY="402.0" text="Boletines seleccionados:" />
-                  <Label layoutX="14.0" layoutY="402.0" text="Boletines Descartados:" />
-                  <ListView fx:id="lvDiscard" layoutX="148.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" />
-                  <Separator layoutX="360.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="55.0" />
-                  <Button fx:id="btRecoverD" layoutX="14.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverD" prefHeight="25.0" prefWidth="120.0" text="Recuperar" />
-                  <Separator layoutX="759.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="66.0" />
-                  <Button fx:id="btRecoverS" layoutX="423.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverS" prefHeight="25.0" prefWidth="128.0" text="Recuperar" />
+                  <Button fx:id="btFinClas" layoutX="833.0" layoutY="521.0" mnemonicParsing="false" onAction="#finalizaClas" prefHeight="40.0" prefWidth="153.0" text="CONTINUAR" AnchorPane.rightAnchor="14.0" />
+                  <ListView fx:id="lvSelect" layoutX="558.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.rightAnchor="242.0" />
+                  <Label layoutX="423.0" layoutY="402.0" text="Boletines seleccionados:" AnchorPane.rightAnchor="449.0" />
+                  <Label layoutX="14.0" layoutY="402.0" text="Boletines Descartados:" AnchorPane.rightAnchor="866.0" />
+                  <ListView fx:id="lvDiscard" layoutX="148.0" layoutY="402.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.rightAnchor="652.0" />
+                  <Separator layoutX="360.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="55.0" AnchorPane.rightAnchor="585.0" />
+                  <Button fx:id="btRecoverD" layoutX="14.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverD" prefHeight="25.0" prefWidth="120.0" text="Recuperar" AnchorPane.rightAnchor="866.0" />
+                  <Separator layoutX="759.0" layoutY="402.0" orientation="VERTICAL" prefHeight="160.0" prefWidth="66.0" AnchorPane.rightAnchor="175.0" />
+                  <Button fx:id="btRecoverS" layoutX="423.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverS" prefHeight="25.0" prefWidth="128.0" text="Recuperar" AnchorPane.rightAnchor="449.0" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="panelBoletines" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
-                  <ToolBar prefHeight="52.0" prefWidth="1000.0">
+                  <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <items>
                         <DatePicker fx:id="dpFechaB" onAction="#cambioEnDatePickerBoletines" prefHeight="30.0" prefWidth="150.0" />
                         <Button fx:id="btDescargaBoletines" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" />
@@ -120,13 +121,13 @@
                         <Button fx:id="btAbrirCarpetaBoletines" mnemonicParsing="false" onAction="#abrirCarpetaBoletines" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
                     </items>
                   </ToolBar>
-                  <TableView fx:id="tvBoletines" layoutY="51.0" prefHeight="524.0" prefWidth="1000.0">
+                  <TableView fx:id="tvBoletines" layoutY="51.0" prefHeight="524.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="codigoCLB" prefWidth="130.0" resizable="false" text="CODIGO" />
-                      <TableColumn fx:id="origenCLB" prefWidth="558.0" resizable="false" text="ORIGEN" />
-                        <TableColumn fx:id="fechaCLB" prefWidth="92.0" resizable="false" text="FECHA" />
-                        <TableColumn fx:id="tipoCLB" prefWidth="71.0" resizable="false" text="TIPO" />
-                        <TableColumn fx:id="estadoCLB" prefWidth="148.0" resizable="false" text="ESTADO" />
+                      <TableColumn fx:id="codigoCLB" maxWidth="-1.0" minWidth="130.0" prefWidth="130.0" resizable="false" text="CODIGO" />
+                      <TableColumn fx:id="origenCLB" maxWidth="-1.0" minWidth="558.0" prefWidth="558.0" resizable="false" text="ORIGEN" />
+                        <TableColumn fx:id="fechaCLB" maxWidth="-1.0" minWidth="92.0" prefWidth="92.0" resizable="false" text="FECHA" />
+                        <TableColumn fx:id="tipoCLB" maxWidth="-1.0" minWidth="71.0" prefWidth="71.0" resizable="false" text="TIPO" />
+                        <TableColumn fx:id="estadoCLB" maxWidth="-1.0" minWidth="148.0" prefWidth="148.0" resizable="false" text="ESTADO" />
                     </columns>
                   </TableView>
                </children>

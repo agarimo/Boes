@@ -94,8 +94,6 @@ public class WinC implements Initializable {
     @FXML
     private Button btAddBoe;
 
-//    @FXML
-//    private ListView<Pdf> lvSeleccionados;
     @FXML
     private TableView<ModeloBoes> tvBoes;
 
@@ -174,15 +172,20 @@ public class WinC implements Initializable {
     @FXML
     private Button btAbrirCarpetaBoletines;
 
+    @FXML
+    private Button btDescartaOrigen;
+
 //</editor-fold>
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
     ObservableList<ModeloBoes> selectedList;
     ObservableList<ModeloBoes> discartedList;
     ObservableList<ModeloBoletines> boletinesList;
+    List origen_descartado;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        origen_descartado = SqlBoe.listaOrigenDescartado();
         iniciaTablaBoes();
 
         final ObservableList<Boe> aux1 = lvBoe.getSelectionModel().getSelectedItems();
@@ -476,6 +479,7 @@ public class WinC implements Initializable {
 
             publicacion.add(model);
         }
+        updateClasificacion();
         getFocusTablaBoes();
     }
 
@@ -494,6 +498,30 @@ public class WinC implements Initializable {
         Date aux = Dates.asDate(dpFechaC.getValue());
         cargarBoes(SqlBoe.cargaBoe(aux));
         Variables.isClasificando = true;
+    }
+
+    void updateClasificacion() {
+        ModeloBoes aux;
+        Iterator it = publicacion.iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloBoes) it.next();
+
+            if (origen_descartado.contains(aux.getOrigen())) {
+                discartedList.add(aux);
+            }
+        }
+        
+        it=discartedList.iterator();
+        
+        while(it.hasNext()){
+            aux=(ModeloBoes) it.next();
+            
+            if(publicacion.contains(aux)){
+                publicacion.remove(aux);
+            }
+        }
+        getFocusTablaBoes();
     }
 
     @FXML
@@ -543,6 +571,32 @@ public class WinC implements Initializable {
             publicacion.add(0, aux);
             discartedList.remove(aux);
             getFocusTablaBoes();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ERROR");
+            alert.setHeaderText(null);
+            alert.setContentText("Debes seleccionar un elemento.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    void descartaOrigen(ActionEvent event) {
+        Sql bd;
+        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            try {
+                bd = new Sql(Variables.con);
+                bd.ejecutar("INSERT into " + Variables.nombreBD + ".origen_descartado (nombre) values("
+                        + Varios.entrecomillar(aux.getOrigen())
+                        + ");");
+                bd.close();
+                origen_descartado.add(aux.getOrigen());
+                updateClasificacion();
+            } catch (SQLException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR");

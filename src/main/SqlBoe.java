@@ -52,6 +52,7 @@ public class SqlBoe {
         return aux;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="LISTADOS">
     public static List<Boe> listaBoe(String query) {
         List<Boe> list = new ArrayList();
         Sql bd;
@@ -130,4 +131,29 @@ public class SqlBoe {
         }
         return list;
     }
+
+    public static List listaOrigenDescartado() {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".origen_descartado";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("nombre");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+//</editor-fold>
 }
