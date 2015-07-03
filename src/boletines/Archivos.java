@@ -55,6 +55,8 @@ public class Archivos {
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append(aux.getFase());
                 buffer.append(System.getProperty("line.separator"));
+                buffer.append(aux.getOrigen());
+                buffer.append(System.getProperty("line.separator"));
                 buffer.append(getDatosBoletin(aux.getIdDescarga()));
 
                 Files.escribeArchivo(file, buffer.toString());
