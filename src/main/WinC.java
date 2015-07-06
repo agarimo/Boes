@@ -28,11 +28,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -511,13 +513,13 @@ public class WinC implements Initializable {
                 discartedList.add(aux);
             }
         }
-        
-        it=discartedList.iterator();
-        
-        while(it.hasNext()){
-            aux=(ModeloBoes) it.next();
-            
-            if(publicacion.contains(aux)){
+
+        it = discartedList.iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloBoes) it.next();
+
+            if (publicacion.contains(aux)) {
                 publicacion.remove(aux);
             }
         }
@@ -704,9 +706,83 @@ public class WinC implements Initializable {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="FASES">
+    
+    //<editor-fold defaultstate="collapsed" desc="Variables FXML">
+    @FXML
+    ComboBox cbEntidad;
+
+    @FXML
+    ListView lvOrigen;
+
+    @FXML
+    TextField tfOrigen;
+
+    @FXML
+    TableView tvFases;
+
+    @FXML
+    ComboBox cbCodigo;
+
+    @FXML
+    ComboBox cbTipo;
+
+    @FXML
+    TextField tfDias;
+
+    @FXML
+    TextArea taTexto1;
+
+    @FXML
+    TextArea taTexto2;
+
+    @FXML
+    TextArea taTexto3;
+
+    @FXML
+    Button btNuevaFase;
+
+    @FXML
+    Button btEditarFase;
+
+    @FXML
+    Button btBorrarFase;
+
+    @FXML
+    Button btGuardarFase;
+    //</editor-fold>
+    
+    //TODO crear las ObservablesList y Modelos para el panel de Fases.
+    
+    //<editor-fold defaultstate="collapsed" desc="Metodos FXML">
+    @FXML
+    void nuevaFase(ActionEvent event){
+        
+    }
+    
+    @FXML
+    void editaFase(ActionEvent event){
+        
+    }
+    
+    @FXML
+    void borraFase(ActionEvent event){
+        
+    }
+    
+    @FXML
+    void guardaFase(ActionEvent event){
+        
+    }
+//</editor-fold>
+    
     @FXML
     void iniciaFases(ActionEvent event) {
         mostrarPanel(4);
+        cargaDatosFases();
+    }
+    
+    private void cargaDatosFases(){
+        //TODO cargar las entidades en el comboBox
     }
 //</editor-fold>
 
