@@ -791,8 +791,21 @@ public class WinC implements Initializable {
 
     @FXML
     void nuevaFase(ActionEvent event) {
+        btNuevaFase.setDisable(true);
+        ModeloComboBox origen=(ModeloComboBox) lvOrigen.getSelectionModel().getSelectedItem();
         btGuardarFase.setVisible(true);
+        ModeloFases aux= new ModeloFases();
+        aux.idOrigen.set(origen.getId());
+        aux.codigo.set(null);
+        aux.dias.set(0);
+        aux.tipo.set(1);
         
+        tablaFases.add(0, aux);
+        btBorrarFase.setVisible(false);
+        btEditarFase.setVisible(false);
+        
+        tvFases.getSelectionModel().select(0);
+        tvFases.scrollTo(0);
     }
 
     @FXML
@@ -808,6 +821,11 @@ public class WinC implements Initializable {
     @FXML
     void guardaFase(ActionEvent event) {
         btGuardarFase.setVisible(false);
+        btBorrarFase.setVisible(true);
+        btEditarFase.setVisible(true);
+        btNuevaFase.setDisable(false);
+        
+        
         
     }
 
