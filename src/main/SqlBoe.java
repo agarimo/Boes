@@ -2,6 +2,7 @@ package main;
 
 import boes.Boe;
 import enty.Descarga;
+import enty.Fase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import model.ModeloBoletines;
+import model.ModeloComboBox;
+import model.ModeloFases;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -145,6 +148,147 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = rs.getString("nombre");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<ModeloComboBox> listaEntidades() {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".entidad";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloComboBox aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloComboBox();
+                aux.id.set(rs.getInt("id"));
+                aux.nombre.set(rs.getString("nombre"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<ModeloComboBox> listaOrigenes(int id) {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad="+id;
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloComboBox aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloComboBox();
+                aux.id.set(rs.getInt("id"));
+                aux.nombre.set(rs.getString("nombre"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<ModeloComboBox> listaTipo() {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".tipo where tipo=0";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloComboBox aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloComboBox();
+                aux.id.set(1);
+                aux.nombre.set(rs.getString("id"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<ModeloFases> listaFases(int id) {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen="+id;
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloFases aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloFases();
+                aux.id.set(rs.getInt("id"));
+                aux.idOrigen.set(rs.getInt("idOrigen"));
+                aux.codigo.set(rs.getString("codigo"));
+                aux.tipo.set(rs.getInt("tipo"));
+                aux.texto1.set(rs.getString("texto1"));
+                aux.texto2.set(rs.getString("texto2"));
+                aux.texto3.set(rs.getString("texto3"));
+                aux.dias.set(rs.getInt("dias"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<Fase> listaFase(String query) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Fase aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Fase();
+                aux.setId(rs.getInt("id"));
+                aux.setIdOrigen(rs.getInt("idOrigen"));
+                aux.setCodigo(rs.getString("codigo"));
+                aux.setTipo(rs.getInt("tipo"));
+                aux.setTexto1(rs.getString("texto1"));
+                aux.setTexto2(rs.getString("texto2"));
+                aux.setTexto3(rs.getString("texto3"));
+                aux.setDias(rs.getInt("dias"));
                 list.add(aux);
             }
             rs.close();

@@ -139,8 +139,8 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <ComboBox layoutY="33.0" prefHeight="25.0" prefWidth="197.0" />
-                              <ListView layoutX="-1.0" layoutY="101.0" prefHeight="455.0" prefWidth="200.0" />
+                              <ComboBox fx:id="cbEntidad" layoutY="33.0" onAction="#cargaOrigenFase" prefHeight="25.0" prefWidth="197.0" />
+                              <ListView fx:id="lvOrigen" layoutX="-1.0" layoutY="101.0" prefHeight="455.0" prefWidth="200.0" />
                               <Label layoutY="6.0" prefHeight="17.0" prefWidth="197.0" text="Entidad :" />
                               <Label layoutY="76.0" prefHeight="17.0" prefWidth="197.0" text="Origen:" />
                            </children>
@@ -148,14 +148,14 @@
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="573.0" prefWidth="802.0">
                            <children>
                               <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="95.0" text="Origen : " />
-                              <TextField layoutX="109.0" layoutY="10.0" prefHeight="25.0" prefWidth="676.0" />
+                              <TextField fx:id="tfOrigen" alignment="CENTER" editable="false" layoutX="109.0" layoutY="10.0" prefHeight="25.0" prefWidth="676.0" />
                               <Label layoutX="14.0" layoutY="64.0" prefHeight="17.0" prefWidth="95.0" text="FASES: " />
-                              <TableView layoutX="14.0" layoutY="89.0" prefHeight="122.0" prefWidth="773.0">
+                              <TableView fx:id="tvFases" layoutX="14.0" layoutY="89.0" prefHeight="122.0" prefWidth="773.0">
                                 <columns>
-                                  <TableColumn prefWidth="295.0" text="FASE" />
-                                  <TableColumn maxWidth="82.0" prefWidth="82.0" resizable="false" text="CODIGO" />
-                                    <TableColumn prefWidth="295.0" text="TIPO" />
-                                    <TableColumn maxWidth="82.0" prefWidth="82.0" text="DIAS" />
+                                  <TableColumn fx:id="faseCLF" maxWidth="300.0" prefWidth="300.0" resizable="false" text="FASE" />
+                                  <TableColumn fx:id="codigoCLF" maxWidth="110.0" prefWidth="110.0" resizable="false" text="CODIGO" />
+                                    <TableColumn fx:id="tipoCLF" maxWidth="300.0" prefWidth="300.0" resizable="false" text="TIPO" />
+                                    <TableColumn fx:id="diasCLF" maxWidth="60.0" prefWidth="60.0" resizable="false" text="DIAS" />
                                 </columns>
                               </TableView>
                               <Pane layoutX="14.0" layoutY="225.0" prefHeight="326.0" prefWidth="773.0">
@@ -166,18 +166,18 @@
                                     <Label layoutX="14.0" layoutY="65.0" prefHeight="20.0" prefWidth="50.0" text="Texto 1: " />
                                     <Label layoutX="14.0" layoutY="153.0" prefHeight="20.0" prefWidth="50.0" text="Texto 2: " />
                                     <Label layoutX="14.0" layoutY="238.0" prefHeight="20.0" prefWidth="50.0" text="Texto 3: " />
-                                    <ComboBox layoutX="64.0" layoutY="12.0" prefWidth="150.0" />
-                                    <ComboBox layoutX="286.0" layoutY="12.0" prefWidth="150.0" />
-                                    <TextField alignment="CENTER" layoutX="505.0" layoutY="12.0" />
-                                    <TextArea layoutX="64.0" layoutY="65.0" prefHeight="70.0" prefWidth="591.0" />
-                                    <TextArea layoutX="64.0" layoutY="153.0" prefHeight="70.0" prefWidth="591.0" />
-                                    <TextArea layoutX="64.0" layoutY="238.0" prefHeight="70.0" prefWidth="591.0" />
-                                    <Button layoutX="667.0" layoutY="65.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Editar" />
-                                    <Button layoutX="667.0" layoutY="103.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Borrar" />
-                                    <Button layoutX="667.0" layoutY="138.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Guardar" />
+                                    <ComboBox fx:id="cbCodigo" layoutX="64.0" layoutY="12.0" prefWidth="150.0" />
+                                    <ComboBox fx:id="cbTipo" layoutX="286.0" layoutY="12.0" prefWidth="150.0" />
+                                    <TextField fx:id="tfDias" alignment="CENTER" layoutX="505.0" layoutY="12.0" />
+                                    <TextArea fx:id="taTexto1" layoutX="64.0" layoutY="65.0" prefHeight="70.0" prefWidth="591.0" />
+                                    <TextArea fx:id="taTexto2" layoutX="64.0" layoutY="153.0" prefHeight="70.0" prefWidth="591.0" />
+                                    <TextArea fx:id="taTexto3" layoutX="64.0" layoutY="238.0" prefHeight="70.0" prefWidth="591.0" />
+                                    <Button fx:id="btEditarFase" layoutX="667.0" layoutY="65.0" mnemonicParsing="false" onAction="#editaFase" prefHeight="25.0" prefWidth="95.0" text="Editar" />
+                                    <Button fx:id="btBorrarFase" layoutX="667.0" layoutY="103.0" mnemonicParsing="false" onAction="#borraFase" prefHeight="25.0" prefWidth="95.0" text="Borrar" />
+                                    <Button fx:id="btGuardarFase" layoutX="667.0" layoutY="138.0" mnemonicParsing="false" onAction="#guardaFase" prefHeight="25.0" prefWidth="95.0" text="Guardar" />
                                  </children>
                               </Pane>
-                              <Button layoutX="109.0" layoutY="60.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Nueva Fase" />
+                              <Button fx:id="btNuevaFase" layoutX="109.0" layoutY="60.0" mnemonicParsing="false" onAction="#nuevaFase" prefHeight="25.0" prefWidth="200.0" text="Nueva Fase" />
                            </children>
                         </AnchorPane>
                     </items>

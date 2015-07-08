@@ -41,12 +41,13 @@ public class Archivos {
 
     public void creaArchivos() {
         File file;
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder buffer;
         ModeloBoletines aux;
         Iterator it = boletines.iterator();
 
         while (it.hasNext()) {
             try {
+                buffer = new StringBuilder();
                 aux = (ModeloBoletines) it.next();
                 file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), aux.getCodigo() + ".txt");
                 file.createNewFile();
@@ -55,6 +56,7 @@ public class Archivos {
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append(aux.getFase());
                 buffer.append(System.getProperty("line.separator"));
+                buffer.append("BCN5 ");
                 buffer.append(aux.getOrigen());
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append(getDatosBoletin(aux.getIdDescarga()));
@@ -68,7 +70,7 @@ public class Archivos {
     }
 
     private File creaDirectorio(String entidad, String origen) {
-        File aux = new File(Variables.ficheroBoe, entidad);
+        File aux = new File(archivoFecha, entidad);
         File aux1 = new File(aux, origen);
         aux1.mkdirs();
 
@@ -90,5 +92,4 @@ public class Archivos {
 
         return aux;
     }
-
 }

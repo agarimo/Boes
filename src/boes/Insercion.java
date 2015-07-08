@@ -98,7 +98,7 @@ public class Insercion {
         bl.setIdDescarga(insertaDescarga(aux.getLink()));
         bl.setCodigo(aux.getCodigo());
         bl.setTipo("*711*");
-        bl.setFase("BCN1LA01");
+        bl.setFase("BCN1LA01-(");
         bl.setEstado(0);
 
         try {

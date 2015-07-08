@@ -6,6 +6,7 @@ import boes.Insercion;
 import boes.Pdf;
 import boes.Publicacion;
 import boletines.Archivos;
+import enty.Fase;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -43,6 +45,8 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 import model.ModeloBoes;
 import model.ModeloBoletines;
+import model.ModeloComboBox;
+import model.ModeloFases;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -190,8 +194,14 @@ public class WinC implements Initializable {
         origen_descartado = SqlBoe.listaOrigenDescartado();
         iniciaTablaBoes();
 
-        final ObservableList<Boe> aux1 = lvBoe.getSelectionModel().getSelectedItems();
-        aux1.addListener(selectorListaBoe);
+        final ObservableList<Boe> ls1 = lvBoe.getSelectionModel().getSelectedItems();
+        ls1.addListener(selectorListaBoe);
+
+        final ObservableList<ModeloComboBox> ls2 = lvOrigen.getSelectionModel().getSelectedItems();
+        ls2.addListener(selectorListaOrigen);
+        
+        final ObservableList<ModeloFases> ls3 = tvFases.getSelectionModel().getSelectedItems();
+        ls3.addListener(selectorTablaFases);
     }
 
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
@@ -706,7 +716,6 @@ public class WinC implements Initializable {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="FASES">
-    
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML
     ComboBox cbEntidad;
@@ -749,40 +758,184 @@ public class WinC implements Initializable {
 
     @FXML
     Button btGuardarFase;
+
+    @FXML
+    TableColumn<ModeloFases, String> faseCLF;
+
+    @FXML
+    TableColumn<ModeloFases, String> codigoCLF;
+
+    @FXML
+    TableColumn<ModeloFases, String> tipoCLF;
+
+    @FXML
+    TableColumn<ModeloFases, String> diasCLF;
     //</editor-fold>
-    
-    //TODO crear las ObservablesList y Modelos para el panel de Fases.
-    
+
+    ObservableList<ModeloComboBox> comboEntidades;
+    ObservableList<ModeloComboBox> comboCodigo;
+    ObservableList<ModeloComboBox> comboTipo;
+    ObservableList<ModeloComboBox> listOrigenes;
+    ObservableList<ModeloFases> tablaFases;
+
     //<editor-fold defaultstate="collapsed" desc="Metodos FXML">
-    @FXML
-    void nuevaFase(ActionEvent event){
-        
-    }
-    
-    @FXML
-    void editaFase(ActionEvent event){
-        
-    }
-    
-    @FXML
-    void borraFase(ActionEvent event){
-        
-    }
-    
-    @FXML
-    void guardaFase(ActionEvent event){
-        
-    }
-//</editor-fold>
-    
     @FXML
     void iniciaFases(ActionEvent event) {
         mostrarPanel(4);
-        cargaDatosFases();
+        inicializaDatosFases();
+        inicializaTablaFases();
+        btGuardarFase.setVisible(false);
+        btBorrarFase.setDisable(true);
+        btEditarFase.setDisable(true);
+    }
+
+    @FXML
+    void nuevaFase(ActionEvent event) {
+        btGuardarFase.setVisible(true);
+        
+    }
+
+    @FXML
+    void editaFase(ActionEvent event) {
+        
+    }
+
+    @FXML
+    void borraFase(ActionEvent event) {
+
+    }
+
+    @FXML
+    void guardaFase(ActionEvent event) {
+        btGuardarFase.setVisible(false);
+        
+    }
+
+    @FXML
+    void cargaOrigenFase(ActionEvent event) {
+        limpiarFases();
+        listOrigenes.clear();
+        ModeloComboBox aux = (ModeloComboBox) cbEntidad.getSelectionModel().getSelectedItem();
+        Iterator it = SqlBoe.listaOrigenes(aux.getId()).iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloComboBox) it.next();
+            listOrigenes.add(aux);
+        }
+        lvOrigen.setItems(listOrigenes);
+    }
+//</editor-fold>
+
+    private void inicializaDatosFases() {
+        comboEntidades = FXCollections.observableArrayList();
+        cbEntidad.setItems(comboEntidades);
+        comboCodigo = FXCollections.observableArrayList();
+        cbCodigo.setItems(comboCodigo);
+        comboTipo = FXCollections.observableArrayList();
+        cbTipo.setItems(comboTipo);
+        listOrigenes = FXCollections.observableArrayList();
+        lvOrigen.setItems(listOrigenes);
+
+        lvOrigen.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> list) {
+                final ListCell cell = new ListCell() {
+                    private Text text;
+
+                    @Override
+                    public void updateItem(Object item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            text = new Text(item.toString());
+                            text.setWrappingWidth(lvOrigen.getPrefWidth() - 30);
+                            setGraphic(text);
+                        }
+                    }
+                };
+
+                return cell;
+            }
+        });
+
+        ModeloComboBox aux;
+        Iterator it = SqlBoe.listaEntidades().iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloComboBox) it.next();
+            comboEntidades.add(aux);
+        }
+
+        it = SqlBoe.listaTipo().iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloComboBox) it.next();
+            comboCodigo.add(aux);
+        }
+
+        aux = new ModeloComboBox();
+        aux.id.set(1);
+        aux.nombre.set("ND");
+        comboTipo.add(aux);
+        aux = new ModeloComboBox();
+        aux.id.set(2);
+        aux.nombre.set("RS");
+        comboTipo.add(aux);
+        aux = new ModeloComboBox();
+        aux.id.set(3);
+        aux.nombre.set("RR");
+        comboTipo.add(aux);
+    }
+
+    private void inicializaTablaFases() {
+        faseCLF.setCellValueFactory(new PropertyValueFactory<>("fase"));
+        codigoCLF.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        tipoCLF.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        diasCLF.setCellValueFactory(new PropertyValueFactory<>("dias"));
+
+        tablaFases = FXCollections.observableArrayList();
+        tvFases.setItems(tablaFases);
+    }
+
+    void cargaFasesOrigen() {
+        tablaFases.clear();
+        ModeloFases mf;
+        ModeloComboBox aux = (ModeloComboBox) lvOrigen.getSelectionModel().getSelectedItem();
+        tfOrigen.setText(aux.getNombre());
+        Iterator it = SqlBoe.listaFases(aux.getId()).iterator();
+
+        while (it.hasNext()) {
+            mf = (ModeloFases) it.next();
+            tablaFases.add(mf);
+        }
+        
+        btBorrarFase.setDisable(true);
+        btEditarFase.setDisable(true);
     }
     
-    private void cargaDatosFases(){
-        //TODO cargar las entidades en el comboBox
+    void cargaDatosFase(){
+        ModeloFases aux=(ModeloFases) tvFases.getSelectionModel().getSelectedItem();
+        ModeloComboBox cb=new ModeloComboBox();
+        cb.id.set(1);
+        cb.nombre.set(aux.codigo.get());
+        cbCodigo.getSelectionModel().select(cb);
+        cbTipo.getSelectionModel().select(aux.getIdTipo()-1);
+        tfDias.setText(Integer.toString(aux.getDias()));
+        taTexto1.setText(aux.getTexto1());
+        taTexto2.setText(aux.getTexto2());
+        taTexto3.setText(aux.getTexto3());
+        
+        btBorrarFase.setDisable(false);
+        btEditarFase.setDisable(false);
+    }
+    
+    void limpiarFases(){
+        cbCodigo.getSelectionModel().select(null);
+        cbTipo.getSelectionModel().select(null);
+        tfDias.setText(null);
+        taTexto1.setText(null);
+        taTexto2.setText(null);
+        taTexto3.setText(null);
+        tfOrigen.setText(null);
     }
 //</editor-fold>
 
@@ -794,5 +947,23 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends Boe> c) -> {
                 mostrarBoe();
             };
+
+    /**
+     * Listener de la lista OrigenFase
+     */
+    private final ListChangeListener<ModeloComboBox> selectorListaOrigen
+            = (ListChangeListener.Change<? extends ModeloComboBox> c) -> {
+                cargaFasesOrigen();
+            };
+    
+    
+    /**
+     * Listener de la Tabla Fases
+     */
+    private final ListChangeListener<ModeloFases> selectorTablaFases
+            = (ListChangeListener.Change<? extends ModeloFases> c) -> {
+                cargaDatosFase();
+            };
+    
 //</editor-fold>
 }

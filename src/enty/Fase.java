@@ -118,7 +118,6 @@ public class Fase {
     }
 
     private String tipoToString() {
-
         if (tipo == 1) {
             return "ND";
         } else if (tipo == 2) {
