@@ -151,6 +151,7 @@ public class Insercion {
 
         return aux;
     }
+    
 
     private int getBoe(String fecha) {
         int aux = 0;

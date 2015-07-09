@@ -50,12 +50,12 @@ public class Archivos {
             try {
                 buffer = new StringBuilder();
                 aux = (ModeloBoletines) it.next();
-                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha) + ".txt");
+                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha,aux.getEntidad()) + ".txt");
                 file.createNewFile();
                 buffer.append("BCN2 ");
                 buffer.append(aux.getLink());
                 buffer.append(System.getProperty("line.separator"));
-                buffer.append(aux.getFase());
+                buffer.append(getFaseBoletin(aux.origen.get()));
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append("BCN5 ");
                 buffer.append(aux.getOrigen());
@@ -77,6 +77,13 @@ public class Archivos {
 
         return aux1;
     }
+    
+    private String getFaseBoletin(String origen){
+        String aux="";
+        //TODO coger el BCN correspondiente.
+        
+        return aux;
+    }
 
     private String getDatosBoletin(int id) {
         Sql bd;
@@ -94,7 +101,8 @@ public class Archivos {
         return aux;
     }
 
-    private String getNombreArchivo(String codigo, Date fecha) {
+    private String getNombreArchivo(String codigo, Date fecha,String entidad) {
+        //TODO meter el puto código de provincia.
         String str = "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
