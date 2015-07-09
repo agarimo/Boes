@@ -160,7 +160,7 @@ public class SqlBoe {
     }
     
     public static List<ModeloComboBox> listaEntidades() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".entidad";
+        String query = "SELECT * FROM " + Variables.nombreBD + ".entidad order by nombre";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -186,7 +186,7 @@ public class SqlBoe {
     }
     
     public static List<ModeloComboBox> listaOrigenes(int id) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad="+id;
+        String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad="+id+" order by nombre";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;

@@ -199,7 +199,7 @@ public class WinC implements Initializable {
 
         final ObservableList<ModeloComboBox> ls2 = lvOrigen.getSelectionModel().getSelectedItems();
         ls2.addListener(selectorListaOrigen);
-        
+
         final ObservableList<ModeloFases> ls3 = tvFases.getSelectionModel().getSelectedItems();
         ls3.addListener(selectorTablaFases);
     }
@@ -792,41 +792,89 @@ public class WinC implements Initializable {
     @FXML
     void nuevaFase(ActionEvent event) {
         btNuevaFase.setDisable(true);
-        ModeloComboBox origen=(ModeloComboBox) lvOrigen.getSelectionModel().getSelectedItem();
+        ModeloComboBox origen = (ModeloComboBox) lvOrigen.getSelectionModel().getSelectedItem();
         btGuardarFase.setVisible(true);
-        ModeloFases aux= new ModeloFases();
+        ModeloFases aux = new ModeloFases();
+        aux.id.set(0);
         aux.idOrigen.set(origen.getId());
         aux.codigo.set(null);
         aux.dias.set(0);
         aux.tipo.set(1);
-        
+
         tablaFases.add(0, aux);
         btBorrarFase.setVisible(false);
         btEditarFase.setVisible(false);
-        
+
         tvFases.getSelectionModel().select(0);
         tvFases.scrollTo(0);
+        tvFases.requestFocus();
     }
 
     @FXML
     void editaFase(ActionEvent event) {
-        
-    }
+        Sql bd;
+        Fase aux = getDatosFase();
 
-    @FXML
-    void borraFase(ActionEvent event) {
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLEditar());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-    }
-
-    @FXML
-    void guardaFase(ActionEvent event) {
         btGuardarFase.setVisible(false);
         btBorrarFase.setVisible(true);
         btEditarFase.setVisible(true);
         btNuevaFase.setDisable(false);
+
+        limpiarFases();
+        cargaFasesOrigen();
+    }
+
+    @FXML
+    void borraFase(ActionEvent event) {
+        Sql bd;
+        Fase aux = getDatosFase();
+
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLBorrar());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        btGuardarFase.setVisible(false);
+        btBorrarFase.setVisible(true);
+        btEditarFase.setVisible(true);
+        btNuevaFase.setDisable(false);
+
+        limpiarFases();
+        cargaFasesOrigen();
         
-        
-        
+    }
+
+    @FXML
+    void guardaFase(ActionEvent event) {
+        Sql bd;
+        Fase aux = getDatosFase();
+
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLCrear());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        btGuardarFase.setVisible(false);
+        btBorrarFase.setVisible(true);
+        btEditarFase.setVisible(true);
+        btNuevaFase.setDisable(false);
+
+        limpiarFases();
+        cargaFasesOrigen();
     }
 
     @FXML
@@ -925,28 +973,31 @@ public class WinC implements Initializable {
             mf = (ModeloFases) it.next();
             tablaFases.add(mf);
         }
-        
+
         btBorrarFase.setDisable(true);
         btEditarFase.setDisable(true);
     }
-    
-    void cargaDatosFase(){
-        ModeloFases aux=(ModeloFases) tvFases.getSelectionModel().getSelectedItem();
-        ModeloComboBox cb=new ModeloComboBox();
-        cb.id.set(1);
-        cb.nombre.set(aux.codigo.get());
-        cbCodigo.getSelectionModel().select(cb);
-        cbTipo.getSelectionModel().select(aux.getIdTipo()-1);
-        tfDias.setText(Integer.toString(aux.getDias()));
-        taTexto1.setText(aux.getTexto1());
-        taTexto2.setText(aux.getTexto2());
-        taTexto3.setText(aux.getTexto3());
-        
+
+    void cargaDatosFase() {
+        ModeloFases aux = (ModeloFases) tvFases.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            ModeloComboBox cb = new ModeloComboBox();
+            cb.id.set(1);
+            cb.nombre.set(aux.codigo.get());
+            cbCodigo.getSelectionModel().select(cb);
+            cbTipo.getSelectionModel().select(aux.getIdTipo() - 1);
+            tfDias.setText(Integer.toString(aux.getDias()));
+            taTexto1.setText(aux.getTexto1());
+            taTexto2.setText(aux.getTexto2());
+            taTexto3.setText(aux.getTexto3());
+        }
+
         btBorrarFase.setDisable(false);
         btEditarFase.setDisable(false);
     }
-    
-    void limpiarFases(){
+
+    void limpiarFases() {
         cbCodigo.getSelectionModel().select(null);
         cbTipo.getSelectionModel().select(null);
         tfDias.setText(null);
@@ -954,6 +1005,36 @@ public class WinC implements Initializable {
         taTexto2.setText(null);
         taTexto3.setText(null);
         tfOrigen.setText(null);
+    }
+
+    Fase getDatosFase() {
+        ModeloFases aux = new ModeloFases();
+        ModeloFases mf;
+        ModeloComboBox mc;
+
+        mf = (ModeloFases) tvFases.getSelectionModel().getSelectedItem();
+        aux.id.set(mf.getId());
+        aux.idOrigen.set(mf.getIdOrigen());
+        mc = (ModeloComboBox) cbCodigo.getSelectionModel().getSelectedItem();
+        aux.codigo.set(mc.getNombre());
+        mc = (ModeloComboBox) cbTipo.getSelectionModel().getSelectedItem();
+        aux.tipo.set(mc.getId());
+        aux.texto1.set(taTexto1.getText().trim());
+        aux.texto2.set(taTexto2.getText().trim());
+        aux.texto3.set(taTexto3.getText().trim());
+        aux.dias.set(Integer.parseInt(tfDias.getText()));
+
+        Fase fase = new Fase();
+        fase.setId(aux.getId());
+        fase.setCodigo(aux.getCodigo());
+        fase.setIdOrigen(aux.getIdOrigen());
+        fase.setTipo(aux.getIdTipo());
+        fase.setTexto1(aux.getTexto1());
+        fase.setTexto2(aux.getTexto2());
+        fase.setTexto3(aux.getTexto3());
+        fase.setDias(aux.getDias());
+
+        return fase;
     }
 //</editor-fold>
 
@@ -973,15 +1054,18 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends ModeloComboBox> c) -> {
                 cargaFasesOrigen();
             };
-    
-    
+
     /**
      * Listener de la Tabla Fases
      */
     private final ListChangeListener<ModeloFases> selectorTablaFases
             = (ListChangeListener.Change<? extends ModeloFases> c) -> {
+//                try {
                 cargaDatosFase();
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
             };
-    
+
 //</editor-fold>
 }

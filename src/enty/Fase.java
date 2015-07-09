@@ -163,7 +163,6 @@ public class Fase {
 
     public String SQLEditar() {
         return "UPDATE " + Variables.nombreBD + ".fase SET "
-                + "origen=" + this.idOrigen + ","
                 + "codigo=" + Varios.entrecomillar(this.codigo) + ","
                 + "tipo=" + this.tipo + ","
                 + "dias=" + this.dias + ","

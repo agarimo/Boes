@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +50,7 @@ public class Archivos {
             try {
                 buffer = new StringBuilder();
                 aux = (ModeloBoletines) it.next();
-                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), aux.getCodigo() + ".txt");
+                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha) + ".txt");
                 file.createNewFile();
                 buffer.append("BCN2 ");
                 buffer.append(aux.getLink());
@@ -91,5 +92,56 @@ public class Archivos {
         }
 
         return aux;
+    }
+
+    private String getNombreArchivo(String codigo, Date fecha) {
+        String str = "";
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fecha);
+        String ori = codigo;
+
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        if (dia < 10) {
+            str = str + "0" + dia;
+        } else {
+            str = str + dia;
+        }
+
+        str = str + "0";
+
+        String anno = Integer.toString(cal.get(Calendar.YEAR));
+        str = str + anno.charAt(3);
+
+        str = ori +"--"+str+"--";
+
+        int mes = cal.get(Calendar.MONTH);
+        mes++;
+        if (mes < 10) {
+            str = str + mes + "Z-";
+        } else {
+            if (mes == 10) {
+                str = str + "XZ-";
+            }
+            if (mes == 11) {
+                str = str + "YZ-";
+            }
+            if (mes == 12) {
+                str = str + "ZZ-";
+            }
+        }
+
+        if (dia < 10) {
+            str = str + "0" + dia + ".";
+        } else {
+            str = str + dia + ".";
+        }
+
+        if (mes < 10) {
+            str = str + "0" + mes + ".";
+        } else {
+            str = str + mes + ".";
+        }
+
+        return str;
     }
 }

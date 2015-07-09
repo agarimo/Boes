@@ -133,7 +133,7 @@
                   </TableView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelFases" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="panelFases" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <SplitPane dividerPositions="0.2" prefHeight="575.0" prefWidth="1000.0">
                     <items>
