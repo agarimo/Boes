@@ -55,7 +55,7 @@ public class Archivos {
                 buffer.append("BCN2 ");
                 buffer.append(aux.getLink());
                 buffer.append(System.getProperty("line.separator"));
-                buffer.append(getFaseBoletin(aux.origen.get()));
+                buffer.append(getFaseBoletin(aux.codigo.get()));
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append("BCN5 ");
                 buffer.append(aux.getOrigen());
@@ -78,9 +78,17 @@ public class Archivos {
         return aux1;
     }
     
-    private String getFaseBoletin(String origen){
+    private String getFaseBoletin(String codigo){
+        Sql bd;
         String aux="";
-        //TODO coger el BCN correspondiente.
+        
+        try {
+            bd=new Sql(Variables.con);
+            aux=bd.getString("SELECT fase FROM boes.boletin where codigo="+Varios.entrecomillar(codigo));
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return aux;
     }
@@ -102,7 +110,6 @@ public class Archivos {
     }
 
     private String getNombreArchivo(String codigo, Date fecha,String entidad) {
-        //TODO meter el puto código de provincia.
         String str = "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
@@ -120,7 +127,7 @@ public class Archivos {
         String anno = Integer.toString(cal.get(Calendar.YEAR));
         str = str + anno.charAt(3);
 
-        str = ori +"--"+str+"--";
+        str = ori +"--"+str+getEntidad(entidad);
 
         int mes = cal.get(Calendar.MONTH);
         mes++;
@@ -152,4 +159,21 @@ public class Archivos {
 
         return str;
     }
+    
+    private String getEntidad(String entidad){
+        Sql bd;
+        String aux = "";
+        
+        try {
+            bd=new Sql(Variables.con);
+            aux=bd.getString("SELECT codigo FROM boes.entidad where nombre="+Varios.entrecomillar(entidad));
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return aux;
+    }
+    
+    
 }

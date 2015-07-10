@@ -117,7 +117,7 @@ public class Boletin {
         return "UPDATE " + Variables.nombreBD + ".boletin SET "
                 + "tipo=" + Varios.entrecomillar(this.tipo) + ","
                 + "fase=" + Varios.entrecomillar(this.fase) + ","
-                + "estado=" + this.estado
+                + "estado=" + this.estado + " "
                 + "WHERE id=" + this.id;
     }
     

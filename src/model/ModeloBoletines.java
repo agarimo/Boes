@@ -51,13 +51,13 @@ public class ModeloBoletines {
                 aux = "SIN DESCARGAR";
                 break;
             case 1:
-                aux = "DESCARGADO";
+                aux = "PENDIENTE FASES";
                 break;
             case 2:
-                aux = "CLASIFICADO";
+                aux = "LISTO";
                 break;
             case 3:
-                aux = "COMPROBAR";
+                aux = "FASE NO ENCONTRADA";
                 break;
         }
         return aux;

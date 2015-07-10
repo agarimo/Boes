@@ -1,6 +1,7 @@
 package main;
 
 import boes.Boe;
+import enty.Boletin;
 import enty.Descarga;
 import enty.Fase;
 import java.sql.ResultSet;
@@ -68,6 +69,31 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Boe(rs.getInt("id"), rs.getDate("fecha"), rs.getString("link"), rs.getBoolean("isClas"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public static List<Boletin> listaBoletin(String query) {
+
+        List<Boletin> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Boletin aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
+                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"));
                 list.add(aux);
             }
             rs.close();
@@ -158,7 +184,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<ModeloComboBox> listaEntidades() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".entidad order by nombre";
         List list = new ArrayList();
@@ -184,9 +210,9 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<ModeloComboBox> listaOrigenes(int id) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad="+id+" order by nombre";
+        String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad=" + id + " order by nombre";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -210,7 +236,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<ModeloComboBox> listaTipo() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".tipo where tipo=0";
         List list = new ArrayList();
@@ -236,9 +262,9 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<ModeloFases> listaFases(int id) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen="+id;
+        String query = "SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id;
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -268,7 +294,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<Fase> listaFase(String query) {
         List list = new ArrayList();
         Sql bd;

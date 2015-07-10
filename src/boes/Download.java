@@ -24,6 +24,7 @@ import main.SqlBoe;
 import main.Variables;
 import util.Files;
 import util.Sql;
+import util.Varios;
 
 /**
  *
@@ -77,6 +78,7 @@ public class Download extends Thread {
             datos=datos.replace("'", "´");
             aux.setDatos(datos);
             bd.ejecutar(aux.SQLSetDatos());
+            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga="+aux.getId());
             
             new File("temp.txt").delete();
             new File("temp.pdf").delete();

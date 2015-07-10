@@ -6,6 +6,7 @@ import boes.Insercion;
 import boes.Pdf;
 import boes.Publicacion;
 import boletines.Archivos;
+import boletines.Fases;
 import enty.Fase;
 import java.awt.Desktop;
 import java.io.File;
@@ -181,6 +182,9 @@ public class WinC implements Initializable {
     @FXML
     private Button btDescartaOrigen;
 
+    @FXML
+    private Button btRecargarBoletines;
+
 //</editor-fold>
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
@@ -255,8 +259,8 @@ public class WinC implements Initializable {
 
     @FXML
     void descargaPendientes(ActionEvent event) {
-        Download dw = new Download();
-        dw.start();
+//        Download dw = new Download();
+//        dw.start();
     }
 //</editor-fold>
 
@@ -691,7 +695,11 @@ public class WinC implements Initializable {
 
     @FXML
     void descargarBoletines(ActionEvent event) {
-
+        Thread a = new Thread(() -> {
+            Download dw = new Download();
+            dw.start();
+        });
+        a.start();
     }
 
     @FXML
@@ -702,7 +710,29 @@ public class WinC implements Initializable {
 
     @FXML
     void comprobarFases(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFechaB.getValue());
 
+        if (fecha != null) {
+            Fases fs = new Fases(fecha);
+            fs.run();
+        }
+
+        boletinesList.clear();
+        Date aux = Dates.asDate(dpFechaB.getValue());
+
+        if (aux != null) {
+            cargaDatosTablaBoletines(aux);
+        }
+    }
+
+    @FXML
+    void recargarBoletines(ActionEvent event) {
+        boletinesList.clear();
+        Date aux = Dates.asDate(dpFechaB.getValue());
+
+        if (aux != null) {
+            cargaDatosTablaBoletines(aux);
+        }
     }
 
     @FXML
@@ -852,7 +882,7 @@ public class WinC implements Initializable {
 
         limpiarFases();
         cargaFasesOrigen();
-        
+
     }
 
     @FXML
