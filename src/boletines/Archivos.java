@@ -60,6 +60,8 @@ public class Archivos {
                 buffer.append("BCN5 ");
                 buffer.append(aux.getOrigen());
                 buffer.append(System.getProperty("line.separator"));
+                buffer.append(getCodigoAyutamiento(aux.getOrigen()));
+                buffer.append(System.getProperty("line.separator"));
                 buffer.append(getDatosBoletin(aux.getIdDescarga()));
 
                 Files.escribeArchivo(file, buffer.toString());
@@ -85,6 +87,21 @@ public class Archivos {
         try {
             bd=new Sql(Variables.con);
             aux=bd.getString("SELECT fase FROM boes.boletin where codigo="+Varios.entrecomillar(codigo));
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return aux;
+    }
+    
+    private String getCodigoAyutamiento(String nombre){
+        Sql bd;
+        String aux="";
+        
+        try {
+            bd=new Sql(Variables.con);
+            aux=bd.getString("SELECT codigoAy FROM boes.origen where nombre="+Varios.entrecomillar(nombre));
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);

@@ -24,7 +24,6 @@ import main.SqlBoe;
 import main.Variables;
 import util.Files;
 import util.Sql;
-import util.Varios;
 
 /**
  *
@@ -60,6 +59,32 @@ public class Download extends Thread {
             Variables.isDownloading = false;
         }
     }
+    
+    public List getListado(){
+        return SqlBoe.listaDescargaPendiente();
+    }
+
+    public void descarga(Descarga aux) {
+        try {
+            Sql bd;
+            String datos;
+            
+            bd= new Sql(Variables.con);
+            descargaPDF(aux.getLink());
+            convertirPDF();
+            datos = Files.leeArchivo(new File("temp.txt"));
+            datos = datos.replace("'", "´");
+            aux.setDatos(datos);
+            bd.ejecutar(aux.SQLSetDatos());
+            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
+            
+            new File("temp.txt").delete();
+            new File("temp.pdf").delete();
+            bd.close();
+        } catch (IOException | SQLException ex) {
+            Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private void descarga() throws SQLException, IOException {
         Sql bd;
@@ -71,15 +96,15 @@ public class Download extends Thread {
 
         while (it.hasNext()) {
             aux = (Descarga) it.next();
-            
+
             descargaPDF(aux.getLink());
             convertirPDF();
-            datos=Files.leeArchivo(new File("temp.txt"));
-            datos=datos.replace("'", "´");
+            datos = Files.leeArchivo(new File("temp.txt"));
+            datos = datos.replace("'", "´");
             aux.setDatos(datos);
             bd.ejecutar(aux.SQLSetDatos());
-            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga="+aux.getId());
-            
+            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
+
             new File("temp.txt").delete();
             new File("temp.pdf").delete();
         }

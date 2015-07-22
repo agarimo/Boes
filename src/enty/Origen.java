@@ -13,6 +13,9 @@ public class Origen {
     private int idEntidad;
     private String nombre;
     private String codigo;
+    private String codigoAy;
+    private String codigoUn;
+    private String codigoTes;
 
     public Origen() {
     }
@@ -21,11 +24,14 @@ public class Origen {
         this.nombre = nombre;
     }
 
-    public Origen(int id,int idEntidad, String nombre, String codigo) {
+    public Origen(int id, int idEntidad, String nombre, String codigo, String codigoAy, String codigoUn, String codigoTes) {
         this.id = id;
-        this.idEntidad=idEntidad;
+        this.idEntidad = idEntidad;
         this.nombre = nombre;
         this.codigo = codigo;
+        this.codigoAy = codigoAy;
+        this.codigoUn = codigoUn;
+        this.codigoTes = codigoTes;
     }
 
     public int getId() {
@@ -58,6 +64,30 @@ public class Origen {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public String getCodigoAy() {
+        return codigoAy;
+    }
+
+    public void setCodigoAy(String codigoAy) {
+        this.codigoAy = codigoAy;
+    }
+
+    public String getCodigoUn() {
+        return codigoUn;
+    }
+
+    public void setCodigoUn(String codigoUn) {
+        this.codigoUn = codigoUn;
+    }
+
+    public String getCodigoTes() {
+        return codigoTes;
+    }
+
+    public void setCodigoTes(String codigoTes) {
+        this.codigoTes = codigoTes;
     }
 
     @Override

@@ -42,7 +42,7 @@
          <children>
             <AnchorPane fx:id="panelInicio" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
-                  <Button fx:id="btDescargar" layoutX="459.0" layoutY="275.0" mnemonicParsing="false" onAction="#descargaPendientes" text="DESCARGAR" />
+                  <Button fx:id="btDescargar" layoutX="459.0" layoutY="275.0" mnemonicParsing="false" onAction="#descargaPendientes" text="DESCARGAR" visible="false" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="panelEnlaces" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -111,19 +111,18 @@
                   <Button fx:id="btRecoverS" layoutX="423.0" layoutY="428.0" mnemonicParsing="false" onAction="#recoverS" prefHeight="25.0" prefWidth="128.0" text="Recuperar" AnchorPane.rightAnchor="449.0" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelBoletines" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0">
                <children>
-                  <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <ToolBar prefHeight="52.0" prefWidth="189.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="812.0">
                     <items>
                         <DatePicker fx:id="dpFechaB" onAction="#cambioEnDatePickerBoletines" prefHeight="30.0" prefWidth="150.0" />
-                        <Button fx:id="btDescargaBoletines" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" />
-                        <Button fx:id="btComprobarFases" mnemonicParsing="false" onAction="#comprobarFases" prefHeight="30.0" prefWidth="150.0" text="Comprobar FASES" />
-                        <Button fx:id="btGenerarArchivos" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
+                        <Button fx:id="btDescargaBoletines" graphicTextGap="1.0" maxHeight="30.0" maxWidth="150.0" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" textOverrun="CLIP" />
+                        <Button fx:id="btComprobarFases" mnemonicParsing="false" onAction="#comprobarFases" prefHeight="30.0" prefWidth="150.0" text="FASES" />
+                        <Button fx:id="btGenerarArchivos" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="ARCHIVOS" />
                         <Button fx:id="btAbrirCarpetaBoletines" mnemonicParsing="false" onAction="#abrirCarpetaBoletines" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
-                        <Button fx:id="btRecargarBoletines" mnemonicParsing="false" onAction="#recargarBoletines" prefHeight="30.0" prefWidth="150.0" text="Recargar" />
                     </items>
                   </ToolBar>
-                  <TableView fx:id="tvBoletines" layoutY="51.0" prefHeight="524.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <TableView fx:id="tvBoletines" layoutY="51.0" prefHeight="483.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
                       <TableColumn fx:id="codigoCLB" maxWidth="-1.0" minWidth="130.0" prefWidth="130.0" resizable="false" text="CODIGO" />
                       <TableColumn fx:id="origenCLB" maxWidth="-1.0" minWidth="558.0" prefWidth="558.0" resizable="false" text="ORIGEN" />
@@ -132,6 +131,27 @@
                         <TableColumn fx:id="estadoCLB" maxWidth="153.0" minWidth="113.0" prefWidth="153.0" resizable="false" text="ESTADO" />
                     </columns>
                   </TableView>
+                  <Label fx:id="lbEstado" alignment="CENTER" layoutX="15.0" layoutY="552.0" prefHeight="25.0" prefWidth="971.0" text="..." />
+                  <ProgressBar fx:id="pbEstado" layoutX="1.0" layoutY="534.0" prefHeight="17.0" prefWidth="1000.0" progress="0.0" visible="false" />
+                  <ToolBar layoutX="189.0" prefHeight="52.0" prefWidth="739.0">
+                    <items>
+                      <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="VER BOLETÍN" />
+                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="VER EN WEB" />
+                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="ELIMINAR" />
+                    </items>
+                  </ToolBar>
+                  <Button fx:id="btRecargarBoletines" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="5.0" layoutX="948.0" layoutY="10.0" mnemonicParsing="false" onAction="#recargarBoletines" prefHeight="40.0" prefWidth="50.0">
+                     <effect>
+                        <ImageInput>
+                           <source>
+                              <Image url="file:/C:/Users/Agarimo/Downloads/developpers_icons_by_sekkyumu/%23Developpers%20Icons/PNG/Transfer.png" />
+                           </source>
+                        </ImageInput>
+                     </effect>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Button>
                </children>
             </AnchorPane>
             <AnchorPane fx:id="panelFases" prefHeight="200.0" prefWidth="200.0" visible="false">

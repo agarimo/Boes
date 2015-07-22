@@ -7,6 +7,7 @@ import boes.Pdf;
 import boes.Publicacion;
 import boletines.Archivos;
 import boletines.Fases;
+import enty.Descarga;
 import enty.Fase;
 import java.awt.Desktop;
 import java.io.File;
@@ -22,24 +23,33 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -416,7 +426,9 @@ public class WinC implements Initializable {
                             text = new Text(item);
                             text.setWrappingWidth(origenCL.getWidth() - 10);
                             this.setWrapText(true);
-
+                            setGraphic(text);
+                        } else {
+                            text = new Text("");
                             setGraphic(text);
                         }
                     }
@@ -438,7 +450,9 @@ public class WinC implements Initializable {
                             text = new Text(item);
                             text.setWrappingWidth(descripcionCL.getWidth() - 20);
                             this.setWrapText(true);
-
+                            setGraphic(text);
+                        } else {
+                            text = new Text("");
                             setGraphic(text);
                         }
                     }
@@ -659,9 +673,19 @@ public class WinC implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="BOLETINES">
     @FXML
+    Label lbEstado;
+
+    @FXML
+    ProgressBar pbEstado;
+
+    @FXML
     void iniciaBoletines(ActionEvent event) {
         mostrarPanel(3);
         iniciaTablaBoletines();
+
+        btRecargarBoletines.setTooltip(new Tooltip("recarga boletines"));
+
+        
     }
 
     void iniciaTablaBoletines() {
@@ -696,8 +720,49 @@ public class WinC implements Initializable {
     @FXML
     void descargarBoletines(ActionEvent event) {
         Thread a = new Thread(() -> {
+
+            Platform.runLater(() -> {
+                btDescargaBoletines.setDisable(true);
+                btComprobarFases.setDisable(true);
+                btGenerarArchivos.setDisable(true);
+                pbEstado.setVisible(true);
+                pbEstado.setProgress(0);
+                lbEstado.setText("DESCARGANDO BOLETINES");
+            });
+
+            Descarga aux;
             Download dw = new Download();
-            dw.start();
+            List list = dw.getListado();
+
+            for (int i = 0; i < list.size(); i++) {
+                final int contador = i;
+                final int total = list.size();
+                Platform.runLater(() -> {
+                    int contadour = contador + 1;
+                    double counter = contador + 1;
+                    double toutal = total;
+                    lbEstado.setText("DESCARGANDO ARCHIVO " + contadour + " de " + total);
+                    pbEstado.setProgress(counter / toutal);
+                });
+                aux = (Descarga) list.get(i);
+                dw.descarga(aux);
+            }
+
+            Platform.runLater(() -> {
+                lbEstado.setText("DESCARGA COMPLETADA");
+                btDescargaBoletines.setDisable(false);
+                btComprobarFases.setDisable(false);
+                btGenerarArchivos.setDisable(false);
+                pbEstado.setProgress(1);
+                pbEstado.setVisible(false);
+                lbEstado.setText("");
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("COMPLETADO");
+                alert.setHeaderText("DESCARGA FINALIZADA");
+                alert.setContentText("SE HAN COMPLETADO LAS DESCARGAS");
+                alert.showAndWait();
+            });
         });
         a.start();
     }
@@ -800,8 +865,8 @@ public class WinC implements Initializable {
 
     @FXML
     TableColumn<ModeloFases, String> diasCLF;
-    //</editor-fold>
 
+    //</editor-fold>
     ObservableList<ModeloComboBox> comboEntidades;
     ObservableList<ModeloComboBox> comboCodigo;
     ObservableList<ModeloComboBox> comboTipo;
@@ -919,6 +984,8 @@ public class WinC implements Initializable {
             listOrigenes.add(aux);
         }
         lvOrigen.setItems(listOrigenes);
+        lvOrigen.setVisible(false);
+        lvOrigen.setVisible(true);
     }
 //</editor-fold>
 
@@ -944,6 +1011,9 @@ public class WinC implements Initializable {
                         if (!isEmpty()) {
                             text = new Text(item.toString());
                             text.setWrappingWidth(lvOrigen.getPrefWidth() - 30);
+                            setGraphic(text);
+                        } else {
+                            text = new Text("");
                             setGraphic(text);
                         }
                     }
@@ -1090,11 +1160,7 @@ public class WinC implements Initializable {
      */
     private final ListChangeListener<ModeloFases> selectorTablaFases
             = (ListChangeListener.Change<? extends ModeloFases> c) -> {
-//                try {
                 cargaDatosFase();
-//                } catch (Exception e) {
-//                    System.out.println(e.getMessage());
-//                }
             };
 
 //</editor-fold>

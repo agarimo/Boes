@@ -115,7 +115,7 @@ public class Insercion {
         Sql bd;
         Origen or = new Origen();
         or.setIdEntidad(insertaEntidad(entidad));
-        or.setNombre(origen);
+        or.setNombre(origen.replace("'", "´"));
 
         try {
             bd = new Sql(Variables.con);
