@@ -62,31 +62,8 @@ public class Insercion {
         }
     }
 
-    private void guardaStatsS() {
-        Boletines_publicados bp;
-        ModeloBoes aux;
-        Iterator it = select.iterator();
-
-        try {
-            Sql bd = new Sql(Variables.con);
-
-            while (it.hasNext()) {
-                aux = (ModeloBoes) it.next();
-                bp = new Boletines_publicados();
-                bp.setEntidad(aux.getEntidad());
-                bp.setOrigen(aux.getOrigen());
-                bp.setCodigo(aux.getCodigo());
-                bp.setDescripcion(aux.getDescripcion());
-                bp.setFecha(aux.getFecha());
-                bp.setTipo(1);
-
-                bd.ejecutar(bp.SQLCrear());
-            }
-
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void runDiscard() {
+        guardaStatsD();
     }
 
     private void insertaSelected(ModeloBoes aux) {
@@ -115,7 +92,7 @@ public class Insercion {
         Sql bd;
         Origen or = new Origen();
         or.setIdEntidad(insertaEntidad(entidad));
-        or.setNombre(origen.replace("'", "´"));
+        or.setNombre(origen.replace("'", "\\'"));
 
         try {
             bd = new Sql(Variables.con);
@@ -135,7 +112,7 @@ public class Insercion {
         int aux = 0;
         Sql bd;
         Entidad en = new Entidad();
-        en.setNombre(nombre);
+        en.setNombre(nombre.replace("'", "\\'"));
 
         try {
             bd = new Sql(Variables.con);
@@ -151,7 +128,6 @@ public class Insercion {
 
         return aux;
     }
-    
 
     private int getBoe(String fecha) {
         int aux = 0;
@@ -187,10 +163,6 @@ public class Insercion {
         return aux;
     }
 
-    private void runDiscard() {
-        guardaStatsD();
-    }
-
     private void guardaStatsD() {
         Boletines_publicados bp;
         ModeloBoes aux;
@@ -202,12 +174,39 @@ public class Insercion {
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
                 bp = new Boletines_publicados();
-                bp.setEntidad(aux.getEntidad());
-                bp.setOrigen(aux.getOrigen());
+                bp.setEntidad(aux.getEntidad().replace("'", "\\'"));
+                bp.setOrigen(aux.getOrigen().replace("'", "\\'"));
                 bp.setCodigo(aux.getCodigo());
-                bp.setDescripcion(aux.getDescripcion());
+                bp.setDescripcion(aux.getDescripcion().replace("'", "\\'"));
                 bp.setFecha(aux.getFecha());
                 bp.setTipo(0);
+
+                bd.ejecutar(bp.SQLCrear());
+            }
+
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void guardaStatsS() {
+        Boletines_publicados bp = null;
+        ModeloBoes aux;
+        Iterator it = select.iterator();
+
+        try {
+            Sql bd = new Sql(Variables.con);
+
+            while (it.hasNext()) {
+                aux = (ModeloBoes) it.next();
+                bp = new Boletines_publicados();
+                bp.setEntidad(aux.getEntidad().replace("'", "\\'"));
+                bp.setOrigen(aux.getOrigen().replace("'", "\\'"));
+                bp.setCodigo(aux.getCodigo());
+                bp.setDescripcion(aux.getDescripcion().replace("'", "\\'"));
+                bp.setFecha(aux.getFecha());
+                bp.setTipo(1);
 
                 bd.ejecutar(bp.SQLCrear());
             }

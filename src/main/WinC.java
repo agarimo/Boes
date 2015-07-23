@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,11 +29,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -46,10 +48,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -59,6 +57,7 @@ import model.ModeloBoletines;
 import model.ModeloComboBox;
 import model.ModeloFases;
 import util.Dates;
+import util.Files;
 import util.Sql;
 import util.Varios;
 
@@ -679,13 +678,21 @@ public class WinC implements Initializable {
     ProgressBar pbEstado;
 
     @FXML
+    Button btEliminarBoletin;
+
+    @FXML
+    Button btVerBoletin;
+
+    @FXML
+    Button btVerBoletinWeb;
+
+    @FXML
     void iniciaBoletines(ActionEvent event) {
         mostrarPanel(3);
         iniciaTablaBoletines();
 
         btRecargarBoletines.setTooltip(new Tooltip("recarga boletines"));
 
-        
     }
 
     void iniciaTablaBoletines() {
@@ -808,8 +815,74 @@ public class WinC implements Initializable {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-//</editor-fold>
 
+    @FXML
+    void eliminarBoletin(ActionEvent event) {
+        ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("BORRAR BOLETÍN");
+            alert.setHeaderText(aux.getCodigo());
+            alert.setContentText("¿Desea BORRAR el boletín seleccionado?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                SqlBoe.eliminaBoletin(aux.getCodigo());
+                boletinesList.clear();
+                Date date = Dates.asDate(dpFechaB.getValue());
+
+                if (date != null) {
+                    cargaDatosTablaBoletines(date);
+                }
+            }
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("ERROR de selección.");
+            alert.setContentText("Debes seleccionar un boletín.");
+
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    void verBoletin(ActionEvent event) {
+        Sql bd;
+        File file= new File("boletinTemp.txt");
+        ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
+        String datos="";
+        
+        try {
+            bd=new Sql(Variables.con);
+            datos=bd.getString("SELECT datos FROM boes.descarga WHERE id="+aux.getIdDescarga());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Files.escribeArchivo(file, datos);
+        
+        try {
+            Desktop.getDesktop().browse(file.toURI());
+        } catch (IOException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    void verBoletinWeb(ActionEvent event) {
+        ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
+
+        try {
+            Desktop.getDesktop().browse(new URI(aux.getLink()));
+        } catch (IOException | URISyntaxException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+//</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML

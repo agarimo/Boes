@@ -33,6 +33,17 @@ public class SqlBoe {
 
         alert.showAndWait();
     }
+    
+    public static void eliminaBoletin(String codigo){
+        Sql bd;
+        try {
+            bd=new Sql(Variables.con);
+            bd.ejecutar("DELETE FROM boes.boletin where codigo="+Varios.entrecomillar(codigo));
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public static Boe cargaBoe(Date fecha) {
         Sql bd;
