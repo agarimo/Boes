@@ -4,6 +4,7 @@ import boes.Boe;
 import enty.Boletin;
 import enty.Descarga;
 import enty.Fase;
+import enty.Origen;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class SqlBoe {
         Sql bd;
         ResultSet rs;
         Boe aux = null;
-        String query = "SELECT * from boes.boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        String query = "SELECT * from "+Variables.nombreBD+".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
 
         try {
             bd = new Sql(Variables.con);
@@ -57,6 +58,29 @@ public class SqlBoe {
 
             if (rs.next()) {
                 aux = new Boe(rs.getInt("id"), rs.getDate("fecha"), rs.getString("link"), rs.getBoolean("isClas"));
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+    
+    public static Origen cargaOrigen(int id) {
+        Sql bd;
+        ResultSet rs;
+        Origen aux = null;
+        String query = "SELECT * from "+Variables.nombreBD+".origen where id=" + id;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            if (rs.next()) {
+               aux= new Origen(rs.getInt("id"),rs.getInt("idEntidad"),rs.getString("nombre"),rs.getString("codigo"),
+                       rs.getString("codigoAy"),rs.getString("codigoUn"),rs.getString("codigoTes")); 
             }
             rs.close();
             bd.close();
@@ -320,6 +344,37 @@ public class SqlBoe {
                 aux = new Fase();
                 aux.setId(rs.getInt("id"));
                 aux.setIdOrigen(rs.getInt("idOrigen"));
+                aux.setCodigo(rs.getString("codigo"));
+                aux.setTipo(rs.getInt("tipo"));
+                aux.setTexto1(rs.getString("texto1"));
+                aux.setTexto2(rs.getString("texto2"));
+                aux.setTexto3(rs.getString("texto3"));
+                aux.setDias(rs.getInt("dias"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<Fase> listaFaseTestra(String query) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Fase aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Fase();
+                aux.setId(rs.getInt("idfase"));
+                aux.setIdOrigen(rs.getInt("origen"));
                 aux.setCodigo(rs.getString("codigo"));
                 aux.setTipo(rs.getInt("tipo"));
                 aux.setTexto1(rs.getString("texto1"));

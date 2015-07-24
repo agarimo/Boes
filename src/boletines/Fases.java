@@ -2,7 +2,9 @@ package boletines;
 
 import enty.Boletin;
 import enty.Fase;
+import enty.Origen;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -25,12 +27,16 @@ public class Fases {
 
     public Fases(Date fecha) {
         this.fecha = fecha;
-        this.boletines = getBoletines();
+        this.boletines = getBol();
     }
 
-    private List getBoletines() {
+    private List getBol() {
         return SqlBoe.listaBoletin("SELECT * FROM " + Variables.nombreBD + ".boletin where idBoe in "
                 + "(SELECT id FROM " + Variables.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
+    }
+    
+    public List getBoletines(){
+        return this.boletines;
     }
 
     public void run() {
@@ -42,9 +48,6 @@ public class Fases {
         while (it.hasNext()) {
 
             aux = (Boletin) it.next();
-            System.out.println(aux.getCodigo());
-            System.out.println(aux.getIdOrigen());
-
             fase = compruebaFase(aux.getIdDescarga(), getFases(aux.getIdOrigen()));
 
             if (fase != null) {
@@ -63,6 +66,30 @@ public class Fases {
             } catch (SQLException ex) {
                 Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+
+    public void runFase(Boletin aux) {
+        Sql bd;
+        Fase fase;
+
+        fase = compruebaFase(aux.getIdDescarga(), getFases(aux.getIdOrigen()));
+
+        if (fase != null) {
+            aux.setTipo(fase.getCodigo());
+            aux.setFase(getCodigoOrigen(aux.getIdOrigen()) + "-" + fase.toString());
+            aux.setEstado(2);
+        } else {
+            aux.setFase(getCodigoOrigen(aux.getIdOrigen()));
+            aux.setEstado(3);
+        }
+
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLEditar());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -97,9 +124,28 @@ public class Fases {
     }
 
     private List getFases(int id) {
-        return SqlBoe.listaFase("SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id);
+        List list= new ArrayList();
+        Fase aux;
+        Iterator it;
+        Origen or=SqlBoe.cargaOrigen(id);
+        
+        it=SqlBoe.listaFase("SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id).iterator();
+        
+        while(it.hasNext()){
+            aux=(Fase) it.next();
+            list.add(aux);
+        }
+        
+        it=SqlBoe.listaFaseTestra("SELECT * FROM datagest.fase where origen="+Varios.entrecomillar(or.getCodigoTes())).iterator();
+        
+        while(it.hasNext()){
+            aux=(Fase) it.next();
+            list.add(aux);
+        }
+        
+        return list;
     }
-
+    
     private String getDatos(int id) {
         Sql bd;
         String str = null;

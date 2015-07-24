@@ -7,6 +7,7 @@ import boes.Pdf;
 import boes.Publicacion;
 import boletines.Archivos;
 import boletines.Fases;
+import enty.Boletin;
 import enty.Descarga;
 import enty.Fase;
 import java.awt.Desktop;
@@ -769,6 +770,7 @@ public class WinC implements Initializable {
                 alert.setHeaderText("DESCARGA FINALIZADA");
                 alert.setContentText("SE HAN COMPLETADO LAS DESCARGAS");
                 alert.showAndWait();
+
             });
         });
         a.start();
@@ -776,8 +778,57 @@ public class WinC implements Initializable {
 
     @FXML
     void generarArchivos(ActionEvent event) {
-        Archivos ar = new Archivos(Dates.asDate(dpFechaB.getValue()));
-        ar.creaArchivos();
+        Date fecha = Dates.asDate(dpFechaB.getValue());
+
+        if (fecha != null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btDescargaBoletines.setDisable(true);
+                    btComprobarFases.setDisable(true);
+                    btGenerarArchivos.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(0);
+                    lbEstado.setText("DESCARGANDO BOLETINES");
+                });
+
+                ModeloBoletines aux;
+                Archivos ar = new Archivos(fecha);
+                List list = ar.getBoletines();
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("GENERANDO ARCHIVO " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (ModeloBoletines) list.get(i);
+                    ar.creaArchivo(aux);
+                }
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("ARCHIVOS GENERADOS");
+                    btDescargaBoletines.setDisable(false);
+                    btComprobarFases.setDisable(false);
+                    btGenerarArchivos.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("COMPLETADO");
+                    alert.setHeaderText("ARCHIVOS GENERADOS");
+                    alert.setContentText("SE HAN GENERADO TODOS LOS ARCHIVOS");
+                    alert.showAndWait();
+
+                });
+            });
+            a.start();
+        }
     }
 
     @FXML
@@ -785,20 +836,63 @@ public class WinC implements Initializable {
         Date fecha = Dates.asDate(dpFechaB.getValue());
 
         if (fecha != null) {
-            Fases fs = new Fases(fecha);
-            fs.run();
-        }
+            Thread a = new Thread(() -> {
 
-        boletinesList.clear();
-        Date aux = Dates.asDate(dpFechaB.getValue());
+                Platform.runLater(() -> {
+                    btDescargaBoletines.setDisable(true);
+                    btComprobarFases.setDisable(true);
+                    btGenerarArchivos.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(0);
+                    lbEstado.setText("DESCARGANDO BOLETINES");
+                });
 
-        if (aux != null) {
-            cargaDatosTablaBoletines(aux);
+                Boletin aux;
+                Fases fs = new Fases(fecha);
+                List list = fs.getBoletines();
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("COMPROBANDO FASE " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (Boletin) list.get(i);
+                    fs.runFase(aux);
+                }
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("COMPROBACIÓN FINALIZADA");
+                    btDescargaBoletines.setDisable(false);
+                    btComprobarFases.setDisable(false);
+                    btGenerarArchivos.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("COMPLETADO");
+                    alert.setHeaderText("COMPROBACIÓN FINALIZADA");
+                    alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE FASES");
+                    alert.showAndWait();
+
+                });
+            });
+            a.start();
         }
+        recargarBoletines();
     }
 
     @FXML
     void recargarBoletines(ActionEvent event) {
+        recargarBoletines();
+    }
+
+    void recargarBoletines() {
         boletinesList.clear();
         Date aux = Dates.asDate(dpFechaB.getValue());
 
@@ -810,7 +904,7 @@ public class WinC implements Initializable {
     @FXML
     void abrirCarpetaBoletines(ActionEvent event) {
         try {
-            Desktop.getDesktop().browse(new File("data").toURI());
+            Desktop.getDesktop().browse(new File(new File("data"),"boeData").toURI());
         } catch (IOException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -830,12 +924,7 @@ public class WinC implements Initializable {
 
             if (result.get() == ButtonType.OK) {
                 SqlBoe.eliminaBoletin(aux.getCodigo());
-                boletinesList.clear();
-                Date date = Dates.asDate(dpFechaB.getValue());
-
-                if (date != null) {
-                    cargaDatosTablaBoletines(date);
-                }
+                recargarBoletines();
             }
         } else {
             Alert alert = new Alert(AlertType.ERROR);
@@ -850,20 +939,20 @@ public class WinC implements Initializable {
     @FXML
     void verBoletin(ActionEvent event) {
         Sql bd;
-        File file= new File("boletinTemp.txt");
+        File file = new File("boletinTemp.txt");
         ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
-        String datos="";
-        
+        String datos = "";
+
         try {
-            bd=new Sql(Variables.con);
-            datos=bd.getString("SELECT datos FROM boes.descarga WHERE id="+aux.getIdDescarga());
+            bd = new Sql(Variables.con);
+            datos = bd.getString("SELECT datos FROM boes.descarga WHERE id=" + aux.getIdDescarga());
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         Files.escribeArchivo(file, datos);
-        
+
         try {
             Desktop.getDesktop().browse(file.toURI());
         } catch (IOException ex) {
@@ -883,6 +972,7 @@ public class WinC implements Initializable {
     }
 
 //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML

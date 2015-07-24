@@ -39,6 +39,38 @@ public class Archivos {
         String query = "SELECT * FROM boes.vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
         boletines = SqlBoe.listaVistaBoletin(query);
     }
+    
+    public List getBoletines(){
+        return this.boletines;
+    }
+
+    public void creaArchivo(ModeloBoletines aux) {
+        File file;
+        StringBuilder buffer;
+
+        try {
+            buffer = new StringBuilder();
+            file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha, aux.getEntidad()) + ".txt");
+            file.createNewFile();
+            buffer.append("BCN2 ");
+            buffer.append(aux.getLink());
+            buffer.append(System.getProperty("line.separator"));
+            buffer.append(getFaseBoletin(aux.codigo.get()));
+            buffer.append(System.getProperty("line.separator"));
+            buffer.append("BCN5 ");
+            buffer.append(aux.getOrigen());
+            buffer.append(System.getProperty("line.separator"));
+            buffer.append(getCodigoAyutamiento(aux.getOrigen()));
+            buffer.append(System.getProperty("line.separator"));
+            buffer.append(getDatosBoletin(aux.getIdDescarga()));
+
+            Files.escribeArchivo(file, buffer.toString());
+
+        } catch (IOException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     public void creaArchivos() {
         File file;
@@ -50,7 +82,7 @@ public class Archivos {
             try {
                 buffer = new StringBuilder();
                 aux = (ModeloBoletines) it.next();
-                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha,aux.getEntidad()) + ".txt");
+                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha, aux.getEntidad()) + ".txt");
                 file.createNewFile();
                 buffer.append("BCN2 ");
                 buffer.append(aux.getLink());
@@ -79,34 +111,34 @@ public class Archivos {
 
         return aux1;
     }
-    
-    private String getFaseBoletin(String codigo){
+
+    private String getFaseBoletin(String codigo) {
         Sql bd;
-        String aux="";
-        
+        String aux = "";
+
         try {
-            bd=new Sql(Variables.con);
-            aux=bd.getString("SELECT fase FROM boes.boletin where codigo="+Varios.entrecomillar(codigo));
+            bd = new Sql(Variables.con);
+            aux = bd.getString("SELECT fase FROM boes.boletin where codigo=" + Varios.entrecomillar(codigo));
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return aux;
     }
-    
-    private String getCodigoAyutamiento(String nombre){
+
+    private String getCodigoAyutamiento(String nombre) {
         Sql bd;
-        String aux="";
-        
+        String aux = "";
+
         try {
-            bd=new Sql(Variables.con);
-            aux=bd.getString("SELECT codigoAy FROM boes.origen where nombre="+Varios.entrecomillar(nombre));
+            bd = new Sql(Variables.con);
+            aux = bd.getString("SELECT codigoAy FROM boes.origen where nombre=" + Varios.entrecomillar(nombre));
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return aux;
     }
 
@@ -126,7 +158,7 @@ public class Archivos {
         return aux;
     }
 
-    private String getNombreArchivo(String codigo, Date fecha,String entidad) {
+    private String getNombreArchivo(String codigo, Date fecha, String entidad) {
         String str = "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
@@ -144,7 +176,7 @@ public class Archivos {
         String anno = Integer.toString(cal.get(Calendar.YEAR));
         str = str + anno.charAt(3);
 
-        str = ori +"--"+str+getEntidad(entidad);
+        str = ori + "--" + str + getEntidad(entidad);
 
         int mes = cal.get(Calendar.MONTH);
         mes++;
@@ -176,21 +208,20 @@ public class Archivos {
 
         return str;
     }
-    
-    private String getEntidad(String entidad){
+
+    private String getEntidad(String entidad) {
         Sql bd;
         String aux = "";
-        
+
         try {
-            bd=new Sql(Variables.con);
-            aux=bd.getString("SELECT codigo FROM boes.entidad where nombre="+Varios.entrecomillar(entidad));
+            bd = new Sql(Variables.con);
+            aux = bd.getString("SELECT codigo FROM boes.entidad where nombre=" + Varios.entrecomillar(entidad));
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return aux;
     }
-    
-    
+
 }
