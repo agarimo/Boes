@@ -526,7 +526,7 @@ public class WinC implements Initializable {
         selectedList.clear();
         discartedList.clear();
         Date aux = Dates.asDate(dpFechaC.getValue());
-        cargarBoes(SqlBoe.cargaBoe(aux));
+        cargarBoes(SqlBoe.getBoe(aux));
         Variables.isClasificando = true;
     }
 

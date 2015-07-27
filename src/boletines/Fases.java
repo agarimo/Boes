@@ -127,7 +127,7 @@ public class Fases {
         List list= new ArrayList();
         Fase aux;
         Iterator it;
-        Origen or=SqlBoe.cargaOrigen(id);
+        Origen or=SqlBoe.getOrigen(id);
         
         it=SqlBoe.listaFase("SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id).iterator();
         

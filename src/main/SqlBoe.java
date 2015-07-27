@@ -2,6 +2,7 @@ package main;
 
 import boes.Boe;
 import enty.Boletin;
+import enty.Cabecera;
 import enty.Descarga;
 import enty.Fase;
 import enty.Origen;
@@ -46,7 +47,7 @@ public class SqlBoe {
         }
     }
 
-    public static Boe cargaBoe(Date fecha) {
+    public static Boe getBoe(Date fecha) {
         Sql bd;
         ResultSet rs;
         Boe aux = null;
@@ -68,7 +69,7 @@ public class SqlBoe {
         return aux;
     }
     
-    public static Origen cargaOrigen(int id) {
+    public static Origen getOrigen(int id) {
         Sql bd;
         ResultSet rs;
         Origen aux = null;
@@ -81,6 +82,28 @@ public class SqlBoe {
             if (rs.next()) {
                aux= new Origen(rs.getInt("id"),rs.getInt("idEntidad"),rs.getString("nombre"),rs.getString("codigo"),
                        rs.getString("codigoAy"),rs.getString("codigoUn"),rs.getString("codigoTes")); 
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+    
+    public static Boletin getBoletin(String query) {
+        Sql bd;
+        ResultSet rs;
+        Boletin aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
+                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"));
             }
             rs.close();
             bd.close();
@@ -381,6 +404,30 @@ public class SqlBoe {
                 aux.setTexto2(rs.getString("texto2"));
                 aux.setTexto3(rs.getString("texto3"));
                 aux.setDias(rs.getInt("dias"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<Cabecera> listaCabeceras(int idOrigen,int tipo) {
+        String query = "SELECT * FROM boes.cabeceras where idOrigen="+idOrigen+" and tipo="+tipo;
+        List<Cabecera> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Cabecera aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Cabecera(rs.getInt("id"),rs.getInt("idOrigen"), rs.getString("cabecera"), rs.getInt("tipo"));
                 list.add(aux);
             }
             rs.close();
