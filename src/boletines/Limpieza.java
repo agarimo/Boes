@@ -10,9 +10,9 @@ import main.SqlBoe;
  */
 public class Limpieza {
 
-    private Boletin boletin;
-    private List cabeceras;
-    private String datos;
+    Boletin boletin;
+    List cabeceras;
+    String datos;
 
     public Limpieza(int idBoletin) {
         boletin = SqlBoe.getBoletin("SELECT * FROM boes.boletin where id=" + idBoletin);
@@ -23,7 +23,6 @@ public class Limpieza {
 
     private void cargarDatos() {
         cabeceras = SqlBoe.listaCabeceras(boletin.getIdDescarga(), 1);
-        
     }
 
 }

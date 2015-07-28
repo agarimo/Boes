@@ -6,6 +6,7 @@ import enty.Descarga;
 import enty.Entidad;
 import enty.Origen;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +53,7 @@ public class Insercion {
     }
 
     private void runSelect() {
+        cleanSelect();
         ModeloBoes aux;
         guardaStatsS();
         Iterator it = select.iterator();
@@ -61,12 +63,47 @@ public class Insercion {
             insertaSelected(aux);
         }
     }
+    
+    private void cleanSelect(){
+        List lista=new ArrayList();
+        ModeloBoes aux;
+        Iterator it = select.iterator();
+        
+        while (it.hasNext()) {
+            aux = (ModeloBoes) it.next();
+            if(!checkSelected(aux)){
+                lista.add(aux);
+            }
+        }
+        select=lista;
+    }
+    
+    private boolean checkSelected(ModeloBoes aux){
+        int a=0;
+        boolean is= false;
+        Sql bd;
+        
+        try {
+            bd=new Sql(Variables.con);
+            a=bd.buscar("SELECT * FROM "+Variables.nombreBD+".boletin where codigo="+Varios.entrecomillar(aux.getCodigo()));
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if(a>0){
+            is=true;
+        }
+        
+        return is;
+    }
 
     private void runDiscard() {
         guardaStatsD();
     }
 
     private void insertaSelected(ModeloBoes aux) {
+        int a;
         Sql bd;
         Boletin bl = new Boletin();
 

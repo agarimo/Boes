@@ -33,9 +33,9 @@ public class Boes extends Application {
      * @throws java.sql.SQLException
      */
     public static void main(String[] args) throws SQLException {
-//        launch(args);
-        test();
-        System.exit(0);
+        launch(args);
+//        test();
+//        System.exit(0);
     }
 
     public static void test() throws SQLException {

@@ -242,6 +242,30 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List listaTextoDescartado() {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".texto_descartado";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("texto");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public static List<ModeloComboBox> listaEntidades() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".entidad order by nombre";

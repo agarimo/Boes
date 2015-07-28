@@ -202,10 +202,12 @@ public class WinC implements Initializable {
     ObservableList<ModeloBoes> discartedList;
     ObservableList<ModeloBoletines> boletinesList;
     List origen_descartado;
+    List texto_descartado;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         origen_descartado = SqlBoe.listaOrigenDescartado();
+        texto_descartado = SqlBoe.listaTextoDescartado();
         iniciaTablaBoes();
 
         final ObservableList<Boe> ls1 = lvBoe.getSelectionModel().getSelectedItems();
@@ -403,8 +405,8 @@ public class WinC implements Initializable {
         return true;
     }
 //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="PANEL CLASIFICACION">
 
+    //<editor-fold defaultstate="collapsed" desc="PANEL CLASIFICACION">
     @FXML
     void iniciaClasificacion(ActionEvent event) {
         mostrarPanel(2);
@@ -526,8 +528,10 @@ public class WinC implements Initializable {
         selectedList.clear();
         discartedList.clear();
         Date aux = Dates.asDate(dpFechaC.getValue());
-        cargarBoes(SqlBoe.getBoe(aux));
-        Variables.isClasificando = true;
+        if (aux != null) {
+            cargarBoes(SqlBoe.getBoe(aux));
+            Variables.isClasificando = true;
+        }
     }
 
     void updateClasificacion() {
@@ -539,6 +543,14 @@ public class WinC implements Initializable {
 
             if (origen_descartado.contains(aux.getOrigen())) {
                 discartedList.add(aux);
+            }
+
+            if (textoDescartado(aux.getDescripcion())) {
+                discartedList.add(aux);
+            }
+
+            if (boletinProcesado(aux.getCodigo())) {
+                selectedList.add(aux);
             }
         }
 
@@ -552,6 +564,42 @@ public class WinC implements Initializable {
             }
         }
         getFocusTablaBoes();
+    }
+
+    boolean textoDescartado(String aux) {
+        boolean a = false;
+        String str;
+        Iterator it = texto_descartado.iterator();
+
+        while (it.hasNext()) {
+            str = (String) it.next();
+
+            if (aux.contains(str)) {
+                System.out.println("se ha encontrado: " + str);
+                a = true;
+                break;
+            }
+        }
+        return a;
+    }
+
+    boolean boletinProcesado(String aux) {
+        Sql bd;
+        int a;
+        boolean is = false;
+
+        try {
+            bd = new Sql(Variables.con);
+            a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
+
+            if (a > 0) {
+                is = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return is;
     }
 
     @FXML
@@ -651,11 +699,19 @@ public class WinC implements Initializable {
             in.run();
             limpiarClasificacion();
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("Todavía quedan Boletines sin clasificar");
-            alert.showAndWait();
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("ACEPTAR BOLETINES");
+            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
+            alert.setContentText("¿Desea CONTINUAR?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                Variables.isClasificando = false;
+                Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
+                in.run();
+                limpiarClasificacion();
+            }
         }
     }
 
@@ -904,7 +960,7 @@ public class WinC implements Initializable {
     @FXML
     void abrirCarpetaBoletines(ActionEvent event) {
         try {
-            Desktop.getDesktop().browse(new File(new File("data"),"boeData").toURI());
+            Desktop.getDesktop().browse(new File(new File("data"), "boeData").toURI());
         } catch (IOException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -972,7 +1028,6 @@ public class WinC implements Initializable {
     }
 
 //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML
