@@ -32,6 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -408,6 +409,9 @@ public class WinC implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="PANEL CLASIFICACION">
     @FXML
+    private Button btRecargarClasificacion;
+
+    @FXML
     void iniciaClasificacion(ActionEvent event) {
         mostrarPanel(2);
         iniciaTablaBoes();
@@ -527,11 +531,26 @@ public class WinC implements Initializable {
         publicacion.clear();
         selectedList.clear();
         discartedList.clear();
-        Date aux = Dates.asDate(dpFechaC.getValue());
-        if (aux != null) {
-            cargarBoes(SqlBoe.getBoe(aux));
-            Variables.isClasificando = true;
-        }
+
+        Thread a = new Thread(() -> {
+
+            Platform.runLater(() -> {
+                rootPane.getScene().setCursor(Cursor.WAIT);
+            });
+
+            try {
+                Date aux = Dates.asDate(dpFechaC.getValue());
+                cargarBoes(SqlBoe.getBoe(aux));
+                Variables.isClasificando = true;
+            } catch (Exception ex) {
+                //
+            }
+
+            Platform.runLater(() -> {
+                rootPane.getScene().setCursor(Cursor.DEFAULT);
+            });
+        });
+        a.start();
     }
 
     void updateClasificacion() {
@@ -563,6 +582,17 @@ public class WinC implements Initializable {
                 publicacion.remove(aux);
             }
         }
+
+        it = selectedList.iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloBoes) it.next();
+
+            if (publicacion.contains(aux)) {
+                publicacion.remove(aux);
+            }
+        }
+
         getFocusTablaBoes();
     }
 
@@ -591,7 +621,7 @@ public class WinC implements Initializable {
         try {
             bd = new Sql(Variables.con);
             a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
-
+            bd.close();
             if (a > 0) {
                 is = true;
             }

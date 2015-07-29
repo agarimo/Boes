@@ -91,13 +91,15 @@
                         <TableColumn fx:id="descripcionCL" prefWidth="633.0" resizable="false" text="DESCRIPCION" />
                     </columns>
                   </TableView>
-                  <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <ToolBar prefHeight="52.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0">
                     <items>
                         <DatePicker fx:id="dpFechaC" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" />
                       <Button fx:id="btSelect" mnemonicParsing="false" onAction="#selectPdf" prefHeight="30.0" prefWidth="150.0" text="Seleccionar" />
                         <Button fx:id="btDiscard" mnemonicParsing="false" onAction="#discardPdf" prefHeight="30.0" prefWidth="150.0" text="Descartar" />
                         <Button mnemonicParsing="false" onAction="#abrirWeb" prefHeight="30.0" prefWidth="150.0" text="Ver Web" />
                         <Button fx:id="btDescartaOrigen" mnemonicParsing="false" onAction="#descartaOrigen" prefHeight="30.0" prefWidth="150.0" text="DESCARTA origen" />
+                        <Separator orientation="VERTICAL" prefHeight="42.0" prefWidth="64.0" visible="false" />
+                        <Button fx:id="btRecargarClasificacion" mnemonicParsing="false" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" text="Recargar" />
                     </items>
                   </ToolBar>
                   <Button fx:id="btFinClas" layoutX="833.0" layoutY="521.0" mnemonicParsing="false" onAction="#finalizaClas" prefHeight="40.0" prefWidth="153.0" text="CONTINUAR" AnchorPane.rightAnchor="14.0" />

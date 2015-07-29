@@ -139,6 +139,7 @@ public class Insercion {
                 bd.ejecutar(or.SQLCrear());
                 aux = bd.ultimoRegistro();
             }
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -159,6 +160,7 @@ public class Insercion {
                 bd.ejecutar(en.SQLCrear());
                 aux = bd.ultimoRegistro();
             }
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -173,6 +175,7 @@ public class Insercion {
         try {
             bd = new Sql(Variables.con);
             aux = bd.getInt("SELECT * FROM boes.boe where fecha=" + Varios.entrecomillar(fecha));
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -194,6 +197,7 @@ public class Insercion {
                 bd.ejecutar(ds.SQLCrear());
                 aux = bd.ultimoRegistro();
             }
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -228,7 +232,7 @@ public class Insercion {
     }
 
     private void guardaStatsS() {
-        Boletines_publicados bp = null;
+        Boletines_publicados bp;
         ModeloBoes aux;
         Iterator it = select.iterator();
 
