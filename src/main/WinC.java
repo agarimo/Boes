@@ -7,6 +7,7 @@ import boes.Pdf;
 import boes.Publicacion;
 import boletines.Archivos;
 import boletines.Fases;
+import boletines.Limpieza;
 import enty.Boletin;
 import enty.Descarga;
 import enty.Fase;
@@ -37,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -56,6 +58,7 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 import model.ModeloBoes;
 import model.ModeloBoletines;
+import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
 import util.Dates;
@@ -237,6 +240,7 @@ public class WinC implements Initializable {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
+                panelCabeceras.setVisible(false);
                 break;
             case 1:
                 panelInicio.setVisible(false);
@@ -244,6 +248,7 @@ public class WinC implements Initializable {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
+                panelCabeceras.setVisible(false);
                 break;
             case 2:
                 panelInicio.setVisible(false);
@@ -251,6 +256,7 @@ public class WinC implements Initializable {
                 panelClasificacion.setVisible(true);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
+                panelCabeceras.setVisible(false);
                 break;
             case 3:
                 panelInicio.setVisible(false);
@@ -258,6 +264,7 @@ public class WinC implements Initializable {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(true);
                 panelFases.setVisible(false);
+                panelCabeceras.setVisible(false);
                 break;
 
             case 4:
@@ -266,6 +273,16 @@ public class WinC implements Initializable {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(true);
+                panelCabeceras.setVisible(false);
+                break;
+
+            case 5:
+                panelInicio.setVisible(false);
+                panelEnlaces.setVisible(false);
+                panelClasificacion.setVisible(false);
+                panelBoletines.setVisible(false);
+                panelFases.setVisible(false);
+                panelCabeceras.setVisible(true);
                 break;
         }
     }
@@ -408,12 +425,20 @@ public class WinC implements Initializable {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="PANEL CLASIFICACION">
+    private boolean autoScroll;
+
     @FXML
     private Button btRecargarClasificacion;
 
     @FXML
+    private CheckBox cbAutoScroll;
+
+    @FXML
     void iniciaClasificacion(ActionEvent event) {
+        autoScroll = true;
+        cbAutoScroll.setSelected(autoScroll);
         mostrarPanel(2);
+        limpiarClasificacion();
         iniciaTablaBoes();
     }
 
@@ -520,10 +545,12 @@ public class WinC implements Initializable {
     }
 
     private void getFocusTablaBoes() {
-        tvBoes.getSelectionModel().select(0);
-        tvBoes.scrollTo(0);
+        if (autoScroll) {
+            tvBoes.getSelectionModel().select(0);
+            tvBoes.scrollTo(0);
 //        tvBoes.focusModelProperty().get().focus(new TablePosition(tvBoes, 0, null));
-        tvBoes.requestFocus();
+            tvBoes.requestFocus();
+        }
     }
 
     @FXML
@@ -551,6 +578,11 @@ public class WinC implements Initializable {
             });
         });
         a.start();
+    }
+
+    @FXML
+    void cambioEnCheckBox(ActionEvent event) {
+        autoScroll = cbAutoScroll.isSelected();
     }
 
     void updateClasificacion() {
@@ -774,6 +806,9 @@ public class WinC implements Initializable {
     Button btVerBoletinWeb;
 
     @FXML
+    Button btLimpiar;
+
+    @FXML
     void iniciaBoletines(ActionEvent event) {
         mostrarPanel(3);
         iniciaTablaBoletines();
@@ -974,6 +1009,23 @@ public class WinC implements Initializable {
     }
 
     @FXML
+    void limpiarBoletin(ActionEvent event) {
+        ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            Limpieza li = new Limpieza(aux.getCodigo());
+            li.run();
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("ERROR de selección.");
+            alert.setContentText("Debes seleccionar un boletín.");
+
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
     void recargarBoletines(ActionEvent event) {
         recargarBoletines();
     }
@@ -1056,8 +1108,8 @@ public class WinC implements Initializable {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML
@@ -1386,6 +1438,123 @@ public class WinC implements Initializable {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="CABECERAS">
+    //<editor-fold defaultstate="collapsed" desc="Variables FXML">
+    @FXML
+    private AnchorPane panelCabeceras;
+
+    @FXML
+    private ComboBox cbEntidadC;
+
+    @FXML
+    private ListView lvOrigenC;
+
+    @FXML
+    private TextField tfOrigenC;
+
+    @FXML
+    private Button btNuevaCabecera;
+
+    @FXML
+    private TableView<ModeloCabeceras> tvCabeceras;
+
+    @FXML
+    private TableColumn<ModeloCabeceras, String> idCLC;
+
+    @FXML
+    private TableColumn<ModeloCabeceras, String> cabeceraCLC;
+
+    @FXML
+    private TextArea taCabecera;
+
+    @FXML
+    private Button btEditaCabecera;
+
+    @FXML
+    private Button btBorraCabecera;
+
+    @FXML
+    private Button btGuardaCabecera;
+    //</editor-fold>
+    
+    ObservableList<ModeloComboBox> comboEntidadesC;
+    ObservableList<ModeloComboBox> listOrigenesC;
+    ObservableList<ModeloCabeceras> tablaCabeceras;
+
+    //<editor-fold defaultstate="collapsed" desc="Métodos FXML">
+    @FXML
+    void iniciaCabeceras(ActionEvent event){
+        
+    }
+    
+    @FXML
+    void nuevaCabecera(ActionEvent event) {
+
+    }
+
+    @FXML
+    void editaCabecera(ActionEvent event) {
+
+    }
+
+    @FXML
+    void borraCabecera(ActionEvent event) {
+
+    }
+
+    @FXML
+    void guardaCabecera(ActionEvent event) {
+
+    }
+    //</editor-fold>
+
+     private void inicializaDatosCabeceras() {
+        comboEntidadesC = FXCollections.observableArrayList();
+        cbEntidadC.setItems(comboEntidadesC);
+        listOrigenesC = FXCollections.observableArrayList();
+        lvOrigenC.setItems(listOrigenesC);
+
+        lvOrigenC.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> list) {
+                final ListCell cell = new ListCell() {
+                    private Text text;
+
+                    @Override
+                    public void updateItem(Object item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            text = new Text(item.toString());
+                            text.setWrappingWidth(lvOrigenC.getPrefWidth() - 30);
+                            setGraphic(text);
+                        } else {
+                            text = new Text("");
+                            setGraphic(text);
+                        }
+                    }
+                };
+
+                return cell;
+            }
+        });
+
+        ModeloComboBox aux;
+        Iterator it = SqlBoe.listaEntidades().iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloComboBox) it.next();
+            comboEntidadesC.add(aux);
+        }
+    }
+     
+     private void inicializaTablaCabeceras() {
+        idCLC.setCellValueFactory(new PropertyValueFactory<>("id"));
+        cabeceraCLC.setCellValueFactory(new PropertyValueFactory<>("cabecera"));
+
+        tablaCabeceras = FXCollections.observableArrayList();
+        tvCabeceras.setItems(tablaCabeceras);
+    }
+//</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="LISTENERS">
     /**
      * Listener de la lista multasAvg
