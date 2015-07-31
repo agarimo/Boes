@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import model.ModeloBoletines;
+import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
 import util.Dates;
@@ -334,6 +335,34 @@ public class SqlBoe {
                 aux = new ModeloComboBox();
                 aux.id.set(1);
                 aux.nombre.set(rs.getString("id"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<ModeloCabeceras> listaCabeceras(int id) {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".cabeceras where idOrigen=" + id;
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloCabeceras aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloCabeceras();
+                aux.id.set(rs.getInt("id"));
+                aux.idOrigen.set(rs.getInt("idOrigen"));
+                aux.cabecera.set(rs.getString("cabecera"));
+                aux.tipo.set(rs.getInt("tipo"));
                 list.add(aux);
             }
             rs.close();

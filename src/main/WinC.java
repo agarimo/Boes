@@ -9,6 +9,7 @@ import boletines.Archivos;
 import boletines.Fases;
 import boletines.Limpieza;
 import enty.Boletin;
+import enty.Cabecera;
 import enty.Descarga;
 import enty.Fase;
 import java.awt.Desktop;
@@ -222,6 +223,12 @@ public class WinC implements Initializable {
 
         final ObservableList<ModeloFases> ls3 = tvFases.getSelectionModel().getSelectedItems();
         ls3.addListener(selectorTablaFases);
+        
+        final ObservableList<ModeloCabeceras> ls4 = tvCabeceras.getSelectionModel().getSelectedItems();
+        ls4.addListener(selectorTablaCabeceras);
+        
+        final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
+        ls5.addListener(selectorListaOrigenC);
     }
 
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
@@ -637,7 +644,6 @@ public class WinC implements Initializable {
             str = (String) it.next();
 
             if (aux.contains(str)) {
-                System.out.println("se ha encontrado: " + str);
                 a = true;
                 break;
             }
@@ -1015,6 +1021,18 @@ public class WinC implements Initializable {
         if (aux != null) {
             Limpieza li = new Limpieza(aux.getCodigo());
             li.run();
+            
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("GUARDAR BOLETÍN");
+            alert.setHeaderText(aux.getCodigo());
+            alert.setContentText("¿Desea GUARDAR el boletín limpiado?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                guardarBoletinLimpiado(aux.getIdDescarga());
+            }
+            
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
@@ -1022,6 +1040,20 @@ public class WinC implements Initializable {
             alert.setContentText("Debes seleccionar un boletín.");
 
             alert.showAndWait();
+        }
+    }
+    
+    void guardarBoletinLimpiado(int id){
+        Sql bd;
+        File aux = new File("tempLp.txt");
+        String datos=Files.leeArchivo(aux);
+        datos = datos.replace("'", "\\'");
+        
+        try {
+            bd= new Sql(Variables.con);
+            bd.ejecutar("UPDATE "+Variables.nombreBD+".descarga SET datos="+Varios.entrecomillar(datos)+" where id="+id);
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1247,7 +1279,6 @@ public class WinC implements Initializable {
 
         limpiarFases();
         cargaFasesOrigen();
-
     }
 
     @FXML
@@ -1476,39 +1507,132 @@ public class WinC implements Initializable {
     @FXML
     private Button btGuardaCabecera;
     //</editor-fold>
-    
+
     ObservableList<ModeloComboBox> comboEntidadesC;
     ObservableList<ModeloComboBox> listOrigenesC;
     ObservableList<ModeloCabeceras> tablaCabeceras;
 
     //<editor-fold defaultstate="collapsed" desc="Métodos FXML">
     @FXML
-    void iniciaCabeceras(ActionEvent event){
-        
+    void iniciaCabeceras(ActionEvent event) {
+        mostrarPanel(5);
+        inicializaDatosCabeceras();
+        inicializaTablaCabeceras();
+        btGuardaCabecera.setVisible(false);
+        btBorraCabecera.setDisable(true);
+        btEditaCabecera.setDisable(true);
     }
-    
+
+    @FXML
+    void cargaOrigenCabecera(ActionEvent event) {
+        limpiaCabecera();
+        listOrigenesC.clear();
+        ModeloComboBox aux = (ModeloComboBox) cbEntidadC.getSelectionModel().getSelectedItem();
+        Iterator it = SqlBoe.listaOrigenes(aux.getId()).iterator();
+
+        while (it.hasNext()) {
+            aux = (ModeloComboBox) it.next();
+            listOrigenesC.add(aux);
+        }
+        lvOrigenC.setItems(listOrigenesC);
+        lvOrigenC.setVisible(false);
+        lvOrigenC.setVisible(true);
+    }
+
     @FXML
     void nuevaCabecera(ActionEvent event) {
+        btNuevaCabecera.setDisable(true);
+        ModeloComboBox origen = (ModeloComboBox) lvOrigenC.getSelectionModel().getSelectedItem();
+        btGuardaCabecera.setVisible(true);
+        ModeloCabeceras aux = new ModeloCabeceras();
+        aux.id.set(0);
+        aux.idOrigen.set(origen.getId());
+        aux.cabecera.set(null);
+        aux.tipo.set(1);
 
+        tablaCabeceras.add(0, aux);
+        btBorraCabecera.setVisible(false);
+        btEditaCabecera.setVisible(false);
+        taCabecera.setText("");
+
+        tvCabeceras.getSelectionModel().select(0);
+        tvCabeceras.scrollTo(0);
+        tvCabeceras.requestFocus();
     }
 
     @FXML
     void editaCabecera(ActionEvent event) {
+        Sql bd;
+        Cabecera aux = getDatosCabecera();
 
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLEditar());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        btGuardaCabecera.setVisible(false);
+        btBorraCabecera.setVisible(true);
+        btEditaCabecera.setVisible(true);
+        btNuevaCabecera.setDisable(false);
+
+        limpiaCabecera();
+        cargaCabecerasOrigen();
     }
 
     @FXML
     void borraCabecera(ActionEvent event) {
+        Sql bd;
+        Cabecera aux = getDatosCabecera();
 
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLBorrar());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        btGuardaCabecera.setVisible(false);
+        btBorraCabecera.setVisible(true);
+        btEditaCabecera.setVisible(true);
+        btNuevaCabecera.setDisable(false);
+
+        limpiaCabecera();
+        cargaCabecerasOrigen();
     }
 
     @FXML
     void guardaCabecera(ActionEvent event) {
+        Sql bd;
+        Cabecera aux = getDatosCabecera();
 
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(aux.SQLCrear());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        btGuardaCabecera.setVisible(false);
+        btBorraCabecera.setVisible(true);
+        btEditaCabecera.setVisible(true);
+        btNuevaCabecera.setDisable(false);
+
+        limpiaCabecera();
+        cargaCabecerasOrigen();
     }
     //</editor-fold>
 
-     private void inicializaDatosCabeceras() {
+    private void limpiaCabecera() {
+        taCabecera.setText(null);
+        tfOrigenC.setText(null);
+    }
+
+    private void inicializaDatosCabeceras() {
         comboEntidadesC = FXCollections.observableArrayList();
         cbEntidadC.setItems(comboEntidadesC);
         listOrigenesC = FXCollections.observableArrayList();
@@ -1546,15 +1670,56 @@ public class WinC implements Initializable {
             comboEntidadesC.add(aux);
         }
     }
-     
-     private void inicializaTablaCabeceras() {
+
+    private void inicializaTablaCabeceras() {
         idCLC.setCellValueFactory(new PropertyValueFactory<>("id"));
         cabeceraCLC.setCellValueFactory(new PropertyValueFactory<>("cabecera"));
 
         tablaCabeceras = FXCollections.observableArrayList();
         tvCabeceras.setItems(tablaCabeceras);
     }
+    
+    private void cargaCabecerasOrigen(){
+        limpiaCabecera();
+        tablaCabeceras.clear();
+        ModeloCabeceras mf;
+        ModeloComboBox aux = (ModeloComboBox) lvOrigenC.getSelectionModel().getSelectedItem();
+        tfOrigenC.setText(aux.getNombre());
+        Iterator it = SqlBoe.listaCabeceras(aux.getId()).iterator();
+
+        while (it.hasNext()) {
+            mf = (ModeloCabeceras) it.next();
+            tablaCabeceras.add(mf);
+        }
+
+        btBorraCabecera.setDisable(true);
+        btEditaCabecera.setDisable(true);
+    }
+    
+    private void cargaDatosCabecera(){
+        ModeloCabeceras aux = (ModeloCabeceras) tvCabeceras.getSelectionModel().getSelectedItem();
+
+        if (aux != null) {
+            taCabecera.setText(aux.getCabecera());
+        }
+
+        btBorraCabecera.setDisable(false);
+        btEditaCabecera.setDisable(false);
+    }
+    
+    private Cabecera getDatosCabecera(){
+        ModeloCabeceras mc=tvCabeceras.getSelectionModel().getSelectedItem();
+        Cabecera aux = new Cabecera();
+        
+        aux.setId(mc.getId());
+        aux.setIdOrigen(mc.getIdOrigen());
+        aux.setCabecera(taCabecera.getText());
+        aux.setTipo(mc.getTipo());
+        
+        return aux;
+    }
 //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="LISTENERS">
     /**
      * Listener de la lista multasAvg
@@ -1571,7 +1736,7 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends ModeloComboBox> c) -> {
                 cargaFasesOrigen();
             };
-
+    
     /**
      * Listener de la Tabla Fases
      */
@@ -1579,6 +1744,21 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends ModeloFases> c) -> {
                 cargaDatosFase();
             };
+    
+     /**
+     * Listener de la lista OrigenFase
+     */
+    private final ListChangeListener<ModeloComboBox> selectorListaOrigenC
+            = (ListChangeListener.Change<? extends ModeloComboBox> c) -> {
+                cargaCabecerasOrigen();
+            };
 
+    /**
+     * Listener de la Tabla Cabeceras
+     */
+    private final ListChangeListener<ModeloCabeceras> selectorTablaCabeceras
+            = (ListChangeListener.Change<? extends ModeloCabeceras> c) -> {
+                cargaDatosCabecera();
+            };
 //</editor-fold>
 }

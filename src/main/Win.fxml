@@ -34,6 +34,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#iniciaBoletines" text="Boletines" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaFases" text="Fases" />
+                  <MenuItem mnemonicParsing="false" onAction="#iniciaCabeceras" text="Cabeceras" />
             </items>
           </Menu>
         </menus>
@@ -209,13 +210,13 @@
                   </SplitPane>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelCabeceras" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="panelCabeceras" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <SplitPane dividerPositions="0.2" prefHeight="575.0" prefWidth="1000.0">
                      <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <ComboBox fx:id="cbEntidadC" layoutY="33.0" onAction="#cargaOrigenFase" prefHeight="25.0" prefWidth="197.0" />
+                              <ComboBox fx:id="cbEntidadC" layoutY="33.0" onAction="#cargaOrigenCabecera" prefHeight="25.0" prefWidth="197.0" />
                               <ListView fx:id="lvOrigenC" layoutX="-1.0" layoutY="101.0" prefHeight="455.0" prefWidth="200.0" />
                               <Label layoutY="6.0" prefHeight="17.0" prefWidth="197.0" text="Entidad :" />
                               <Label layoutY="76.0" prefHeight="17.0" prefWidth="197.0" text="Origen:" />

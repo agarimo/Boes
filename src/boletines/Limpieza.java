@@ -52,10 +52,8 @@ public class Limpieza {
 
         while (it.hasNext()) {
             aux = (Cabecera) it.next();
-            System.out.println(aux.getCabecera());
 
             if (datos.contains(aux.getCabecera())) {
-                System.out.println("inicia lector");
                 lector(aux.getCabecera());
                 break;
             }

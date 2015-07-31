@@ -1,5 +1,8 @@
 package enty;
 
+import main.Variables;
+import util.Varios;
+
 /**
  *
  * @author Agarimo
@@ -10,6 +13,10 @@ public class Cabecera {
     private int idOrigen;
     private String cabecera;
     private int tipo;
+    
+    public Cabecera(){
+        
+    }
 
     public Cabecera(int id, int idOrigen, String cabecera, int tipo) {
         this.id = id;
@@ -52,5 +59,24 @@ public class Cabecera {
     
     public String SQLBuscarOrigen(int id){
         return "SELECT * FROM boes.cabeceras where idOrigen="+id;
+    }
+    
+    public String SQLCrear() {
+        return "INSERT into " + Variables.nombreBD + ".cabeceras (idOrigen, cabecera, tipo) values("
+                + this.idOrigen + ","
+                + Varios.entrecomillar(this.cabecera) + ","
+                + this.tipo
+                + ")";
+    }
+
+    public String SQLEditar() {
+        return "UPDATE " + Variables.nombreBD + ".cabeceras SET "
+                + "cabecera=" + Varios.entrecomillar(this.cabecera) + ","
+                + "tipo=" + this.tipo +" "
+                + "WHERE id=" + this.id;
+    }
+
+    public String SQLBorrar() {
+        return "DELETE FROM " + Variables.nombreBD + ".cabeceras WHERE id=" + this.id + ";";
     }
 }
