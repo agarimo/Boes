@@ -104,7 +104,7 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
-                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"));
+                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"),rs.getInt("idioma"));
             }
             rs.close();
             bd.close();
@@ -152,7 +152,7 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
-                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"));
+                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"),rs.getInt("idioma"));
                 list.add(aux);
             }
             rs.close();
@@ -209,6 +209,7 @@ public class SqlBoe {
                 aux.estado.set(rs.getInt("estado"));
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.link.set(rs.getString("link"));
+                aux.idioma.set(rs.getInt("idioma"));
                 list.add(aux);
             }
             rs.close();

@@ -18,6 +18,7 @@ public class ModeloBoletines {
     public SimpleIntegerProperty estado = new SimpleIntegerProperty();
     public SimpleIntegerProperty idDescarga = new SimpleIntegerProperty();
     public SimpleStringProperty link = new SimpleStringProperty();
+    public SimpleIntegerProperty idioma = new SimpleIntegerProperty();
 
     public String getCodigo(){
         return codigo.get();
@@ -69,6 +70,10 @@ public class ModeloBoletines {
     
     public String getLink(){
         return link.get();
+    }
+    
+    public int getIdioma(){
+        return idioma.get();
     }
 
     @Override

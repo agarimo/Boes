@@ -17,11 +17,12 @@ public class Boletin {
     private String tipo;
     private String fase;
     private int estado;
+    private int idioma;
 
     public Boletin() {
     }
 
-    public Boletin(int id, int idOrigen, int idBoe, int idDescarga, String codigo,String tipo, String fase,int estado) {
+    public Boletin(int id, int idOrigen, int idBoe, int idDescarga, String codigo,String tipo, String fase,int estado,int idioma) {
         this.id = id;
         this.idOrigen = idOrigen;
         this.idBoe = idBoe;
@@ -30,6 +31,7 @@ public class Boletin {
         this.tipo=tipo;
         this.fase = fase;
         this.estado=estado;
+        this.idioma=idioma;
     }
 
     public String getFase() {
@@ -96,20 +98,29 @@ public class Boletin {
         this.estado = estado;
     }
 
+    public int getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(int idioma) {
+        this.idioma = idioma;
+    }
+
     @Override
     public String toString() {
         return codigo;
     }
     
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,estado) values("
+        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,estado,idioma) values("
                 + this.idOrigen + ","
                 + this.idBoe + ","
                 + this.idDescarga + ","
                 + Varios.entrecomillar(this.codigo) + ","
                 + Varios.entrecomillar(this.tipo) + ","
                 + Varios.entrecomillar(this.fase) + ","
-                + this.estado
+                + this.estado + ","
+                + this.idioma
                 + ");";
     }
     
@@ -117,6 +128,7 @@ public class Boletin {
         return "UPDATE " + Variables.nombreBD + ".boletin SET "
                 + "tipo=" + Varios.entrecomillar(this.tipo) + ","
                 + "fase=" + Varios.entrecomillar(this.fase) + ","
+                + "idioma=" + this.idioma + ","
                 + "estado=" + this.estado + " "
                 + "WHERE id=" + this.id;
     }

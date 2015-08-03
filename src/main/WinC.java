@@ -55,6 +55,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import model.ModeloBoes;
@@ -223,10 +224,10 @@ public class WinC implements Initializable {
 
         final ObservableList<ModeloFases> ls3 = tvFases.getSelectionModel().getSelectedItems();
         ls3.addListener(selectorTablaFases);
-        
+
         final ObservableList<ModeloCabeceras> ls4 = tvCabeceras.getSelectionModel().getSelectedItems();
         ls4.addListener(selectorTablaCabeceras);
-        
+
         final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
         ls5.addListener(selectorListaOrigenC);
     }
@@ -507,6 +508,8 @@ public class WinC implements Initializable {
     }
 
     private void cargarBoes(Boe boe) {
+        origen_descartado = SqlBoe.listaOrigenDescartado();
+        texto_descartado = SqlBoe.listaTextoDescartado();
         List bol = new ArrayList();
         boe.getBoletines();
 
@@ -643,9 +646,8 @@ public class WinC implements Initializable {
         while (it.hasNext()) {
             str = (String) it.next();
 
-            if (aux.contains(str)) {
+            if (aux.toUpperCase().contains(str.toUpperCase())) {
                 a = true;
-                break;
             }
         }
         return a;
@@ -814,17 +816,42 @@ public class WinC implements Initializable {
     @FXML
     Button btLimpiar;
 
+    List boletinesIdioma;
+
     @FXML
     void iniciaBoletines(ActionEvent event) {
+        boletinesIdioma = new ArrayList();
         mostrarPanel(3);
         iniciaTablaBoletines();
 
         btRecargarBoletines.setTooltip(new Tooltip("recarga boletines"));
-
     }
 
     void iniciaTablaBoletines() {
         codigoCLB.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        codigoCLB.setCellFactory(column -> {
+            return new TableCell<ModeloBoletines, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(item);
+
+                        if (boletinesIdioma.contains(item)) {
+                            setTextFill(Color.BLACK);
+                            setStyle("-fx-background-color: #999999");
+                        } else {
+                            setTextFill(Color.BLACK);
+                            setStyle("");
+                        }
+                    }
+                }
+            };
+        });
         origenCLB.setCellValueFactory(new PropertyValueFactory<>("origen"));
         fechaCLB.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         tipoCLB.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -835,6 +862,7 @@ public class WinC implements Initializable {
     }
 
     void cargaDatosTablaBoletines(Date fecha) {
+        boletinesIdioma.clear();
         ModeloBoletines aux;
         String query = "SELECT * FROM " + Variables.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
         Iterator it = SqlBoe.listaVistaBoletin(query).iterator();
@@ -842,6 +870,10 @@ public class WinC implements Initializable {
         while (it.hasNext()) {
             aux = (ModeloBoletines) it.next();
             boletinesList.add(aux);
+
+            if (aux.idioma.get() == 1) {
+                boletinesIdioma.add(aux.codigo.get());
+            }
         }
     }
 
@@ -1021,7 +1053,7 @@ public class WinC implements Initializable {
         if (aux != null) {
             Limpieza li = new Limpieza(aux.getCodigo());
             li.run();
-            
+
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("GUARDAR BOLETÍN");
             alert.setHeaderText(aux.getCodigo());
@@ -1030,9 +1062,9 @@ public class WinC implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == ButtonType.OK) {
-                guardarBoletinLimpiado(aux.getIdDescarga());
+                guardarBoletinLimpiado(aux.getIdDescarga(), aux.codigo.get());
             }
-            
+
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
@@ -1042,16 +1074,18 @@ public class WinC implements Initializable {
             alert.showAndWait();
         }
     }
-    
-    void guardarBoletinLimpiado(int id){
+
+    void guardarBoletinLimpiado(int id, String codigo) {
         Sql bd;
         File aux = new File("tempLp.txt");
-        String datos=Files.leeArchivo(aux);
+        String datos = Files.leeArchivo(aux);
         datos = datos.replace("'", "\\'");
-        
+
         try {
-            bd= new Sql(Variables.con);
-            bd.ejecutar("UPDATE "+Variables.nombreBD+".descarga SET datos="+Varios.entrecomillar(datos)+" where id="+id);
+            bd = new Sql(Variables.con);
+            bd.ejecutar("UPDATE " + Variables.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + id);
+            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET idioma=" + 0 + " where codigo=" + Varios.entrecomillar(codigo));
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1678,8 +1712,8 @@ public class WinC implements Initializable {
         tablaCabeceras = FXCollections.observableArrayList();
         tvCabeceras.setItems(tablaCabeceras);
     }
-    
-    private void cargaCabecerasOrigen(){
+
+    private void cargaCabecerasOrigen() {
         limpiaCabecera();
         tablaCabeceras.clear();
         ModeloCabeceras mf;
@@ -1695,8 +1729,8 @@ public class WinC implements Initializable {
         btBorraCabecera.setDisable(true);
         btEditaCabecera.setDisable(true);
     }
-    
-    private void cargaDatosCabecera(){
+
+    private void cargaDatosCabecera() {
         ModeloCabeceras aux = (ModeloCabeceras) tvCabeceras.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
@@ -1706,16 +1740,16 @@ public class WinC implements Initializable {
         btBorraCabecera.setDisable(false);
         btEditaCabecera.setDisable(false);
     }
-    
-    private Cabecera getDatosCabecera(){
-        ModeloCabeceras mc=tvCabeceras.getSelectionModel().getSelectedItem();
+
+    private Cabecera getDatosCabecera() {
+        ModeloCabeceras mc = tvCabeceras.getSelectionModel().getSelectedItem();
         Cabecera aux = new Cabecera();
-        
+
         aux.setId(mc.getId());
         aux.setIdOrigen(mc.getIdOrigen());
         aux.setCabecera(taCabecera.getText());
         aux.setTipo(mc.getTipo());
-        
+
         return aux;
     }
 //</editor-fold>
@@ -1736,7 +1770,7 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends ModeloComboBox> c) -> {
                 cargaFasesOrigen();
             };
-    
+
     /**
      * Listener de la Tabla Fases
      */
@@ -1744,8 +1778,8 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends ModeloFases> c) -> {
                 cargaDatosFase();
             };
-    
-     /**
+
+    /**
      * Listener de la lista OrigenFase
      */
     private final ListChangeListener<ModeloComboBox> selectorListaOrigenC

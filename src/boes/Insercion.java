@@ -114,6 +114,7 @@ public class Insercion {
         bl.setTipo("*711*");
         bl.setFase("BCN1");
         bl.setEstado(0);
+        bl.setIdioma(getIdioma(bl.getIdOrigen()));
 
         try {
             bd = new Sql(Variables.con);
@@ -183,6 +184,20 @@ public class Insercion {
         return aux;
     }
 
+    private int getIdioma(int idOrigen){
+        int aux=0;
+        Sql bd;
+        
+        try {
+            bd= new Sql(Variables.con);
+            aux = bd.getInt("SELECT idioma FROM "+Variables.nombreBD+".origen where id="+idOrigen);
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return aux;
+    }
     private int insertaDescarga(String link) {
         int aux = 0;
         Descarga ds = new Descarga();
