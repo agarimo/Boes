@@ -23,209 +23,147 @@ import util.Varios;
  */
 public class Insercion {
 
-    List select;
-    List discard;
-    Date fecha;
+    private Sql bd;
 
-    public Insercion(List select, List discard, Date fecha) {
-        this.select = select;
-        this.discard = discard;
-        this.fecha = fecha;
+    public Insercion() {
+
     }
+//    public void insertaBoletines(List lista) {
+//        ModeloBoes aux;
+//        Iterator it = cleanSelect(lista).iterator();
+//
+//        while (it.hasNext()) {
+//            aux = (ModeloBoes) it.next();
+//            insertaSelected(aux);
+//        }
+//    }
 
-    public void run() {
-        runSelect();
-        runDiscard();
-        runClear();
-    }
-
-    private void runClear() {
-        Boe boe = new Boe(this.fecha);
-        Sql bd;
+    //<editor-fold defaultstate="collapsed" desc="Comprobar Selección">
+    public List limpiarDuplicadosLista(List list) {
+        List lista = new ArrayList();
+        ModeloBoes aux;
+        Iterator it = list.iterator();
 
         try {
             bd = new Sql(Variables.con);
-            bd.ejecutar(boe.SQLSetClas());
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
-    private void runSelect() {
-        cleanSelect();
-        ModeloBoes aux;
-        guardaStatsS();
-        Iterator it = select.iterator();
-
-        while (it.hasNext()) {
-            aux = (ModeloBoes) it.next();
-            insertaSelected(aux);
-        }
-    }
-    
-    private void cleanSelect(){
-        List lista=new ArrayList();
-        ModeloBoes aux;
-        Iterator it = select.iterator();
-        
-        while (it.hasNext()) {
-            aux = (ModeloBoes) it.next();
-            if(!checkSelected(aux)){
-                lista.add(aux);
+            while (it.hasNext()) {
+                aux = (ModeloBoes) it.next();
+                if (!checkSelected(aux)) {
+                    lista.add(aux);
+                }
             }
-        }
-        select=lista;
-    }
-    
-    private boolean checkSelected(ModeloBoes aux){
-        int a=0;
-        boolean is= false;
-        Sql bd;
-        
-        try {
-            bd=new Sql(Variables.con);
-            a=bd.buscar("SELECT * FROM "+Variables.nombreBD+".boletin where codigo="+Varios.entrecomillar(aux.getCodigo()));
+
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(a>0){
-            is=true;
+        return lista;
+    }
+
+    private boolean checkSelected(ModeloBoes aux) throws SQLException {
+        boolean is = false;
+
+        int a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux.getCodigo()));
+
+        if (a > 0) {
+            is = true;
         }
-        
+
         return is;
     }
+//</editor-fold>
 
-    private void runDiscard() {
-        guardaStatsD();
-    }
-
-    private void insertaSelected(ModeloBoes aux) {
-        int a;
-        Sql bd;
+    public void insertaBoletin(ModeloBoes aux) {
         Boletin bl = new Boletin();
 
-        bl.setIdOrigen(insertaOrigen(aux.getEntidad(), aux.getOrigen()));
-        bl.setIdBoe(getBoe(aux.getFecha()));
-        bl.setIdDescarga(insertaDescarga(aux.getLink()));
-        bl.setCodigo(aux.getCodigo());
-        bl.setTipo("*711*");
-        bl.setFase("BCN1");
-        bl.setEstado(0);
-        bl.setIdioma(getIdioma(bl.getIdOrigen()));
-
         try {
             bd = new Sql(Variables.con);
+
+            bl.setIdOrigen(getIdOrigen(aux.getEntidad(), aux.getOrigen()));
+            bl.setIdBoe(getIdBoe(aux.getFecha()));
+            bl.setIdDescarga(getIdDescarga(aux.getLink()));
+            bl.setCodigo(aux.getCodigo());
+            bl.setTipo("*711*");
+            bl.setFase("BCN1");
+            bl.setEstado(0);
+            bl.setIdioma(getIdioma(bl.getIdOrigen()));
+
             bd.ejecutar(bl.SQLCrear());
             bd.close();
+
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private int insertaOrigen(String entidad, String origen) {
-        int aux = 0;
-        Sql bd;
+    //<editor-fold defaultstate="collapsed" desc="Inserción">
+    private int getIdOrigen(String entidad, String origen) throws SQLException {
+        int aux;
         Origen or = new Origen();
-        or.setIdEntidad(insertaEntidad(entidad));
+        or.setIdEntidad(getIdEntidad(entidad));
         or.setNombre(origen.replace("'", "\\'"));
 
-        try {
-            bd = new Sql(Variables.con);
-            aux = bd.buscar(or.SQLBuscar());
+        aux = bd.buscar(or.SQLBuscar());
 
-            if (aux == -1) {
-                bd.ejecutar(or.SQLCrear());
-                aux = bd.ultimoRegistro();
-            }
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        if (aux == -1) {
+            bd.ejecutar(or.SQLCrear());
+            aux = bd.ultimoRegistro();
         }
+
         return aux;
     }
 
-    private int insertaEntidad(String nombre) {
-        int aux = 0;
-        Sql bd;
+    private int getIdEntidad(String nombre) throws SQLException {
+        int aux;
         Entidad en = new Entidad();
         en.setNombre(nombre.replace("'", "\\'"));
 
-        try {
-            bd = new Sql(Variables.con);
-            aux = bd.buscar(en.SQLBuscar());
+        aux = bd.buscar(en.SQLBuscar());
 
-            if (aux == -1) {
-                bd.ejecutar(en.SQLCrear());
-                aux = bd.ultimoRegistro();
-            }
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        if (aux == -1) {
+            bd.ejecutar(en.SQLCrear());
+            aux = bd.ultimoRegistro();
         }
 
         return aux;
     }
 
-    private int getBoe(String fecha) {
-        int aux = 0;
-        Sql bd;
-
-        try {
-            bd = new Sql(Variables.con);
-            aux = bd.getInt("SELECT * FROM boes.boe where fecha=" + Varios.entrecomillar(fecha));
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return aux;
+    private int getIdBoe(String fecha) throws SQLException {
+        return bd.getInt("SELECT * FROM boes.boe where fecha=" + Varios.entrecomillar(fecha));
     }
 
-    private int getIdioma(int idOrigen){
-        int aux=0;
-        Sql bd;
-        
-        try {
-            bd= new Sql(Variables.con);
-            aux = bd.getInt("SELECT idioma FROM "+Variables.nombreBD+".origen where id="+idOrigen);
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return aux;
+    private int getIdioma(int idOrigen) throws SQLException {
+        return bd.getInt("SELECT idioma FROM " + Variables.nombreBD + ".origen where id=" + idOrigen);
     }
-    private int insertaDescarga(String link) {
+
+    private int getIdDescarga(String link) throws SQLException {
         int aux = 0;
         Descarga ds = new Descarga();
         ds.setLink(link);
-        Sql bd;
 
-        try {
-            bd = new Sql(Variables.con);
-            aux = bd.buscar(ds.SQLBuscar());
+        aux = bd.buscar(ds.SQLBuscar());
 
-            if (aux == -1) {
-                bd.ejecutar(ds.SQLCrear());
-                aux = bd.ultimoRegistro();
-            }
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        if (aux == -1) {
+            bd.ejecutar(ds.SQLCrear());
+            aux = bd.ultimoRegistro();
         }
         return aux;
     }
+//</editor-fold>
 
-    private void guardaStatsD() {
+    public void marcarClasificado(Date fecha) throws SQLException {
+        Boe boe = new Boe(fecha);
+        bd.ejecutar(boe.SQLSetClas());
+    }
+
+    public void guardaStatsD(List lista) {
         Boletines_publicados bp;
         ModeloBoes aux;
-        Iterator it = discard.iterator();
+        Iterator it = lista.iterator();
 
         try {
-            Sql bd = new Sql(Variables.con);
+            Sql bdd = new Sql(Variables.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
@@ -237,22 +175,22 @@ public class Insercion {
                 bp.setFecha(aux.getFecha());
                 bp.setTipo(0);
 
-                bd.ejecutar(bp.SQLCrear());
+                bdd.ejecutar(bp.SQLCrear());
             }
 
-            bd.close();
+            bdd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void guardaStatsS() {
+    public void guardaStatsS(List lista) {
         Boletines_publicados bp;
         ModeloBoes aux;
-        Iterator it = select.iterator();
+        Iterator it = lista.iterator();
 
         try {
-            Sql bd = new Sql(Variables.con);
+            Sql bdd = new Sql(Variables.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
@@ -264,10 +202,10 @@ public class Insercion {
                 bp.setFecha(aux.getFecha());
                 bp.setTipo(1);
 
-                bd.ejecutar(bp.SQLCrear());
+                bdd.ejecutar(bp.SQLCrear());
             }
 
-            bd.close();
+            bdd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }

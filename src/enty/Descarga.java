@@ -10,19 +10,22 @@ import util.Varios;
 public class Descarga {
 
     private int id;
+    private String codigo;
     private String link;
     private String datos;
 
     public Descarga() {
     }
 
-    public Descarga(String link) {
+    public Descarga(String codigo, String link) {
+        this.codigo = codigo;
         this.link = link;
         this.datos = "null";
     }
 
-    public Descarga(int id, String link, String datos) {
+    public Descarga(int id, String codigo, String link, String datos) {
         this.id = id;
+        this.codigo = codigo;
         this.link = link;
         this.datos = datos;
     }
@@ -51,8 +54,17 @@ public class Descarga {
         this.datos = datos;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".descarga (link,datos) values("
+        return "INSERT into " + Variables.nombreBD + ".descarga (codigo,link,datos) values("
+                + Varios.entrecomillar(this.codigo) + ","
                 + Varios.entrecomillar(this.link) + ","
                 + Varios.entrecomillar(this.datos)
                 + ");";
@@ -65,6 +77,6 @@ public class Descarga {
     }
 
     public String SQLBuscar() {
-        return "SELECT * from " + Variables.nombreBD + ".descarga where link=" + Varios.entrecomillar(this.link);
+        return "SELECT * from " + Variables.nombreBD + ".descarga where codigo=" + Varios.entrecomillar(this.codigo);
     }
 }

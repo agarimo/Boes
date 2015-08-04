@@ -176,7 +176,7 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Descarga(rs.getInt("id"), rs.getString("link"), rs.getString("datos"));
+                aux = new Descarga(rs.getInt("id"),rs.getString("codigo"), rs.getString("link"), rs.getString("datos"));
                 list.add(aux);
             }
             rs.close();

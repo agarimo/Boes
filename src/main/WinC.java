@@ -434,12 +434,22 @@ public class WinC implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="PANEL CLASIFICACION">
     private boolean autoScroll;
+    private boolean isInsercion;
 
     @FXML
     private Button btRecargarClasificacion;
 
     @FXML
     private CheckBox cbAutoScroll;
+
+    @FXML
+    private Label lbClasificacion;
+
+    @FXML
+    private ProgressBar pbClasificacion;
+    
+    @FXML
+    private Button btVerWebC;
 
     @FXML
     void iniciaClasificacion(ActionEvent event) {
@@ -761,28 +771,95 @@ public class WinC implements Initializable {
         dpFechaC.setValue(null);
     }
 
+    private void setProcesandoC(boolean aux){
+        lbClasificacion.setVisible(aux);
+        pbClasificacion.setVisible(aux);
+        btFinClas.setDisable(aux);
+        dpFecha.setDisable(aux);
+        btSelect.setDisable(aux);
+        btDiscard.setDisable(aux);
+        btVerWebC.setDisable(aux);
+        btDescartaOrigen.setDisable(aux);
+        btRecargarClasificacion.setDisable(aux);
+        btRecoverD.setDisable(aux);
+        btRecoverS.setDisable(aux);
+    }
     @FXML
     void finalizaClas() {
-        if (publicacion.isEmpty()) {
-            Variables.isClasificando = false;
-            Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
-            in.run();
-            limpiarClasificacion();
-        } else {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("ACEPTAR BOLETINES");
-            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
-            alert.setContentText("¿Desea CONTINUAR?");
+//        if (publicacion.isEmpty()) {
+//            Variables.isClasificando = false;
+//            Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
+//            in.run();
+//            limpiarClasificacion();
+//        } else {
+//            Alert alert = new Alert(AlertType.CONFIRMATION);
+//            alert.setTitle("ACEPTAR BOLETINES");
+//            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
+//            alert.setContentText("¿Desea CONTINUAR?");
+//
+//            Optional<ButtonType> result = alert.showAndWait();
+//
+//            if (result.get() == ButtonType.OK) {
+//                Variables.isClasificando = false;
+//                Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
+//                in.run();
+//            }
+//        }
+    }
 
-            Optional<ButtonType> result = alert.showAndWait();
+    void insercion() {
+        Thread a = new Thread(() -> {
 
-            if (result.get() == ButtonType.OK) {
-                Variables.isClasificando = false;
-                Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
-                in.run();
-                limpiarClasificacion();
+            Platform.runLater(() -> {
+                setProcesandoC(true);
+                pbClasificacion.setProgress(-1);
+                lbClasificacion.setText("LIMPIANDO DUPLICADOS");
+            });
+
+            ModeloBoes aux;
+            Insercion in = new Insercion();
+            List list = in.limpiarDuplicadosLista(this.selectedList);
+
+            Platform.runLater(() -> {
+                pbClasificacion.setProgress(0);
+                lbClasificacion.setText("INICIANDO CARGA DE BOLETINES");
+            });
+
+            for (int i = 0; i < list.size(); i++) {
+                final int contador = i;
+                final int total = list.size();
+
+                Platform.runLater(() -> {
+                    int contadour = contador + 1;
+                    double counter = contador + 1;
+                    double toutal = total;
+                    lbClasificacion.setText("INSERTANDO BOLETÍN " + contadour + " de " + total);
+                    pbClasificacion.setProgress(counter / toutal);
+                });
+
+                aux = (ModeloBoes) list.get(i);
+                in.insertaBoletin(aux);
             }
-        }
+
+            Platform.runLater(() -> {
+                lbEstado.setText("COMPROBACIÓN FINALIZADA");
+                btDescargaBoletines.setDisable(false);
+                btComprobarFases.setDisable(false);
+                btGenerarArchivos.setDisable(false);
+                pbEstado.setProgress(1);
+                pbEstado.setVisible(false);
+                lbEstado.setText("");
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("COMPLETADO");
+                alert.setHeaderText("COMPROBACIÓN FINALIZADA");
+                alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE FASES");
+                alert.showAndWait();
+
+                limpiarClasificacion();
+            });
+        });
+        a.start();
     }
 
     @FXML
