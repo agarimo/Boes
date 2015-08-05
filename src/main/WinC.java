@@ -861,15 +861,32 @@ public class WinC implements Initializable {
             Platform.runLater(() -> {
                 setProcesandoC(true);
                 pbClasificacion.setProgress(-1);
-                lbClasificacion.setText("LIMPIANDO DUPLICADOS");
+                lbClasificacion.setText("INICIANDO");
             });
 
             ModeloBoes aux;
             Insercion in = new Insercion();
+            
+            Platform.runLater(() -> {
+                lbClasificacion.setText("LIMPIANDO DUPLICADOS (Selected)");
+            });
             List list = in.limpiarDuplicadosLista(this.selectedList);
+            
+            Platform.runLater(() -> {
+                lbClasificacion.setText("LIMPIANDO DUPLICADOS (Discarted)");
+            });
             List listD = in.limpiarDuplicadosLista(this.discartedList);
 
+            Platform.runLater(() -> {
+                lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Selected)");
+            });
+            
             in.guardaStatsS(list);
+            
+            Platform.runLater(() -> {
+                lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Discarted)");
+            });
+            
             in.guardaStatsD(listD);
 
             Platform.runLater(() -> {
