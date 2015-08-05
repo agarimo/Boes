@@ -28,15 +28,6 @@ public class Insercion {
     public Insercion() {
 
     }
-//    public void insertaBoletines(List lista) {
-//        ModeloBoes aux;
-//        Iterator it = cleanSelect(lista).iterator();
-//
-//        while (it.hasNext()) {
-//            aux = (ModeloBoes) it.next();
-//            insertaSelected(aux);
-//        }
-//    }
 
     //<editor-fold defaultstate="collapsed" desc="Comprobar Selección">
     public List limpiarDuplicadosLista(List list) {

@@ -202,6 +202,7 @@ public class WinC implements Initializable {
     private Button btRecargarBoletines;
 
 //</editor-fold>
+    Sql bd;
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
     ObservableList<ModeloBoes> selectedList;
@@ -447,15 +448,19 @@ public class WinC implements Initializable {
 
     @FXML
     private ProgressBar pbClasificacion;
-    
+
     @FXML
     private Button btVerWebC;
+
+    @FXML
+    private Button btSelectAll;
 
     @FXML
     void iniciaClasificacion(ActionEvent event) {
         autoScroll = true;
         cbAutoScroll.setSelected(autoScroll);
         mostrarPanel(2);
+        setProcesandoC(false);
         limpiarClasificacion();
         iniciaTablaBoes();
     }
@@ -561,14 +566,12 @@ public class WinC implements Initializable {
             publicacion.add(model);
         }
         updateClasificacion();
-        getFocusTablaBoes();
     }
 
     private void getFocusTablaBoes() {
         if (autoScroll) {
             tvBoes.getSelectionModel().select(0);
             tvBoes.scrollTo(0);
-//        tvBoes.focusModelProperty().get().focus(new TablePosition(tvBoes, 0, null));
             tvBoes.requestFocus();
         }
     }
@@ -607,25 +610,35 @@ public class WinC implements Initializable {
 
     void updateClasificacion() {
         ModeloBoes aux;
+        ObservableList<ModeloBoes> dList = FXCollections.observableArrayList();
+        ObservableList<ModeloBoes> sList = FXCollections.observableArrayList();
         Iterator it = publicacion.iterator();
+
+        try {
+            bd = new Sql(Variables.con);
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         while (it.hasNext()) {
             aux = (ModeloBoes) it.next();
 
-            if (origen_descartado.contains(aux.getOrigen())) {
-                discartedList.add(aux);
-            }
-
-            if (textoDescartado(aux.getDescripcion())) {
-                discartedList.add(aux);
+            if (origen_descartado.contains(aux.getOrigen()) || textoDescartado(aux.getDescripcion())) {
+                dList.add(aux);
             }
 
             if (boletinProcesado(aux.getCodigo())) {
-                selectedList.add(aux);
+                sList.add(aux);
             }
         }
 
-        it = discartedList.iterator();
+        try {
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        it = dList.iterator();
 
         while (it.hasNext()) {
             aux = (ModeloBoes) it.next();
@@ -635,7 +648,7 @@ public class WinC implements Initializable {
             }
         }
 
-        it = selectedList.iterator();
+        it = sList.iterator();
 
         while (it.hasNext()) {
             aux = (ModeloBoes) it.next();
@@ -645,7 +658,13 @@ public class WinC implements Initializable {
             }
         }
 
-        getFocusTablaBoes();
+        Platform.runLater(() -> {
+            getFocusTablaBoes();
+            discartedList.clear();
+            discartedList.addAll(dList);
+            selectedList.clear();
+            selectedList.addAll(sList);
+        });
     }
 
     boolean textoDescartado(String aux) {
@@ -664,14 +683,11 @@ public class WinC implements Initializable {
     }
 
     boolean boletinProcesado(String aux) {
-        Sql bd;
         int a;
         boolean is = false;
 
         try {
-            bd = new Sql(Variables.con);
             a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
-            bd.close();
             if (a > 0) {
                 is = true;
             }
@@ -690,6 +706,29 @@ public class WinC implements Initializable {
             selectedList.add(0, aux);
             publicacion.remove(aux);
             getFocusTablaBoes();
+        }
+    }
+
+    @FXML
+    void selectAll(ActionEvent event) {
+        ModeloBoes aux;
+        Iterator it;
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("SELECCIONAR TODOS");
+        alert.setHeaderText(null);
+        alert.setContentText("¿Desea SELECCIONAR TODOS?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            it = publicacion.iterator();
+
+            while (it.hasNext()) {
+                aux = (ModeloBoes) it.next();
+                selectedList.add(0, aux);
+            }
+            publicacion.clear();
         }
     }
 
@@ -740,20 +779,30 @@ public class WinC implements Initializable {
 
     @FXML
     void descartaOrigen(ActionEvent event) {
-        Sql bd;
+        Sql bdd;
         ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
-            try {
-                bd = new Sql(Variables.con);
-                bd.ejecutar("INSERT into " + Variables.nombreBD + ".origen_descartado (nombre) values("
-                        + Varios.entrecomillar(aux.getOrigen())
-                        + ");");
-                bd.close();
-                origen_descartado.add(aux.getOrigen());
-                updateClasificacion();
-            } catch (SQLException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("DESCARTAR ORIGEN");
+            alert.setHeaderText(aux.getEntidad());
+            alert.setContentText("¿Desea DESCARTAR el ORIGEN " + aux.getOrigen());
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                try {
+                    bdd = new Sql(Variables.con);
+                    bdd.ejecutar("INSERT into " + Variables.nombreBD + ".origen_descartado (nombre) values("
+                            + Varios.entrecomillar(aux.getOrigen())
+                            + ");");
+                    bdd.close();
+                    origen_descartado.add(aux.getOrigen());
+                    updateClasificacion();
+                } catch (SQLException ex) {
+                    Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -771,7 +820,7 @@ public class WinC implements Initializable {
         dpFechaC.setValue(null);
     }
 
-    private void setProcesandoC(boolean aux){
+    private void setProcesandoC(boolean aux) {
         lbClasificacion.setVisible(aux);
         pbClasificacion.setVisible(aux);
         btFinClas.setDisable(aux);
@@ -783,28 +832,27 @@ public class WinC implements Initializable {
         btRecargarClasificacion.setDisable(aux);
         btRecoverD.setDisable(aux);
         btRecoverS.setDisable(aux);
+        btSelectAll.setDisable(aux);
     }
+
     @FXML
     void finalizaClas() {
-//        if (publicacion.isEmpty()) {
-//            Variables.isClasificando = false;
-//            Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
-//            in.run();
-//            limpiarClasificacion();
-//        } else {
-//            Alert alert = new Alert(AlertType.CONFIRMATION);
-//            alert.setTitle("ACEPTAR BOLETINES");
-//            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
-//            alert.setContentText("¿Desea CONTINUAR?");
-//
-//            Optional<ButtonType> result = alert.showAndWait();
-//
-//            if (result.get() == ButtonType.OK) {
-//                Variables.isClasificando = false;
-//                Insercion in = new Insercion(this.selectedList, this.discartedList, Dates.asDate(dpFechaC.getValue()));
-//                in.run();
-//            }
-//        }
+        if (publicacion.isEmpty()) {
+            Variables.isClasificando = false;
+            insercion();
+        } else {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("ACEPTAR BOLETINES");
+            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
+            alert.setContentText("¿Desea CONTINUAR?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                Variables.isClasificando = false;
+                insercion();
+            }
+        }
     }
 
     void insercion() {
@@ -819,6 +867,10 @@ public class WinC implements Initializable {
             ModeloBoes aux;
             Insercion in = new Insercion();
             List list = in.limpiarDuplicadosLista(this.selectedList);
+            List listD = in.limpiarDuplicadosLista(this.discartedList);
+
+            in.guardaStatsS(list);
+            in.guardaStatsD(listD);
 
             Platform.runLater(() -> {
                 pbClasificacion.setProgress(0);
@@ -842,18 +894,13 @@ public class WinC implements Initializable {
             }
 
             Platform.runLater(() -> {
-                lbEstado.setText("COMPROBACIÓN FINALIZADA");
-                btDescargaBoletines.setDisable(false);
-                btComprobarFases.setDisable(false);
-                btGenerarArchivos.setDisable(false);
-                pbEstado.setProgress(1);
-                pbEstado.setVisible(false);
-                lbEstado.setText("");
+                setProcesandoC(false);
+                lbClasificacion.setText("INSERCIÓN FINALIZADA");
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("COMPLETADO");
-                alert.setHeaderText("COMPROBACIÓN FINALIZADA");
-                alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE FASES");
+                alert.setHeaderText("INSERCIÓN FINALIZADA");
+                alert.setContentText("SE HA FINALIZADO LA INSERCIÓN");
                 alert.showAndWait();
 
                 limpiarClasificacion();

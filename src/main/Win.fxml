@@ -83,7 +83,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelClasificacion" prefHeight="403.0" prefWidth="800.0">
+            <AnchorPane fx:id="panelClasificacion" prefHeight="403.0" prefWidth="800.0" visible="false">
                <children>
                   <TableView fx:id="tvBoes" layoutY="53.0" prefHeight="308.0" prefWidth="1001.0" rotate="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
@@ -97,13 +97,13 @@
                         <DatePicker fx:id="dpFechaC" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" />
                       <Button fx:id="btSelect" mnemonicParsing="false" onAction="#selectPdf" prefHeight="30.0" prefWidth="150.0" text="Seleccionar" />
                         <Button fx:id="btDiscard" mnemonicParsing="false" onAction="#discardPdf" prefHeight="30.0" prefWidth="150.0" text="Descartar" />
-                        <Button mnemonicParsing="false" onAction="#abrirWeb" prefHeight="30.0" prefWidth="150.0" text="Ver Web" />
+                        <Button fx:id="btVerWebC" mnemonicParsing="false" onAction="#abrirWeb" prefHeight="30.0" prefWidth="150.0" text="Ver Web" />
                         <Button fx:id="btDescartaOrigen" mnemonicParsing="false" onAction="#descartaOrigen" prefHeight="30.0" prefWidth="150.0" text="DESCARTA origen" />
                         <Separator orientation="VERTICAL" prefHeight="42.0" prefWidth="64.0" visible="false" />
                         <Button fx:id="btRecargarClasificacion" mnemonicParsing="false" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" text="Recargar" />
                     </items>
                   </ToolBar>
-                  <Button fx:id="btFinClas" layoutX="833.0" layoutY="483.0" mnemonicParsing="false" onAction="#finalizaClas" prefHeight="40.0" prefWidth="153.0" text="CONTINUAR" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btFinClas" layoutX="833.0" layoutY="483.0" mnemonicParsing="false" onAction="#finalizaClas" prefHeight="40.0" prefWidth="149.0" text="CONTINUAR" AnchorPane.rightAnchor="19.0" />
                   <ListView fx:id="lvSelect" layoutX="558.0" layoutY="373.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.rightAnchor="243.0" />
                   <Label layoutX="423.0" layoutY="373.0" text="Boletines seleccionados:" AnchorPane.rightAnchor="450.0" />
                   <Label layoutX="14.0" layoutY="373.0" text="Boletines Descartados:" AnchorPane.rightAnchor="867.0" />
@@ -115,6 +115,7 @@
                   <CheckBox fx:id="cbAutoScroll" layoutX="833.0" layoutY="373.0" mnemonicParsing="false" onAction="#cambioEnCheckBox" prefHeight="17.0" prefWidth="153.0" selected="true" text="AutoScroll" />
                   <ProgressBar fx:id="pbClasificacion" layoutX="15.0" layoutY="554.0" prefHeight="18.0" prefWidth="971.0" progress="0.0" />
                   <Label fx:id="lbClasificacion" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="533.0" prefHeight="17.0" prefWidth="971.0" text="INSERTANDO 5 DE 200" />
+                  <Button fx:id="btSelectAll" layoutX="833.0" layoutY="399.0" mnemonicParsing="false" onAction="#selectAll" prefHeight="25.0" prefWidth="149.0" text="Seleccionar TODO" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0" visible="false">
