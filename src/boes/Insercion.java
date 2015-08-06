@@ -51,11 +51,45 @@ public class Insercion {
         }
         return lista;
     }
+    
+    public List limpiarDuplicadosListaD(List list) {
+        List lista = new ArrayList();
+        ModeloBoes aux;
+        Iterator it = list.iterator();
+
+        try {
+            bd = new Sql(Variables.con);
+
+            while (it.hasNext()) {
+                aux = (ModeloBoes) it.next();
+                if (!checkSelectedD(aux)) {
+                    lista.add(aux);
+                }
+            }
+
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lista;
+    }
 
     private boolean checkSelected(ModeloBoes aux) throws SQLException {
         boolean is = false;
 
         int a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux.getCodigo()));
+
+        if (a > 0) {
+            is = true;
+        }
+
+        return is;
+    }
+    
+    private boolean checkSelectedD(ModeloBoes aux) throws SQLException {
+        boolean is = false;
+
+        int a = bd.buscar("SELECT * FROM stats.boletines_publicados where codigo=" + Varios.entrecomillar(aux.getCodigo()));
 
         if (a > 0) {
             is = true;
@@ -73,7 +107,7 @@ public class Insercion {
 
             bl.setIdOrigen(getIdOrigen(aux.getEntidad(), aux.getOrigen()));
             bl.setIdBoe(getIdBoe(aux.getFecha()));
-            bl.setIdDescarga(getIdDescarga(aux.getLink()));
+            bl.setIdDescarga(getIdDescarga(aux.getCodigo(),aux.getLink()));
             bl.setCodigo(aux.getCodigo());
             bl.setTipo("*711*");
             bl.setFase("BCN1");
@@ -128,10 +162,12 @@ public class Insercion {
         return bd.getInt("SELECT idioma FROM " + Variables.nombreBD + ".origen where id=" + idOrigen);
     }
 
-    private int getIdDescarga(String link) throws SQLException {
-        int aux = 0;
+    private int getIdDescarga(String codigo,String link) throws SQLException {
+        int aux;
         Descarga ds = new Descarga();
+        ds.setCodigo(codigo);
         ds.setLink(link);
+        ds.setDatos("null");
 
         aux = bd.buscar(ds.SQLBuscar());
 

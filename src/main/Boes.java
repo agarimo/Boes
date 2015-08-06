@@ -1,6 +1,5 @@
 package main;
 
-import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,9 +25,9 @@ public class Boes extends Application {
 
     /**
      * @param args the command line arguments
-     * @throws java.sql.SQLException
      */
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         launch(args);
+
     }
 }

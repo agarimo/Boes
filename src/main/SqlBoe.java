@@ -187,6 +187,29 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List<Descarga> listaDescarga(String query) {
+        List<Descarga> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Descarga aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Descarga(rs.getInt("id"),rs.getString("codigo"), rs.getString("link"), rs.getString("datos"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public static List<ModeloBoletines> listaVistaBoletin(String query) {
         List<ModeloBoletines> list = new ArrayList();
@@ -284,6 +307,30 @@ public class SqlBoe {
                 aux = new ModeloComboBox();
                 aux.id.set(rs.getInt("id"));
                 aux.nombre.set(rs.getString("nombre"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<Origen> listaOrigen(String query){
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Origen aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Origen(rs.getInt("id"),rs.getInt("idEntidad"),rs.getString("nombre"),rs.getString("codigo"),
+                        rs.getString("codigoAy"),rs.getString("codigoUn"),rs.getString("codigoTes"));
                 list.add(aux);
             }
             rs.close();

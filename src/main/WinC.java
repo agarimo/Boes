@@ -456,6 +456,15 @@ public class WinC implements Initializable {
     private Button btSelectAll;
 
     @FXML
+    private Label lbContadorS;
+
+    @FXML
+    private Label lbContadorD;
+
+    @FXML
+    private Label lbContadorT;
+
+    @FXML
     void iniciaClasificacion(ActionEvent event) {
         autoScroll = true;
         cbAutoScroll.setSelected(autoScroll);
@@ -578,6 +587,9 @@ public class WinC implements Initializable {
 
     @FXML
     void cambioEnDatePicker() {
+        lbContadorT.setText("...");
+        lbContadorD.setText("...");
+        lbContadorS.setText("...");
         publicacion.clear();
         selectedList.clear();
         discartedList.clear();
@@ -664,6 +676,9 @@ public class WinC implements Initializable {
             discartedList.addAll(dList);
             selectedList.clear();
             selectedList.addAll(sList);
+            lbContadorT.setText(Integer.toString(publicacion.size()));
+            lbContadorD.setText(Integer.toString(discartedList.size()));
+            lbContadorS.setText(Integer.toString(selectedList.size()));
         });
     }
 
@@ -866,27 +881,27 @@ public class WinC implements Initializable {
 
             ModeloBoes aux;
             Insercion in = new Insercion();
-            
+
             Platform.runLater(() -> {
                 lbClasificacion.setText("LIMPIANDO DUPLICADOS (Selected)");
             });
             List list = in.limpiarDuplicadosLista(this.selectedList);
-            
+
             Platform.runLater(() -> {
                 lbClasificacion.setText("LIMPIANDO DUPLICADOS (Discarted)");
             });
-            List listD = in.limpiarDuplicadosLista(this.discartedList);
+            List listD = in.limpiarDuplicadosListaD(this.discartedList);
 
             Platform.runLater(() -> {
                 lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Selected)");
             });
-            
+
             in.guardaStatsS(list);
-            
+
             Platform.runLater(() -> {
                 lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Discarted)");
             });
-            
+
             in.guardaStatsD(listD);
 
             Platform.runLater(() -> {
