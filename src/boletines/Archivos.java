@@ -31,6 +31,8 @@ public class Archivos {
     public Archivos(Date fecha) {
         this.fecha = fecha;
         this.archivoFecha = new File(Variables.ficheroBoe, Dates.imprimeFecha(this.fecha));
+        Files.borraDirectorio(archivoFecha);
+        archivoFecha.mkdir();
         this.boletines = new ArrayList();
         cargaBoletines();
     }

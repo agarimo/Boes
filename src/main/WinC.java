@@ -972,6 +972,9 @@ public class WinC implements Initializable {
     @FXML
     Button btLimpiar;
 
+    @FXML
+    Button btLimpiarBoletines;
+
     List boletinesIdioma;
 
     @FXML
@@ -1203,12 +1206,71 @@ public class WinC implements Initializable {
     }
 
     @FXML
+    void limpiarBoletines(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFechaB.getValue());
+
+        if (fecha != null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btDescargaBoletines.setDisable(true);
+                    btComprobarFases.setDisable(true);
+                    btGenerarArchivos.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(0);
+                    lbEstado.setText("LIMPIANDO BOLETINES");
+                });
+
+                Boletin aux;
+                Limpieza li;
+                List list = SqlBoe.listaBoletin("SELECT * FROM boes.boletin where idBoe="
+                        + "(SELECT id FROM boes.boe where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+")");
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("LIMPIANDO BOLETIN " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (Boletin) list.get(i);
+                    li=new Limpieza(aux);
+                    li.run();
+                }
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("LIMPIEZA FINALIZADA");
+                    btDescargaBoletines.setDisable(false);
+                    btComprobarFases.setDisable(false);
+                    btGenerarArchivos.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("COMPLETADO");
+                    alert.setHeaderText("LIMPIEZA FINALIZADA");
+                    alert.setContentText("SE HA FINALIZADO LA LIMPIEZA DE BOLETINES");
+                    alert.showAndWait();
+
+                });
+            });
+            a.start();
+        }
+        recargarBoletines();
+    }
+
+    @FXML
     void limpiarBoletin(ActionEvent event) {
+        Limpieza li;
         ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
-            Limpieza li = new Limpieza(aux.getCodigo());
-            li.run();
+            li = new Limpieza(aux.getCodigo());
+            li.runSingle();
 
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("GUARDAR BOLETÍN");
@@ -1232,16 +1294,16 @@ public class WinC implements Initializable {
     }
 
     void guardarBoletinLimpiado(int id, String codigo) {
-        Sql bd;
+        Sql bdd;
         File aux = new File("tempLp.txt");
         String datos = Files.leeArchivo(aux);
         datos = datos.replace("'", "\\'");
 
         try {
-            bd = new Sql(Variables.con);
-            bd.ejecutar("UPDATE " + Variables.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + id);
-            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET idioma=" + 0 + " where codigo=" + Varios.entrecomillar(codigo));
-            bd.close();
+            bdd = new Sql(Variables.con);
+            bdd.ejecutar("UPDATE " + Variables.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + id);
+            bdd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET idioma=" + 0 + " where codigo=" + Varios.entrecomillar(codigo));
+            bdd.close();
         } catch (SQLException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }

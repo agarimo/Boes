@@ -50,7 +50,7 @@ public class Union {
     }
     
     public void run(){
-        
+        //TODO carga los boletines del día por el código de unión y los vuelca a archivo.
     }
     
 }

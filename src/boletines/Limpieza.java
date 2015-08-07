@@ -1,12 +1,11 @@
 package boletines;
 
 import enty.Boletin;
-import enty.Cabecera;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +23,6 @@ import util.Varios;
 public class Limpieza {
 
     Boletin boletin;
-    List cabeceras;
     String datos;
 
     public Limpieza(String codigo) {
@@ -33,45 +31,61 @@ public class Limpieza {
             cargarDatos();
         }
     }
+    
+    public Limpieza (Boletin boletin){
+        this.boletin=boletin;
+        cargarDatos();
+    }
 
     private void cargarDatos() {
         Sql bd;
-        cabeceras = SqlBoe.listaCabeceras(boletin.getIdOrigen(), 1);
-
         try {
             bd = new Sql(Variables.con);
             datos = bd.getString("SELECT datos FROM " + Variables.nombreBD + ".descarga where id=" + boletin.getIdDescarga());
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Limpieza.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void run() {
-        Cabecera aux;
-        Iterator it = cabeceras.iterator();
-
-        while (it.hasNext()) {
-            aux = (Cabecera) it.next();
-
-            if (datos.contains(aux.getCabecera())) {
-                lector(aux.getCabecera());
-                break;
-            }
-        }
-    }
-
-    private void lector(String cabecera) {
-        boolean leer = true;
+        List lista=new ArrayList();
         StringBuilder buffer = new StringBuilder();
         String[] split = datos.split(System.getProperty("line.separator"));
 
         for (String split1 : split) {
 
-            if (split1.contains(cabecera)) {
-                leer = false;
+            if (!lista.contains(split1)) {
+                lista.add(split1);
+                buffer.append(split1);
+                buffer.append(System.getProperty("line.separator"));
             }
+        }
+        guardaDatos(buffer.toString());
+    }
+    
+    private void guardaDatos(String datos){
+        Sql bd;
+        datos=datos.replace("'", "\\'");
+        
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar("UPDATE " + Variables.nombreBD + ".descarga SET datos="+Varios.entrecomillar(datos)+" where id=" + boletin.getIdDescarga());
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Limpieza.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-            if (leer) {
+    public void runSingle() {
+        List lista=new ArrayList();
+        StringBuilder buffer = new StringBuilder();
+        String[] split = datos.split(System.getProperty("line.separator"));
+
+        for (String split1 : split) {
+
+            if (!lista.contains(split1)) {
+                lista.add(split1);
                 buffer.append(split1);
                 buffer.append(System.getProperty("line.separator"));
             }
@@ -96,5 +110,6 @@ public class Limpieza {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    
 }
