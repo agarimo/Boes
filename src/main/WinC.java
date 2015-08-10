@@ -1360,15 +1360,15 @@ public class WinC implements Initializable {
 
     @FXML
     void verBoletin(ActionEvent event) {
-        Sql bd;
+        Sql bdd;
         File file = new File("boletinTemp.txt");
         ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
         String datos = "";
 
         try {
-            bd = new Sql(Variables.con);
-            datos = bd.getString("SELECT datos FROM boes.descarga WHERE id=" + aux.getIdDescarga());
-            bd.close();
+            bdd = new Sql(Variables.con);
+            datos = bdd.getString("SELECT datos FROM boes.descarga WHERE id=" + aux.getIdDescarga());
+            bdd.close();
         } catch (SQLException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }

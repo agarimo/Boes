@@ -126,7 +126,7 @@
             </AnchorPane>
             <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0" visible="false">
                <children>
-                  <ToolBar prefHeight="52.0" prefWidth="189.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="812.0">
+                  <ToolBar maxWidth="189.0" prefHeight="52.0" prefWidth="189.0" AnchorPane.leftAnchor="0.0">
                     <items>
                         <DatePicker fx:id="dpFechaB" onAction="#cambioEnDatePickerBoletines" prefHeight="30.0" prefWidth="150.0" />
                         <Button fx:id="btDescargaBoletines" graphicTextGap="1.0" maxHeight="30.0" maxWidth="150.0" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" textOverrun="CLIP" />
@@ -147,7 +147,7 @@
                   </TableView>
                   <Label fx:id="lbEstado" alignment="CENTER" layoutX="15.0" layoutY="552.0" prefHeight="25.0" prefWidth="971.0" text="..." />
                   <ProgressBar fx:id="pbEstado" layoutX="1.0" layoutY="534.0" prefHeight="17.0" prefWidth="1000.0" progress="0.0" visible="false" />
-                  <ToolBar layoutX="189.0" prefHeight="52.0" prefWidth="812.0">
+                  <ToolBar layoutX="189.0" prefHeight="52.0" prefWidth="812.0" AnchorPane.leftAnchor="189.0" AnchorPane.rightAnchor="0.0">
                     <items>
                       <Button fx:id="btVerBoletin" mnemonicParsing="false" onAction="#verBoletin" prefHeight="30.0" prefWidth="150.0" text="VER BOLETÍN" />
                         <Button fx:id="btVerBoletinWeb" mnemonicParsing="false" onAction="#verBoletinWeb" prefHeight="30.0" prefWidth="150.0" text="VER EN WEB" />

@@ -4,6 +4,7 @@ import boes.Boe;
 import enty.Boletin;
 import enty.Cabecera;
 import enty.Descarga;
+import enty.Estructura;
 import enty.Fase;
 import enty.Origen;
 import java.sql.ResultSet;
@@ -105,6 +106,27 @@ public class SqlBoe {
             while (rs.next()) {
                 aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
                         rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"),rs.getInt("idioma"));
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+    
+    public static Estructura getEstructura(String query){
+        Sql bd;
+        ResultSet rs;
+        Estructura aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Estructura(rs.getInt("id"),rs.getString("nombre"),rs.getString("estructura"));
             }
             rs.close();
             bd.close();
@@ -529,6 +551,29 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Cabecera(rs.getInt("id"),rs.getInt("idOrigen"), rs.getString("cabecera"), rs.getInt("tipo"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+     public static List<Estructura> listaEstructuras(String query) {
+        List<Estructura> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Estructura aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Estructura(rs.getInt("id"),rs.getString("nombre"),rs.getString("estructura"));
                 list.add(aux);
             }
             rs.close();

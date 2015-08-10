@@ -41,19 +41,24 @@ public class Archivos {
         String query = "SELECT * FROM boes.vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
         boletines = SqlBoe.listaVistaBoletin(query);
     }
-    
-    public List getBoletines(){
+
+    public List getBoletines() {
         return this.boletines;
     }
 
     public void creaArchivo(ModeloBoletines aux) {
         File file;
+        File file1;
         StringBuilder buffer;
 
         try {
             buffer = new StringBuilder();
             file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha, aux.getEntidad()) + ".txt");
+            //temp archivos sueltos.
+            file1 = new File(archivoFecha, getNombreArchivoN(aux.getCodigo(), fecha, aux.getEntidad()) + ".txt");
             file.createNewFile();
+            //temp archivos sueltos.
+            file1.createNewFile();
             buffer.append("BCN2 ");
             buffer.append(aux.getLink());
             buffer.append(System.getProperty("line.separator"));
@@ -67,6 +72,7 @@ public class Archivos {
             buffer.append(getDatosBoletin(aux.getIdDescarga()));
 
             Files.escribeArchivo(file, buffer.toString());
+            Files.escribeArchivo(file1, buffer.toString());
 
         } catch (IOException ex) {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
@@ -207,6 +213,59 @@ public class Archivos {
         } else {
             str = str + mes + ".";
         }
+
+        return str;
+    }
+
+    private String getNombreArchivoN(String codigo, Date fecha, String entidad) {
+        String str = "";
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fecha);
+        String ori = codigo;
+
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        if (dia < 10) {
+            str = str + "0" + dia;
+        } else {
+            str = str + dia;
+        }
+
+        str = str + "0";
+
+        String anno = Integer.toString(cal.get(Calendar.YEAR));
+        str = str + anno.charAt(3);
+
+        str = str + getEntidad(entidad);
+
+        int mes = cal.get(Calendar.MONTH);
+        mes++;
+        if (mes < 10) {
+            str = str + mes + "Z-";
+        } else {
+            if (mes == 10) {
+                str = str + "XZ-";
+            }
+            if (mes == 11) {
+                str = str + "YZ-";
+            }
+            if (mes == 12) {
+                str = str + "ZZ-";
+            }
+        }
+
+        if (dia < 10) {
+            str = str + "0" + dia + ".";
+        } else {
+            str = str + dia + ".";
+        }
+
+        if (mes < 10) {
+            str = str + "0" + mes + ".";
+        } else {
+            str = str + mes + ".";
+        }
+
+        str = str + "--" + ori;
 
         return str;
     }
