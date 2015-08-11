@@ -49,8 +49,8 @@ public class Variables {
 
     private static void setConexion() {
         con = new Conexion();
-        con.setDireccion("192.168.1.40");
-//        con.setDireccion("localhost");
+//        con.setDireccion("192.168.1.40");
+        con.setDireccion("localhost");
         con.setUsuario("admin");
         con.setPass("IkuinenK@@m.s84");
         con.setPuerto("3306");

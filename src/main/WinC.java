@@ -178,7 +178,10 @@ public class WinC implements Initializable {
     private TableColumn<ModeloBoletines, String> tipoCLB;
 
     @FXML
-    private TableColumn<ModeloBoletines, String> estadoCLB;
+    private TableColumn<ModeloBoletines, Integer> faseCLB;
+
+    @FXML
+    private TableColumn<ModeloBoletines, Integer> estructuraCLB;
 
     @FXML
     private DatePicker dpFechaB;
@@ -300,6 +303,29 @@ public class WinC implements Initializable {
     void descargaPendientes(ActionEvent event) {
 //        Download dw = new Download();
 //        dw.start();
+    }
+
+    @FXML
+    void descargarBoletines(ActionEvent event) {
+        Thread a = new Thread(() -> {
+            Descarga aux;
+            Download dw = new Download();
+            List list = dw.getListado();
+
+            for (int i = 0; i < list.size(); i++) {
+                aux = (Descarga) list.get(i);
+                dw.descarga(aux);
+            }
+
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("COMPLETADO");
+                alert.setHeaderText("DESCARGA FINALIZADA");
+                alert.setContentText("SE HAN COMPLETADO LAS DESCARGAS");
+                alert.showAndWait();
+            });
+        });
+        a.start();
     }
 //</editor-fold>
 
@@ -852,11 +878,12 @@ public class WinC implements Initializable {
 
     @FXML
     void finalizaClas() {
+
         if (publicacion.isEmpty()) {
             Variables.isClasificando = false;
             insercion();
         } else {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ACEPTAR BOLETINES");
             alert.setHeaderText("Todavía quedan Boletines sin clasificar");
             alert.setContentText("¿Desea CONTINUAR?");
@@ -926,13 +953,67 @@ public class WinC implements Initializable {
             }
 
             Platform.runLater(() -> {
-                setProcesandoC(false);
                 lbClasificacion.setText("INSERCIÓN FINALIZADA");
+                pbClasificacion.setProgress(-1);
+                lbClasificacion.setText("INICIANDO DESCARGA");
+            });
+
+            Descarga des;
+            Download dw = new Download();
+            List listDes = dw.getListado();
+
+            for (int i = 0; i < listDes.size(); i++) {
+                final int contador = i;
+                final int total = listDes.size();
+                Platform.runLater(() -> {
+                    int contadour = contador + 1;
+                    double counter = contador + 1;
+                    double toutal = total;
+                    lbClasificacion.setText("DESCARGANDO ARCHIVO " + contadour + " de " + total);
+                    pbClasificacion.setProgress(counter / toutal);
+                });
+                des = (Descarga) listDes.get(i);
+                dw.descarga(des);
+            }
+
+            Platform.runLater(() -> {
+                lbClasificacion.setText("DESCARGA FINALIZADA");
+                pbClasificacion.setProgress(-1);
+                lbClasificacion.setText("INICIANDO");
+            });
+
+            Date fecha = Dates.asDate(dpFechaC.getValue());
+
+            if (fecha != null) {
+                Boletin bol;
+                Limpieza li;
+                List listLi = SqlBoe.listaBoletin("SELECT * FROM boes.boletin where idBoe="
+                        + "(SELECT id FROM boes.boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + ")");
+
+                for (int i = 0; i < listLi.size(); i++) {
+                    final int contador = i;
+                    final int total = listLi.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbClasificacion.setText("LIMPIANDO BOLETIN " + contadour + " de " + total);
+                        pbClasificacion.setProgress(counter / toutal);
+                    });
+                    bol = (Boletin) listLi.get(i);
+                    li = new Limpieza(bol);
+                    li.run();
+                }
+            }
+
+            Platform.runLater(() -> {
+                setProcesandoC(false);
+                lbClasificacion.setText("LIMPIEZA FINALIZADA");
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("COMPLETADO");
-                alert.setHeaderText("INSERCIÓN FINALIZADA");
-                alert.setContentText("SE HA FINALIZADO LA INSERCIÓN");
+                alert.setHeaderText("PROCESO FINALIZADO");
+                alert.setContentText("SE HA FINALIZADO LA INSERCIÓN, DESCARGA Y LIMPIEZA");
                 alert.showAndWait();
 
                 limpiarClasificacion();
@@ -973,7 +1054,7 @@ public class WinC implements Initializable {
     Button btLimpiar;
 
     @FXML
-    Button btLimpiarBoletines;
+    Button btEstructuras;
 
     List boletinesIdioma;
 
@@ -1014,7 +1095,65 @@ public class WinC implements Initializable {
         origenCLB.setCellValueFactory(new PropertyValueFactory<>("origen"));
         fechaCLB.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         tipoCLB.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-        estadoCLB.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        faseCLB.setCellValueFactory(new PropertyValueFactory<>("isFase"));
+        faseCLB.setCellFactory(column -> {
+            return new TableCell<ModeloBoletines, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText("");
+
+                        switch (item) {
+                            case 0:
+                                setTextFill(Color.BLACK);
+                                setStyle("-fx-background-color: red");
+                                break;
+                            case 1:
+                                setTextFill(Color.BLACK);
+                                setStyle("-fx-background-color: orange");
+                                break;
+                            case 2:
+                                setTextFill(Color.BLACK);
+                                setStyle("-fx-background-color: green");
+                                break;
+                            default:
+                                setTextFill(Color.BLACK);
+                                setStyle("");
+                                break;
+                        }
+                    }
+                }
+            };
+        });
+        estructuraCLB.setCellValueFactory(new PropertyValueFactory<>("isEstructura"));
+        estructuraCLB.setCellFactory(column -> {
+            return new TableCell<ModeloBoletines, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        if (item == 0) {
+                            setText("");
+                            setTextFill(Color.BLACK);
+                            setStyle("-fx-background-color: red");
+                        } else {
+                            setText(item.toString());
+                            setTextFill(Color.BLACK);
+                            setStyle("");
+                        }
+                    }
+                }
+            };
+        });
 
         boletinesList = FXCollections.observableArrayList();
         tvBoletines.setItems(boletinesList);
@@ -1044,54 +1183,8 @@ public class WinC implements Initializable {
     }
 
     @FXML
-    void descargarBoletines(ActionEvent event) {
-        Thread a = new Thread(() -> {
+    void comprobarEstructuras(ActionEvent event) {
 
-            Platform.runLater(() -> {
-                btDescargaBoletines.setDisable(true);
-                btComprobarFases.setDisable(true);
-                btGenerarArchivos.setDisable(true);
-                pbEstado.setVisible(true);
-                pbEstado.setProgress(0);
-                lbEstado.setText("DESCARGANDO BOLETINES");
-            });
-
-            Descarga aux;
-            Download dw = new Download();
-            List list = dw.getListado();
-
-            for (int i = 0; i < list.size(); i++) {
-                final int contador = i;
-                final int total = list.size();
-                Platform.runLater(() -> {
-                    int contadour = contador + 1;
-                    double counter = contador + 1;
-                    double toutal = total;
-                    lbEstado.setText("DESCARGANDO ARCHIVO " + contadour + " de " + total);
-                    pbEstado.setProgress(counter / toutal);
-                });
-                aux = (Descarga) list.get(i);
-                dw.descarga(aux);
-            }
-
-            Platform.runLater(() -> {
-                lbEstado.setText("DESCARGA COMPLETADA");
-                btDescargaBoletines.setDisable(false);
-                btComprobarFases.setDisable(false);
-                btGenerarArchivos.setDisable(false);
-                pbEstado.setProgress(1);
-                pbEstado.setVisible(false);
-                lbEstado.setText("");
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("COMPLETADO");
-                alert.setHeaderText("DESCARGA FINALIZADA");
-                alert.setContentText("SE HAN COMPLETADO LAS DESCARGAS");
-                alert.showAndWait();
-
-            });
-        });
-        a.start();
     }
 
     @FXML
@@ -1198,69 +1291,12 @@ public class WinC implements Initializable {
                     alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE FASES");
                     alert.showAndWait();
 
+                    recargarBoletines();
                 });
             });
             a.start();
         }
-        recargarBoletines();
-    }
 
-    @FXML
-    void limpiarBoletines(ActionEvent event) {
-        Date fecha = Dates.asDate(dpFechaB.getValue());
-
-        if (fecha != null) {
-            Thread a = new Thread(() -> {
-
-                Platform.runLater(() -> {
-                    btDescargaBoletines.setDisable(true);
-                    btComprobarFases.setDisable(true);
-                    btGenerarArchivos.setDisable(true);
-                    pbEstado.setVisible(true);
-                    pbEstado.setProgress(0);
-                    lbEstado.setText("LIMPIANDO BOLETINES");
-                });
-
-                Boletin aux;
-                Limpieza li;
-                List list = SqlBoe.listaBoletin("SELECT * FROM boes.boletin where idBoe="
-                        + "(SELECT id FROM boes.boe where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+")");
-
-                for (int i = 0; i < list.size(); i++) {
-                    final int contador = i;
-                    final int total = list.size();
-                    Platform.runLater(() -> {
-                        int contadour = contador + 1;
-                        double counter = contador + 1;
-                        double toutal = total;
-                        lbEstado.setText("LIMPIANDO BOLETIN " + contadour + " de " + total);
-                        pbEstado.setProgress(counter / toutal);
-                    });
-                    aux = (Boletin) list.get(i);
-                    li=new Limpieza(aux);
-                    li.run();
-                }
-
-                Platform.runLater(() -> {
-                    lbEstado.setText("LIMPIEZA FINALIZADA");
-                    btDescargaBoletines.setDisable(false);
-                    btComprobarFases.setDisable(false);
-                    btGenerarArchivos.setDisable(false);
-                    pbEstado.setProgress(1);
-                    pbEstado.setVisible(false);
-                    lbEstado.setText("");
-
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("COMPLETADO");
-                    alert.setHeaderText("LIMPIEZA FINALIZADA");
-                    alert.setContentText("SE HA FINALIZADO LA LIMPIEZA DE BOLETINES");
-                    alert.showAndWait();
-
-                });
-            });
-            a.start();
-        }
-        recargarBoletines();
     }
 
     @FXML

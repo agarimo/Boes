@@ -39,6 +39,21 @@ public class Fases {
         return this.boletines;
     }
 
+    private String getDatos(int id) {
+        Sql bd;
+        String str = null;
+        
+        try {
+            bd = new Sql(Variables.con);
+            str = bd.getString("SELECT datos FROM " + Variables.nombreBD + ".descarga where id=" + id);
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return str;
+    }
+
     public void run() {
         Sql bd;
         Fase fase;
@@ -53,10 +68,10 @@ public class Fases {
             if (fase != null) {
                 aux.setTipo(fase.getCodigo());
                 aux.setFase(getCodigoOrigen(aux.getIdOrigen()) + "-" + fase.toString());
-                aux.setEstado(2);
+                aux.setIsFase(2);
             } else {
                 aux.setFase(getCodigoOrigen(aux.getIdOrigen()));
-                aux.setEstado(3);
+                aux.setIsFase(1);
             }
 
             try {
@@ -78,10 +93,10 @@ public class Fases {
         if (fase != null) {
             aux.setTipo(fase.getCodigo());
             aux.setFase(getCodigoOrigen(aux.getIdOrigen()) + "-" + fase.toString());
-            aux.setEstado(2);
+            aux.setIsFase(2);
         } else {
             aux.setFase(getCodigoOrigen(aux.getIdOrigen()));
-            aux.setEstado(3);
+            aux.setIsFase(1);
         }
 
         try {
@@ -145,20 +160,4 @@ public class Fases {
         
         return list;
     }
-    
-    private String getDatos(int id) {
-        Sql bd;
-        String str = null;
-
-        try {
-            bd = new Sql(Variables.con);
-            str = bd.getString("SELECT datos FROM " + Variables.nombreBD + ".descarga where id=" + id);
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return str;
-    }
-
 }

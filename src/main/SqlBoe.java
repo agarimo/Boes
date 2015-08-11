@@ -37,12 +37,13 @@ public class SqlBoe {
 
         alert.showAndWait();
     }
-    
-    public static void eliminaBoletin(String codigo){
+
+    public static void eliminaBoletin(String codigo) {
         Sql bd;
         try {
-            bd=new Sql(Variables.con);
-            bd.ejecutar("DELETE FROM boes.boletin where codigo="+Varios.entrecomillar(codigo));
+            bd = new Sql(Variables.con);
+            bd.ejecutar("DELETE FROM boes.boletin where codigo=" + Varios.entrecomillar(codigo));
+            bd.ejecutarQueryRs("UPDATE stats.boletines_publicados SET tipo=0 where codigo="+Varios.entrecomillar(codigo));
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
@@ -53,7 +54,7 @@ public class SqlBoe {
         Sql bd;
         ResultSet rs;
         Boe aux = null;
-        String query = "SELECT * from "+Variables.nombreBD+".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        String query = "SELECT * from " + Variables.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
 
         try {
             bd = new Sql(Variables.con);
@@ -70,20 +71,20 @@ public class SqlBoe {
         }
         return aux;
     }
-    
+
     public static Origen getOrigen(int id) {
         Sql bd;
         ResultSet rs;
         Origen aux = null;
-        String query = "SELECT * from "+Variables.nombreBD+".origen where id=" + id;
+        String query = "SELECT * from " + Variables.nombreBD + ".origen where id=" + id;
 
         try {
             bd = new Sql(Variables.con);
             rs = bd.ejecutarQueryRs(query);
 
             if (rs.next()) {
-               aux= new Origen(rs.getInt("id"),rs.getInt("idEntidad"),rs.getString("nombre"),rs.getString("codigo"),
-                       rs.getString("codigoAy"),rs.getString("codigoUn"),rs.getString("codigoTes")); 
+                aux = new Origen(rs.getInt("id"), rs.getInt("idEntidad"), rs.getString("nombre"), rs.getString("codigo"),
+                        rs.getString("codigoAy"), rs.getString("codigoUn"), rs.getString("codigoTes"));
             }
             rs.close();
             bd.close();
@@ -93,7 +94,7 @@ public class SqlBoe {
         }
         return aux;
     }
-    
+
     public static Boletin getBoletin(String query) {
         Sql bd;
         ResultSet rs;
@@ -105,7 +106,8 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
-                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"),rs.getInt("idioma"));
+                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("isFase"),
+                        rs.getInt("isEstructura"), rs.getInt("idioma"));
             }
             rs.close();
             bd.close();
@@ -115,8 +117,8 @@ public class SqlBoe {
         }
         return aux;
     }
-    
-    public static Estructura getEstructura(String query){
+
+    public static Estructura getEstructura(String query) {
         Sql bd;
         ResultSet rs;
         Estructura aux = null;
@@ -126,7 +128,7 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Estructura(rs.getInt("id"),rs.getString("nombre"),rs.getString("estructura"));
+                aux = new Estructura(rs.getInt("id"), rs.getString("nombre"), rs.getString("estructura"));
             }
             rs.close();
             bd.close();
@@ -174,7 +176,8 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Boletin(rs.getInt("id"), rs.getInt("idOrigen"), rs.getInt("idBoe"), rs.getInt("idDescarga"),
-                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("estado"),rs.getInt("idioma"));
+                        rs.getString("codigo"), rs.getString("tipo"), rs.getString("fase"), rs.getInt("isFase"),
+                        rs.getInt("isEstructura"), rs.getInt("idioma"));
                 list.add(aux);
             }
             rs.close();
@@ -198,7 +201,7 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Descarga(rs.getInt("id"),rs.getString("codigo"), rs.getString("link"), rs.getString("datos"));
+                aux = new Descarga(rs.getInt("id"), rs.getString("codigo"), rs.getString("link"), rs.getString("datos"));
                 list.add(aux);
             }
             rs.close();
@@ -209,7 +212,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<Descarga> listaDescarga(String query) {
         List<Descarga> list = new ArrayList();
         Sql bd;
@@ -221,7 +224,7 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Descarga(rs.getInt("id"),rs.getString("codigo"), rs.getString("link"), rs.getString("datos"));
+                aux = new Descarga(rs.getInt("id"), rs.getString("codigo"), rs.getString("link"), rs.getString("datos"));
                 list.add(aux);
             }
             rs.close();
@@ -251,7 +254,8 @@ public class SqlBoe {
                 aux.fecha.set(Dates.imprimeFecha(rs.getDate("fecha")));
                 aux.tipo.set(rs.getString("tipo"));
                 aux.fase.set(rs.getString("fase"));
-                aux.estado.set(rs.getInt("estado"));
+                aux.isFase.set(rs.getInt("isFase"));
+                aux.isEstructura.set(rs.getInt("isEstructura"));
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.link.set(rs.getString("link"));
                 aux.idioma.set(rs.getInt("idioma"));
@@ -289,7 +293,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaTextoDescartado() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".texto_descartado";
         List list = new ArrayList();
@@ -339,8 +343,8 @@ public class SqlBoe {
         }
         return list;
     }
-    
-    public static List<Origen> listaOrigen(String query){
+
+    public static List<Origen> listaOrigen(String query) {
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -351,8 +355,8 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Origen(rs.getInt("id"),rs.getInt("idEntidad"),rs.getString("nombre"),rs.getString("codigo"),
-                        rs.getString("codigoAy"),rs.getString("codigoUn"),rs.getString("codigoTes"));
+                aux = new Origen(rs.getInt("id"), rs.getInt("idEntidad"), rs.getString("nombre"), rs.getString("codigo"),
+                        rs.getString("codigoAy"), rs.getString("codigoUn"), rs.getString("codigoTes"));
                 list.add(aux);
             }
             rs.close();
@@ -415,7 +419,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<ModeloCabeceras> listaCabeceras(int id) {
         String query = "SELECT * FROM " + Variables.nombreBD + ".cabeceras where idOrigen=" + id;
         List list = new ArrayList();
@@ -506,7 +510,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<Fase> listaFaseTestra(String query) {
         List list = new ArrayList();
         Sql bd;
@@ -537,9 +541,9 @@ public class SqlBoe {
         }
         return list;
     }
-    
-    public static List<Cabecera> listaCabeceras(int idOrigen,int tipo) {
-        String query = "SELECT * FROM boes.cabeceras where idOrigen="+idOrigen+" and tipo="+tipo;
+
+    public static List<Cabecera> listaCabeceras(int idOrigen, int tipo) {
+        String query = "SELECT * FROM boes.cabeceras where idOrigen=" + idOrigen + " and tipo=" + tipo;
         List<Cabecera> list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -550,7 +554,7 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Cabecera(rs.getInt("id"),rs.getInt("idOrigen"), rs.getString("cabecera"), rs.getInt("tipo"));
+                aux = new Cabecera(rs.getInt("id"), rs.getInt("idOrigen"), rs.getString("cabecera"), rs.getInt("tipo"));
                 list.add(aux);
             }
             rs.close();
@@ -561,8 +565,8 @@ public class SqlBoe {
         }
         return list;
     }
-    
-     public static List<Estructura> listaEstructuras(String query) {
+
+    public static List<Estructura> listaEstructuras(String query) {
         List<Estructura> list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -573,7 +577,7 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Estructura(rs.getInt("id"),rs.getString("nombre"),rs.getString("estructura"));
+                aux = new Estructura(rs.getInt("id"), rs.getString("nombre"), rs.getString("estructura"));
                 list.add(aux);
             }
             rs.close();

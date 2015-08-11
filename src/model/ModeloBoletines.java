@@ -15,7 +15,8 @@ public class ModeloBoletines {
     public SimpleStringProperty fecha = new SimpleStringProperty();
     public SimpleStringProperty tipo = new SimpleStringProperty();
     public SimpleStringProperty fase = new SimpleStringProperty();
-    public SimpleIntegerProperty estado = new SimpleIntegerProperty();
+    public SimpleIntegerProperty isFase = new SimpleIntegerProperty();
+    public SimpleIntegerProperty isEstructura = new SimpleIntegerProperty();
     public SimpleIntegerProperty idDescarga = new SimpleIntegerProperty();
     public SimpleStringProperty link = new SimpleStringProperty();
     public SimpleIntegerProperty idioma = new SimpleIntegerProperty();
@@ -43,25 +44,13 @@ public class ModeloBoletines {
     public String getFase(){
         return fase.get();
     }
-    
-    public String getEstado() {
-        String aux = "ERROR";
 
-        switch (estado.get()) {
-            case 0:
-                aux = "SIN DESCARGAR";
-                break;
-            case 1:
-                aux = "PENDIENTE FASES";
-                break;
-            case 2:
-                aux = "LISTO";
-                break;
-            case 3:
-                aux = "FASE NO ENCONTRADA";
-                break;
-        }
-        return aux;
+    public int getIsFase() {
+        return isFase.get();
+    }
+
+    public int getIsEstructura() {
+        return isEstructura.get();
     }
     
     public int getIdDescarga(){

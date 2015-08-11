@@ -8,7 +8,6 @@ import util.Varios;
  * @author Agarimo
  */
 public class Boletin {
-
     private int id;
     private int idOrigen;
     private int idBoe;
@@ -16,13 +15,15 @@ public class Boletin {
     private String codigo;
     private String tipo;
     private String fase;
-    private int estado;
+    private int isFase;
+    private int isEstructura;
     private int idioma;
 
     public Boletin() {
     }
 
-    public Boletin(int id, int idOrigen, int idBoe, int idDescarga, String codigo,String tipo, String fase,int estado,int idioma) {
+    public Boletin(int id, int idOrigen, int idBoe, int idDescarga, String codigo,String tipo, String fase,
+            int isFase,int isEstructura,int idioma) {
         this.id = id;
         this.idOrigen = idOrigen;
         this.idBoe = idBoe;
@@ -30,7 +31,8 @@ public class Boletin {
         this.codigo = codigo;
         this.tipo=tipo;
         this.fase = fase;
-        this.estado=estado;
+        this.isFase=isFase;
+        this.isEstructura=isEstructura;
         this.idioma=idioma;
     }
 
@@ -90,14 +92,6 @@ public class Boletin {
         this.tipo = tipo;
     }
 
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
-
     public int getIdioma() {
         return idioma;
     }
@@ -106,20 +100,37 @@ public class Boletin {
         this.idioma = idioma;
     }
 
+    public int getIsFase() {
+        return isFase;
+    }
+
+    public void setIsFase(int isFase) {
+        this.isFase = isFase;
+    }
+
+    public int getIsEstructura() {
+        return isEstructura;
+    }
+
+    public void setIsEstructura(int isEstructura) {
+        this.isEstructura = isEstructura;
+    }
+
     @Override
     public String toString() {
         return codigo;
     }
     
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,estado,idioma) values("
+        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,isFase,isEstructura,idioma) values("
                 + this.idOrigen + ","
                 + this.idBoe + ","
                 + this.idDescarga + ","
                 + Varios.entrecomillar(this.codigo) + ","
                 + Varios.entrecomillar(this.tipo) + ","
                 + Varios.entrecomillar(this.fase) + ","
-                + this.estado + ","
+                + this.isFase + ","
+                + this.isEstructura + ","
                 + this.idioma
                 + ");";
     }
@@ -128,17 +139,13 @@ public class Boletin {
         return "UPDATE " + Variables.nombreBD + ".boletin SET "
                 + "tipo=" + Varios.entrecomillar(this.tipo) + ","
                 + "fase=" + Varios.entrecomillar(this.fase) + ","
-                + "idioma=" + this.idioma + ","
-                + "estado=" + this.estado + " "
+                + "isFase=" + this.isFase + ","
+                + "isEstructura=" + this.isEstructura + ","
+                + "idioma=" + this.idioma + " "
                 + "WHERE id=" + this.id;
     }
     
     public String SQLBuscar(){
         return "SELECT * from "+Variables.nombreBD+".boletin where codigo="+Varios.entrecomillar(this.codigo);
     }
-    
-    
-    
-    
-
 }

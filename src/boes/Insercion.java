@@ -111,7 +111,8 @@ public class Insercion {
             bl.setCodigo(aux.getCodigo());
             bl.setTipo("*711*");
             bl.setFase("BCN1");
-            bl.setEstado(0);
+            bl.setIsFase(0);
+            bl.setIsEstructura(0);
             bl.setIdioma(getIdioma(bl.getIdOrigen()));
 
             bd.ejecutar(bl.SQLCrear());
