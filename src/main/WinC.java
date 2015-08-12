@@ -6,6 +6,7 @@ import boes.Insercion;
 import boes.Pdf;
 import boes.Publicacion;
 import boletines.Archivos;
+import boletines.Estructuras;
 import boletines.Fases;
 import boletines.Limpieza;
 import enty.Boletin;
@@ -1111,15 +1112,15 @@ public class WinC implements Initializable {
                         switch (item) {
                             case 0:
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: red");
+                                setStyle("-fx-background-color: red"); 
                                 break;
                             case 1:
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: orange");
+                                setStyle("-fx-background-color: orange"); 
                                 break;
                             case 2:
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: green");
+                                setStyle("-fx-background-color: green"); 
                                 break;
                             default:
                                 setTextFill(Color.BLACK);
@@ -1141,14 +1142,22 @@ public class WinC implements Initializable {
                         setText(null);
                         setStyle("");
                     } else {
-                        if (item == 0) {
-                            setText("");
-                            setTextFill(Color.BLACK);
-                            setStyle("-fx-background-color: red");
-                        } else {
-                            setText(item.toString());
-                            setTextFill(Color.BLACK);
-                            setStyle("");
+                        switch (item) {
+                            case 0:
+                                setText("");
+                                setTextFill(Color.BLACK);
+                                setStyle("-fx-background-color: red"); 
+                                break;
+                            case -1:
+                                setText("");
+                                setTextFill(Color.BLACK);
+                                setStyle("-fx-background-color: orange"); 
+                                break;
+                            default:
+                                setText(item.toString());
+                                setTextFill(Color.BLACK);
+                                setStyle("");
+                                break;
                         }
                     }
                 }
@@ -1184,7 +1193,59 @@ public class WinC implements Initializable {
 
     @FXML
     void comprobarEstructuras(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFechaB.getValue());
 
+        if (fecha != null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btDescargaBoletines.setDisable(true);
+                    btComprobarFases.setDisable(true);
+                    btGenerarArchivos.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(0);
+                    lbEstado.setText("INICIANDO ESTRUCTURAS");
+                });
+
+                Boletin aux;
+                Estructuras es = new Estructuras(fecha);
+                es.limpiarEstructuras();
+                List list = es.getBoletines();
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("COMPROBANDO ESTRUCTURAS " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (Boletin) list.get(i);
+                    es.run(aux);
+                }
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("COMPROBACIÓN FINALIZADA");
+                    btDescargaBoletines.setDisable(false);
+                    btComprobarFases.setDisable(false);
+                    btGenerarArchivos.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("COMPLETADO");
+                    alert.setHeaderText("COMPROBACIÓN FINALIZADA");
+                    alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE ESTRUCTURAS");
+                    alert.showAndWait();
+
+                    recargarBoletines();
+                });
+            });
+            a.start();
+        }
     }
 
     @FXML

@@ -30,6 +30,7 @@ import util.Varios;
 public class SqlBoe {
 
     private static void error(String aux) {
+        System.out.println(aux);
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERROR");
         alert.setHeaderText("ERROR DE CONEXIÓN");

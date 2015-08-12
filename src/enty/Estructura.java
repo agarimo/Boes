@@ -1,5 +1,6 @@
 package enty;
 
+import java.util.Objects;
 import main.Variables;
 import util.Varios;
 
@@ -14,8 +15,8 @@ public class Estructura {
     String estructura;
 
     public Estructura() {
-        this.nombre="null";
-        this.estructura="null";
+        this.nombre = "null";
+        this.estructura = "null";
     }
 
     public Estructura(int id, String nombre, String estructura) {
@@ -51,6 +52,29 @@ public class Estructura {
     @Override
     public String toString() {
         return this.nombre;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.estructura);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Estructura other = (Estructura) obj;
+        if (!Objects.equals(this.estructura, other.estructura)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public String SQLCrear() {
