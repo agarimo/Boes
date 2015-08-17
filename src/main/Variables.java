@@ -16,6 +16,7 @@ public class Variables {
     public static File ficheroPdf;
     public static File ficheroTxt;
     public static File ficheroBoe;
+    public static File ficheroUnion;
     public static boolean isClasificando;
     public static boolean isDownloading;
 
@@ -24,6 +25,7 @@ public class Variables {
         ficheroPdf = new File(new File("data"), "pdfData");
         ficheroTxt = new File(new File("data"), "txtData");
         ficheroBoe = new File(new File("data"), "boeData");
+        ficheroUnion = new File(new File("data"), "unionData");
         isClasificando = false;
         isDownloading = false;
         initFiles();

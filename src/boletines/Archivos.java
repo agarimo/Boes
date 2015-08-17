@@ -28,6 +28,10 @@ public class Archivos {
     Date fecha;
     List boletines;
 
+    public Archivos() {
+
+    }
+
     public Archivos(Date fecha) {
         this.fecha = fecha;
         this.archivoFecha = new File(Variables.ficheroBoe, Dates.imprimeFecha(this.fecha));
@@ -39,11 +43,29 @@ public class Archivos {
 
     private void cargaBoletines() {
         String query = "SELECT * FROM boes.vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
-        boletines = SqlBoe.listaVistaBoletin(query);
+        boletines = SqlBoe.listaModeloBoletines(query);
     }
 
     public List getBoletines() {
         return this.boletines;
+    }
+
+    public String getDataArchivo(ModeloBoletines aux) {
+        StringBuilder buffer;
+
+        buffer = new StringBuilder();
+        buffer.append("BCN2 ");
+        buffer.append(aux.getLink());
+        buffer.append(System.getProperty("line.separator"));
+        buffer.append(getFaseBoletin(aux.codigo.get()));
+        buffer.append("BCN5 ");
+        buffer.append(aux.getOrigen());
+        buffer.append(System.getProperty("line.separator"));
+        buffer.append(getCodigoAyutamiento(aux.getOrigen()));
+        buffer.append(System.getProperty("line.separator"));
+        buffer.append(getDatosBoletin(aux.getIdDescarga()));
+
+        return buffer.toString();
     }
 
     public void creaArchivo(ModeloBoletines aux) {
@@ -77,20 +99,82 @@ public class Archivos {
         } catch (IOException ex) {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
-    public void creaArchivos() {
+    public void creaArchivos(List bol, String codigoUn, Date fecha) {
+        if (codigoUn == null) {
+            caIn(bol, fecha);
+        } else {
+            caUn(bol, codigoUn, fecha);
+        }
+    }
+
+    /**
+     * Crea archivos unidos
+     */
+    private void caUn(List bol, String codigoUn, Date fecha) {
+        File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
+
+        File file;
+        StringBuilder buffer = new StringBuilder();
+        ModeloBoletines aux;
+        Iterator it = bol.iterator();
+
+        try {
+
+            file = new File(dir, getNombreArchivoUn(codigoUn, fecha, "00") + ".txt");
+            file.createNewFile();
+
+            while (it.hasNext()) {
+                aux = (ModeloBoletines) it.next();
+
+                buffer.append("BCN2 ");
+                buffer.append(aux.getLink());
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append(getFaseBoletin(aux.codigo.get()));
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append("BCN5 ");
+                buffer.append(aux.getOrigen());
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append(getCodigoAyutamiento(aux.getOrigen()));
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append(getDatosBoletin(aux.getIdDescarga()));
+
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append("-------------------------------------------------");
+                buffer.append(System.getProperty("line.separator"));
+
+                buffer.append("-------------------------------------------------");
+                buffer.append(System.getProperty("line.separator"));
+                buffer.append(System.getProperty("line.separator"));
+
+            }
+
+            Files.escribeArchivo(file, buffer.toString());
+
+        } catch (IOException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Crea archivos individuales
+     */
+    private void caIn(List bol, Date fecha) {
+        File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
         File file;
         StringBuilder buffer;
         ModeloBoletines aux;
-        Iterator it = boletines.iterator();
+        Iterator it = bol.iterator();
 
-        while (it.hasNext()) {
-            try {
-                buffer = new StringBuilder();
+        try {
+
+            while (it.hasNext()) {
                 aux = (ModeloBoletines) it.next();
-                file = new File(creaDirectorio(aux.getEntidad(), aux.getOrigen()), getNombreArchivo(aux.getCodigo(), fecha, aux.getEntidad()) + ".txt");
+
+                buffer = new StringBuilder();
+                file = new File(dir, getNombreArchivoN(aux.getCodigo(), fecha, aux.getEntidad()) + ".txt");
                 file.createNewFile();
                 buffer.append("BCN2 ");
                 buffer.append(aux.getLink());
@@ -105,10 +189,10 @@ public class Archivos {
                 buffer.append(getDatosBoletin(aux.getIdDescarga()));
 
                 Files.escribeArchivo(file, buffer.toString());
-
-            } catch (IOException ex) {
-                Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+        } catch (IOException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -270,6 +354,59 @@ public class Archivos {
         return str;
     }
 
+    private String getNombreArchivoUn(String codigo, Date fecha, String entidad) {
+        String str = "";
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fecha);
+        String ori = codigo;
+
+        int dia = cal.get(Calendar.DAY_OF_MONTH);
+        if (dia < 10) {
+            str = str + "0" + dia;
+        } else {
+            str = str + dia;
+        }
+
+        str = str + "0";
+
+        String anno = Integer.toString(cal.get(Calendar.YEAR));
+        str = str + anno.charAt(3);
+
+        str = str + entidad;
+
+        int mes = cal.get(Calendar.MONTH);
+        mes++;
+        if (mes < 10) {
+            str = str + mes + "Z-";
+        } else {
+            if (mes == 10) {
+                str = str + "XZ-";
+            }
+            if (mes == 11) {
+                str = str + "YZ-";
+            }
+            if (mes == 12) {
+                str = str + "ZZ-";
+            }
+        }
+
+        if (dia < 10) {
+            str = str + "0" + dia + ".";
+        } else {
+            str = str + dia + ".";
+        }
+
+        if (mes < 10) {
+            str = str + "0" + mes + ".";
+        } else {
+            str = str + mes + ".";
+        }
+
+        str = str + "--" + ori;
+
+        return str;
+    }
+
     private String getEntidad(String entidad) {
         Sql bd;
         String aux = "";
@@ -284,5 +421,4 @@ public class Archivos {
 
         return aux;
     }
-
 }

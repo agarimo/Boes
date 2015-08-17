@@ -133,6 +133,7 @@
                         <Button fx:id="btComprobarFases" mnemonicParsing="false" onAction="#comprobarFases" prefHeight="30.0" prefWidth="150.0" text="FASES" />
                         <Button fx:id="btEstructuras" mnemonicParsing="false" onAction="#comprobarEstructuras" prefHeight="30.0" prefWidth="150.0" text="ESTRUCTURAS" />
                         <Button fx:id="btGenerarArchivos" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="ARCHIVOS" />
+                        <Button fx:id="btUnion" mnemonicParsing="false" onAction="#generarArchivosUnion" prefHeight="30.0" prefWidth="150.0" text="UNION" />
                         <Button fx:id="btAbrirCarpetaBoletines" mnemonicParsing="false" onAction="#abrirCarpetaBoletines" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
                     </items>
                   </ToolBar>

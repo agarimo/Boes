@@ -19,6 +19,7 @@ import model.ModeloBoletines;
 import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
+import model.ModeloUnion;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -44,7 +45,7 @@ public class SqlBoe {
         try {
             bd = new Sql(Variables.con);
             bd.ejecutar("DELETE FROM boes.boletin where codigo=" + Varios.entrecomillar(codigo));
-            bd.ejecutarQueryRs("UPDATE stats.boletines_publicados SET tipo=0 where codigo="+Varios.entrecomillar(codigo));
+            bd.ejecutarQueryRs("UPDATE stats.boletines_publicados SET tipo=0 where codigo=" + Varios.entrecomillar(codigo));
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,6 +132,66 @@ public class SqlBoe {
             while (rs.next()) {
                 aux = new Estructura(rs.getInt("id"), rs.getString("nombre"), rs.getString("estructura"));
             }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+
+    public static ModeloBoletines getModeloBoletines(String codigo) {
+        Sql bd;
+        ResultSet rs;
+        ModeloBoletines aux = null;
+        String query = "SELECT * FROM boes.vista_boletines where codigo=" + Varios.entrecomillar(codigo);
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloBoletines();
+                aux.codigo.set(rs.getString("codigo"));
+                aux.entidad.set(rs.getString("entidad"));
+                aux.origen.set(rs.getString("origen"));
+                aux.fecha.set(Dates.imprimeFecha(rs.getDate("fecha")));
+                aux.tipo.set(rs.getString("tipo"));
+                aux.fase.set(rs.getString("fase"));
+                aux.isFase.set(rs.getInt("isFase"));
+                aux.isEstructura.set(rs.getInt("isEstructura"));
+                aux.idDescarga.set(rs.getInt("idDescarga"));
+                aux.link.set(rs.getString("link"));
+                aux.idioma.set(rs.getInt("idioma"));
+            }
+
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+
+    public static ModeloUnion getUnion(String query) {
+        Sql bd;
+        ResultSet rs;
+        ModeloUnion aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloUnion();
+                aux.codigo.set(rs.getString("codigo"));
+                aux.idDescarga.set(rs.getInt("idDescarga"));
+                aux.fecha.set(rs.getString("fecha"));
+                aux.codigoUn.set(rs.getString("codigoUn"));
+            }
+
             rs.close();
             bd.close();
         } catch (SQLException ex) {
@@ -237,7 +298,7 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloBoletines> listaVistaBoletin(String query) {
+    public static List<ModeloBoletines> listaModeloBoletines(String query) {
         List<ModeloBoletines> list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -319,7 +380,7 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloComboBox> listaEntidades() {
+    public static List<ModeloComboBox> listaModeloComboBoxEntidades() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".entidad order by nombre";
         List list = new ArrayList();
         Sql bd;
@@ -369,7 +430,7 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloComboBox> listaOrigenes(int id) {
+    public static List<ModeloComboBox> listaModeloComboBoxOrigenes(int id) {
         String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad=" + id + " order by nombre";
         List list = new ArrayList();
         Sql bd;
@@ -395,7 +456,7 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloComboBox> listaTipo() {
+    public static List<ModeloComboBox> listaModeloComboBoxTipo() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".tipo where tipo=0";
         List list = new ArrayList();
         Sql bd;
@@ -421,7 +482,7 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloCabeceras> listaCabeceras(int id) {
+    public static List<ModeloCabeceras> listaModeloCabeceras(int id) {
         String query = "SELECT * FROM " + Variables.nombreBD + ".cabeceras where idOrigen=" + id;
         List list = new ArrayList();
         Sql bd;
@@ -449,7 +510,7 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloFases> listaFases(int id) {
+    public static List<ModeloFases> listaModeloFases(int id) {
         String query = "SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id;
         List list = new ArrayList();
         Sql bd;
@@ -579,6 +640,33 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Estructura(rs.getInt("id"), rs.getString("nombre"), rs.getString("estructura"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public static List<ModeloUnion> listaUnion(String query) {
+        List<ModeloUnion> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ModeloUnion aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ModeloUnion();
+                aux.codigo.set(rs.getString("codigo"));
+                aux.idDescarga.set(rs.getInt("idDescarga"));
+                aux.fecha.set(rs.getString("fecha"));
+                aux.codigoUn.set(rs.getString("codigoUn"));
                 list.add(aux);
             }
             rs.close();

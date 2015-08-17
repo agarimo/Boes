@@ -9,6 +9,7 @@ import boletines.Archivos;
 import boletines.Estructuras;
 import boletines.Fases;
 import boletines.Limpieza;
+import boletines.Union;
 import enty.Boletin;
 import enty.Cabecera;
 import enty.Descarga;
@@ -26,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -1057,6 +1059,9 @@ public class WinC implements Initializable {
     @FXML
     Button btEstructuras;
 
+    @FXML
+    Button btUnion;
+
     List boletinesIdioma;
 
     @FXML
@@ -1112,15 +1117,15 @@ public class WinC implements Initializable {
                         switch (item) {
                             case 0:
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: red"); 
+                                setStyle("-fx-background-color: red");
                                 break;
                             case 1:
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: orange"); 
+                                setStyle("-fx-background-color: orange");
                                 break;
                             case 2:
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: green"); 
+                                setStyle("-fx-background-color: green");
                                 break;
                             default:
                                 setTextFill(Color.BLACK);
@@ -1146,12 +1151,12 @@ public class WinC implements Initializable {
                             case 0:
                                 setText("");
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: red"); 
+                                setStyle("-fx-background-color: red");
                                 break;
                             case -1:
                                 setText("");
                                 setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: orange"); 
+                                setStyle("-fx-background-color: orange");
                                 break;
                             default:
                                 setText(item.toString());
@@ -1172,7 +1177,7 @@ public class WinC implements Initializable {
         boletinesIdioma.clear();
         ModeloBoletines aux;
         String query = "SELECT * FROM " + Variables.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
-        Iterator it = SqlBoe.listaVistaBoletin(query).iterator();
+        Iterator it = SqlBoe.listaModeloBoletines(query).iterator();
 
         while (it.hasNext()) {
             aux = (ModeloBoletines) it.next();
@@ -1357,7 +1362,63 @@ public class WinC implements Initializable {
             });
             a.start();
         }
+    }
 
+    @FXML
+    void generarArchivosUnion(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFechaB.getValue());
+        
+        File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
+        Files.borraDirectorio(dir);
+        dir.mkdirs();
+
+        Thread a = new Thread(() -> {
+
+            Platform.runLater(() -> {
+                btDescargaBoletines.setDisable(true);
+                btComprobarFases.setDisable(true);
+                btGenerarArchivos.setDisable(true);
+                pbEstado.setVisible(true);
+                pbEstado.setProgress(0);
+                lbEstado.setText("GENERANDO ARCHIVOS .un");
+            });
+
+            String aux;
+            Union un = new Union(fecha);
+            Archivos ar = new Archivos();
+            List list = un.getKeySet();
+
+            for (int i = 0; i < list.size(); i++) {
+                final int contador = i;
+                final int total = list.size();
+                Platform.runLater(() -> {
+                    int contadour = contador + 1;
+                    double counter = contador + 1;
+                    double toutal = total;
+                    lbEstado.setText("GENERANDO GRUPO " + contadour + " de " + total);
+                    pbEstado.setProgress(counter / toutal);
+                });
+                aux = (String) list.get(i);
+                ar.creaArchivos(un.getBoletines(aux), aux, fecha);
+            }
+
+            Platform.runLater(() -> {
+                lbEstado.setText("PROCESO FINALIZADO");
+                btDescargaBoletines.setDisable(false);
+                btComprobarFases.setDisable(false);
+                btGenerarArchivos.setDisable(false);
+                pbEstado.setProgress(1);
+                pbEstado.setVisible(false);
+                lbEstado.setText("");
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("COMPLETADO");
+                alert.setHeaderText("PROCESO FINALIZADO");
+                alert.setContentText("SE HAN GENERADO LOS ARCHIVOS .un");
+                alert.showAndWait();
+            });
+        });
+        a.start();
     }
 
     @FXML
@@ -1423,7 +1484,7 @@ public class WinC implements Initializable {
     @FXML
     void abrirCarpetaBoletines(ActionEvent event) {
         try {
-            Desktop.getDesktop().browse(new File(new File("data"), "boeData").toURI());
+            Desktop.getDesktop().browse(new File("data").toURI());
         } catch (IOException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1657,7 +1718,7 @@ public class WinC implements Initializable {
         limpiarFases();
         listOrigenes.clear();
         ModeloComboBox aux = (ModeloComboBox) cbEntidad.getSelectionModel().getSelectedItem();
-        Iterator it = SqlBoe.listaOrigenes(aux.getId()).iterator();
+        Iterator it = SqlBoe.listaModeloComboBoxOrigenes(aux.getId()).iterator();
 
         while (it.hasNext()) {
             aux = (ModeloComboBox) it.next();
@@ -1704,14 +1765,14 @@ public class WinC implements Initializable {
         });
 
         ModeloComboBox aux;
-        Iterator it = SqlBoe.listaEntidades().iterator();
+        Iterator it = SqlBoe.listaModeloComboBoxEntidades().iterator();
 
         while (it.hasNext()) {
             aux = (ModeloComboBox) it.next();
             comboEntidades.add(aux);
         }
 
-        it = SqlBoe.listaTipo().iterator();
+        it = SqlBoe.listaModeloComboBoxTipo().iterator();
 
         while (it.hasNext()) {
             aux = (ModeloComboBox) it.next();
@@ -1747,7 +1808,7 @@ public class WinC implements Initializable {
         ModeloFases mf;
         ModeloComboBox aux = (ModeloComboBox) lvOrigen.getSelectionModel().getSelectedItem();
         tfOrigen.setText(aux.getNombre());
-        Iterator it = SqlBoe.listaFases(aux.getId()).iterator();
+        Iterator it = SqlBoe.listaModeloFases(aux.getId()).iterator();
 
         while (it.hasNext()) {
             mf = (ModeloFases) it.next();
@@ -1877,7 +1938,7 @@ public class WinC implements Initializable {
         limpiaCabecera();
         listOrigenesC.clear();
         ModeloComboBox aux = (ModeloComboBox) cbEntidadC.getSelectionModel().getSelectedItem();
-        Iterator it = SqlBoe.listaOrigenes(aux.getId()).iterator();
+        Iterator it = SqlBoe.listaModeloComboBoxOrigenes(aux.getId()).iterator();
 
         while (it.hasNext()) {
             aux = (ModeloComboBox) it.next();
@@ -2012,7 +2073,7 @@ public class WinC implements Initializable {
         });
 
         ModeloComboBox aux;
-        Iterator it = SqlBoe.listaEntidades().iterator();
+        Iterator it = SqlBoe.listaModeloComboBoxEntidades().iterator();
 
         while (it.hasNext()) {
             aux = (ModeloComboBox) it.next();
@@ -2034,7 +2095,7 @@ public class WinC implements Initializable {
         ModeloCabeceras mf;
         ModeloComboBox aux = (ModeloComboBox) lvOrigenC.getSelectionModel().getSelectedItem();
         tfOrigenC.setText(aux.getNombre());
-        Iterator it = SqlBoe.listaCabeceras(aux.getId()).iterator();
+        Iterator it = SqlBoe.listaModeloCabeceras(aux.getId()).iterator();
 
         while (it.hasNext()) {
             mf = (ModeloCabeceras) it.next();
