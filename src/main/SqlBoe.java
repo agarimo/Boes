@@ -190,6 +190,8 @@ public class SqlBoe {
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.fecha.set(rs.getString("fecha"));
                 aux.codigoUn.set(rs.getString("codigoUn"));
+                aux.estructura.set(rs.getInt("isEstructura"));
+                aux.codigoProv.set(rs.getString("codigoProv"));
             }
 
             rs.close();
@@ -667,6 +669,8 @@ public class SqlBoe {
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.fecha.set(rs.getString("fecha"));
                 aux.codigoUn.set(rs.getString("codigoUn"));
+                aux.estructura.set(rs.getInt("isEstructura"));
+                aux.codigoProv.set(rs.getString("codigoProv"));
                 list.add(aux);
             }
             rs.close();

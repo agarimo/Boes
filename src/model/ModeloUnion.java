@@ -13,6 +13,8 @@ public class ModeloUnion {
     public SimpleIntegerProperty idDescarga = new SimpleIntegerProperty();
     public SimpleStringProperty fecha = new SimpleStringProperty();
     public SimpleStringProperty codigoUn = new SimpleStringProperty();
+    public SimpleStringProperty codigoProv = new SimpleStringProperty();
+    public SimpleIntegerProperty estructura = new SimpleIntegerProperty();
     
     public String getCodigo(){
         return this.codigo.get();
@@ -28,5 +30,13 @@ public class ModeloUnion {
     
     public String getCodigoUn(){
         return this.codigoUn.get();
+    }
+    
+    public int getEstructura(){
+        return this.estructura.get();
+    }
+    
+    public String getCodigoProv(){
+        return this.codigoProv.get();
     }
 }
