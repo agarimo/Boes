@@ -19,30 +19,51 @@ import util.Varios;
 public class Union {
 
     Date fecha;
-    List boletines;
     MultiValueMap map;
 
     public Union(Date fecha) {
         this.fecha = fecha;
-        this.boletines = cargaBoletines();
-        this.map = cargaMap();
-    }
-
-    private List cargaBoletines() {
-        return SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)));
+        reparteBolProv(cargaMap());
     }
 
     private MultiValueMap cargaMap() {
         MultiValueMap mp = new MultiValueMap();
         ModeloUnion aux;
-        Iterator it = boletines.iterator();
+        Iterator it = SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))).iterator();
 
         while (it.hasNext()) {
             aux = (ModeloUnion) it.next();
-            mp.put(aux.getCodigoUn(), aux);
+            mp.put(aux.getCodigoProv(), aux);
         }
 
         return mp;
+    }
+    
+    private void reparteBolProv(MultiValueMap mapProv){
+        MultiValueMap tmp= new MultiValueMap();
+        String aux;
+        Iterator it=new ArrayList(mapProv.keySet()).iterator();
+        
+        while(it.hasNext()){
+            aux=(String) it.next();
+            tmp.put(aux, buildMap(mapProv,aux));
+        }
+        
+        map=tmp;
+    }
+    
+    private MultiValueMap buildMap(MultiValueMap mapProv,String prov){
+        ModeloUnion un;
+        MultiValueMap aux = new MultiValueMap();
+        
+        Iterator it = mapProv.iterator(prov);
+
+        while (it.hasNext()) {
+            un = (ModeloUnion) it.next();
+            aux.put(un.getEstructura(), un);
+        }
+        
+        return aux;
     }
 
     public List getKeySet() {
@@ -63,4 +84,10 @@ public class Union {
         
         return list;
     }
+    
+    public MultiValueMap getMap(){
+        return this.map;
+    }
+    
+    
 }
