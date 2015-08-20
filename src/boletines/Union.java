@@ -19,58 +19,42 @@ import util.Varios;
 public class Union {
 
     Date fecha;
+    List provincias;
     MultiValueMap map;
 
     public Union(Date fecha) {
         this.fecha = fecha;
-        reparteBolProv(cargaMap());
+        this.provincias=SqlBoe.listaProvinciasDia(fecha);
     }
-
-    private MultiValueMap cargaMap() {
+    
+    public MultiValueMap cargaMap(String codigoProv) {
         MultiValueMap mp = new MultiValueMap();
         ModeloUnion aux;
-        Iterator it = SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))).iterator();
+        Iterator it = SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union "
+                + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))+" "
+                + "and codigoProv="+Varios.entrecomillar(codigoProv)).iterator();
 
         while (it.hasNext()) {
             aux = (ModeloUnion) it.next();
-            mp.put(aux.getCodigoProv(), aux);
+            mp.put(aux.getEstructura(), aux);
         }
 
         return mp;
     }
     
-    private void reparteBolProv(MultiValueMap mapProv){
-        MultiValueMap tmp= new MultiValueMap();
-        String aux;
-        Iterator it=new ArrayList(mapProv.keySet()).iterator();
-        
-        while(it.hasNext()){
-            aux=(String) it.next();
-            tmp.put(aux, buildMap(mapProv,aux));
-        }
-        
-        map=tmp;
+    public void setMap(MultiValueMap aux){
+        this.map=aux;
     }
     
-    private MultiValueMap buildMap(MultiValueMap mapProv,String prov){
-        ModeloUnion un;
-        MultiValueMap aux = new MultiValueMap();
-        
-        Iterator it = mapProv.iterator(prov);
-
-        while (it.hasNext()) {
-            un = (ModeloUnion) it.next();
-            aux.put(un.getEstructura(), un);
-        }
-        
-        return aux;
+    public List getProvincias(){
+        return this.provincias;
     }
 
     public List getKeySet() {
         return new ArrayList(map.keySet());
     }
 
-    public List getBoletines(String aux) {
+    public List getBoletines(int aux) {
         List list = new ArrayList();
         ModeloBoletines bol;
         ModeloUnion un;
@@ -84,10 +68,4 @@ public class Union {
         
         return list;
     }
-    
-    public MultiValueMap getMap(){
-        return this.map;
-    }
-    
-    
 }

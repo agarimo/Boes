@@ -681,5 +681,31 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List<String> listaProvinciasDia(Date fecha){
+        List<String> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String query="select codigoProv from boes.vista_union "
+                        + "where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+" "
+                        + "group by codigoProv;";
+        String aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux=rs.getString("codigoProv");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 //</editor-fold>
 }

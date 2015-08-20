@@ -101,18 +101,18 @@ public class Archivos {
         }
     }
 
-    public void creaArchivos(List bol, String codigoUn, Date fecha) {
-        if (codigoUn == null) {
+    public void creaArchivos(List bol, Date fecha, String provincia, int estructura) {
+        if (estructura == -1) {
             caIn(bol, fecha);
         } else {
-            caUn(bol, codigoUn, fecha);
+            caUn(bol, fecha, provincia, estructura);
         }
     }
 
     /**
      * Crea archivos unidos
      */
-    private void caUn(List bol, String codigoUn, Date fecha) {
+    private void caUn(List bol, Date fecha, String provincia, int estructura) {
         File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
 
         File file;
@@ -122,7 +122,7 @@ public class Archivos {
 
         try {
 
-            file = new File(dir, getNombreArchivoUn(codigoUn, fecha, "00") + ".txt");
+            file = new File(dir, getNombreArchivoUn(estructura, fecha, provincia) + ".txt");
             file.createNewFile();
 
             while (it.hasNext()) {
@@ -148,8 +148,19 @@ public class Archivos {
                 buffer.append("-------------------------------------------------");
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append(System.getProperty("line.separator"));
-
             }
+
+            buffer.append("SE HAN UNIDO ").append(bol.size()).append(" BOLETINES");
+            buffer.append(System.getProperty("line.separator"));
+
+            it = bol.iterator();
+            while (it.hasNext()) {
+                aux = (ModeloBoletines) it.next();
+                buffer.append(aux.getCodigo());
+                buffer.append(System.getProperty("line.separator"));
+            }
+
+            buffer.append("-------------------------------------------------");
 
             Files.escribeArchivo(file, buffer.toString());
 
@@ -354,11 +365,11 @@ public class Archivos {
         return str;
     }
 
-    private String getNombreArchivoUn(String codigo, Date fecha, String entidad) {
+    private String getNombreArchivoUn(int estructura, Date fecha, String provincia) {
         String str = "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
-        String ori = codigo;
+        String ori = "STRU" + estructura;
 
         int dia = cal.get(Calendar.DAY_OF_MONTH);
         if (dia < 10) {
@@ -372,7 +383,7 @@ public class Archivos {
         String anno = Integer.toString(cal.get(Calendar.YEAR));
         str = str + anno.charAt(3);
 
-        str = str + entidad;
+        str = str + provincia;
 
         int mes = cal.get(Calendar.MONTH);
         mes++;

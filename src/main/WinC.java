@@ -1367,7 +1367,7 @@ public class WinC implements Initializable {
     @FXML
     void generarArchivosUnion(ActionEvent event) {
         Date fecha = Dates.asDate(dpFechaB.getValue());
-        
+
         File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
         Files.borraDirectorio(dir);
         dir.mkdirs();
@@ -1383,10 +1383,12 @@ public class WinC implements Initializable {
                 lbEstado.setText("GENERANDO ARCHIVOS .un");
             });
 
-            String aux;
+            String provincia;
+            int estructura;
+            Iterator it;
             Union un = new Union(fecha);
             Archivos ar = new Archivos();
-            List list = un.getKeySet();
+            List list = un.getProvincias();
 
             for (int i = 0; i < list.size(); i++) {
                 final int contador = i;
@@ -1395,11 +1397,17 @@ public class WinC implements Initializable {
                     int contadour = contador + 1;
                     double counter = contador + 1;
                     double toutal = total;
-                    lbEstado.setText("GENERANDO GRUPO " + contadour + " de " + total);
+                    lbEstado.setText("GENERANDO PROVINCIA " + contadour + " de " + total);
                     pbEstado.setProgress(counter / toutal);
                 });
-                aux = (String) list.get(i);
-                ar.creaArchivos(un.getBoletines(aux), aux, fecha);
+                provincia = (String) list.get(i);
+                un.setMap(un.cargaMap(provincia));
+                it = un.getKeySet().iterator();
+
+                while (it.hasNext()) {
+                    estructura = (int) it.next();
+                    ar.creaArchivos(un.getBoletines(estructura), fecha, provincia, estructura);
+                }
             }
 
             Platform.runLater(() -> {
