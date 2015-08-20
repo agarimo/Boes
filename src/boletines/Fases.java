@@ -50,7 +50,6 @@ public class Fases {
         } catch (SQLException ex) {
             Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return str;
     }
 

@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -1531,20 +1530,30 @@ public class WinC implements Initializable {
         ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
         String datos = "";
 
-        try {
-            bdd = new Sql(Variables.con);
-            datos = bdd.getString("SELECT datos FROM boes.descarga WHERE id=" + aux.getIdDescarga());
-            bdd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        if (aux != null) {
+            try {
+                bdd = new Sql(Variables.con);
+                datos = bdd.getString("SELECT datos FROM boes.descarga WHERE id=" + aux.getIdDescarga());
+                bdd.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        Files.escribeArchivo(file, datos);
+            Files.escribeArchivo(file, datos);
 
-        try {
-            Desktop.getDesktop().browse(file.toURI());
-        } catch (IOException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                Desktop.getDesktop().browse(file.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("ERROR de selección.");
+            alert.setContentText("Debes seleccionar un boletín.");
+
+            alert.showAndWait();
         }
     }
 
@@ -1552,11 +1561,21 @@ public class WinC implements Initializable {
     void verBoletinWeb(ActionEvent event) {
         ModeloBoletines aux = tvBoletines.getSelectionModel().getSelectedItem();
 
-        try {
-            Desktop.getDesktop().browse(new URI(aux.getLink()));
-        } catch (IOException | URISyntaxException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        if (aux != null) {
+            try {
+                Desktop.getDesktop().browse(new URI(aux.getLink()));
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("ERROR de selección.");
+            alert.setContentText("Debes seleccionar un boletín.");
+
+            alert.showAndWait();
         }
+
     }
 //</editor-fold>
 
