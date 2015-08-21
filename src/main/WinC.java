@@ -47,7 +47,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -1061,6 +1063,15 @@ public class WinC implements Initializable {
     @FXML
     Button btUnion;
 
+    @FXML
+    SplitMenuButton btProcesar;
+
+    @FXML
+    MenuItem miEstructuras;
+
+    @FXML
+    MenuItem miFases;
+
     List boletinesIdioma;
 
     @FXML
@@ -1194,6 +1205,82 @@ public class WinC implements Initializable {
         Date aux = Dates.asDate(dpFechaB.getValue());
         cargaDatosTablaBoletines(aux);
     }
+    
+    @FXML
+    void procesarBoletines(ActionEvent event){
+        Date fecha = Dates.asDate(dpFechaB.getValue());
+
+        if (fecha != null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btProcesar.setDisable(true);
+                    miEstructuras.setDisable(true);
+                    miFases.setDisable(true);
+                    btUnion.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(0);
+                    lbEstado.setText("INICIANDO ESTRUCTURAS");
+                });
+
+                Boletin aux;
+                Estructuras es = new Estructuras(fecha);
+                es.limpiarEstructuras();
+                List list = es.getBoletines();
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("COMPROBANDO ESTRUCTURAS " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (Boletin) list.get(i);
+                    es.run(aux);
+                }
+                
+                Fases fs = new Fases(fecha);
+                list = fs.getBoletines();
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("COMPROBANDO FASE " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (Boletin) list.get(i);
+                    fs.runFase(aux);
+                }
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("COMPROBACIÓN FINALIZADA");
+                    btProcesar.setDisable(false);
+                    miEstructuras.setDisable(false);
+                    miFases.setDisable(false);
+                    btUnion.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("COMPLETADO");
+                    alert.setHeaderText("PROCESO FINALIZADO");
+                    alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE ESTRUCTURAS Y FASES");
+                    alert.showAndWait();
+
+                    recargarBoletines();
+                });
+            });
+            a.start();
+        }
+    }
 
     @FXML
     void comprobarEstructuras(ActionEvent event) {
@@ -1238,12 +1325,6 @@ public class WinC implements Initializable {
                     pbEstado.setProgress(1);
                     pbEstado.setVisible(false);
                     lbEstado.setText("");
-
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("COMPLETADO");
-                    alert.setHeaderText("COMPROBACIÓN FINALIZADA");
-                    alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE ESTRUCTURAS");
-                    alert.showAndWait();
 
                     recargarBoletines();
                 });
@@ -1350,12 +1431,6 @@ public class WinC implements Initializable {
                     pbEstado.setVisible(false);
                     lbEstado.setText("");
 
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("COMPLETADO");
-                    alert.setHeaderText("COMPROBACIÓN FINALIZADA");
-                    alert.setContentText("SE HA FINALIZADO LA COMPROBACIÓN DE FASES");
-                    alert.showAndWait();
-
                     recargarBoletines();
                 });
             });
@@ -1382,12 +1457,12 @@ public class WinC implements Initializable {
                 lbEstado.setText("GENERANDO ARCHIVOS .un");
             });
 
-            String provincia;
-            int estructura;
+            int struc;
+            String codigoUn;
             Iterator it;
             Union un = new Union(fecha);
             Archivos ar = new Archivos();
-            List list = un.getProvincias();
+            List list = un.getEstructuras();
 
             for (int i = 0; i < list.size(); i++) {
                 final int contador = i;
@@ -1399,13 +1474,13 @@ public class WinC implements Initializable {
                     lbEstado.setText("GENERANDO PROVINCIA " + contadour + " de " + total);
                     pbEstado.setProgress(counter / toutal);
                 });
-                provincia = (String) list.get(i);
-                un.setMap(un.cargaMap(provincia));
+                struc = (int) list.get(i);
+                un.setMap(un.cargaMap(struc));
                 it = un.getKeySet().iterator();
 
                 while (it.hasNext()) {
-                    estructura = (int) it.next();
-                    ar.creaArchivos(un.getBoletines(estructura), fecha, provincia, estructura);
+                    codigoUn = (String) it.next();
+                    ar.creaArchivos(un.getBoletines(codigoUn), fecha, struc, codigoUn);
                 }
             }
 

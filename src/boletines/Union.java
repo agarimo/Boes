@@ -19,26 +19,26 @@ import util.Varios;
 public class Union {
 
     Date fecha;
-    List provincias;
+    List estructuras;
     MultiValueMap map;
 
     public Union(Date fecha) {
         this.fecha = fecha;
-        this.provincias=SqlBoe.listaProvinciasDia(fecha);
+        this.estructuras=SqlBoe.listaEstructurasDia(fecha);
     }
     
-    public MultiValueMap cargaMap(String codigoProv) {
+    public MultiValueMap cargaMap(int estructura) {
         MultiValueMap mp = new MultiValueMap();
         ModeloUnion aux;
         Iterator it = SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union "
                 + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))+" "
-                + "and codigoProv="+Varios.entrecomillar(codigoProv)).iterator();
+                + "and isEstructura="+estructura).iterator();
 
         while (it.hasNext()) {
             aux = (ModeloUnion) it.next();
-            mp.put(aux.getEstructura(), aux);
+            mp.put(aux.getCodigoUn(), aux);
         }
-
+        
         return mp;
     }
     
@@ -46,15 +46,15 @@ public class Union {
         this.map=aux;
     }
     
-    public List getProvincias(){
-        return this.provincias;
+    public List getEstructuras(){
+        return this.estructuras;
     }
 
     public List getKeySet() {
         return new ArrayList(map.keySet());
     }
 
-    public List getBoletines(int aux) {
+    public List getBoletines(String aux) {
         List list = new ArrayList();
         ModeloBoletines bol;
         ModeloUnion un;

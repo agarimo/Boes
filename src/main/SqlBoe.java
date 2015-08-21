@@ -682,21 +682,21 @@ public class SqlBoe {
         return list;
     }
     
-    public static List<String> listaProvinciasDia(Date fecha){
-        List<String> list = new ArrayList();
+    public static List listaEstructurasDia(Date fecha){
+        List list = new ArrayList();
         Sql bd;
         ResultSet rs;
-        String query="select codigoProv from boes.vista_union "
+        String query="select isEstructura from boes.vista_union "
                         + "where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+" "
-                        + "group by codigoProv;";
-        String aux;
+                        + "group by isEstructura;";
+        int aux;
 
         try {
             bd = new Sql(Variables.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux=rs.getString("codigoProv");
+                aux=rs.getInt("isEstructura");
                 list.add(aux);
             }
             rs.close();
