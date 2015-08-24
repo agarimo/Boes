@@ -16,7 +16,7 @@ public class ModeloBoletines {
     public SimpleStringProperty tipo = new SimpleStringProperty();
     public SimpleStringProperty fase = new SimpleStringProperty();
     public SimpleIntegerProperty isFase = new SimpleIntegerProperty();
-    public SimpleIntegerProperty isEstructura = new SimpleIntegerProperty();
+    public SimpleStringProperty isEstructura = new SimpleStringProperty();
     public SimpleIntegerProperty idDescarga = new SimpleIntegerProperty();
     public SimpleStringProperty link = new SimpleStringProperty();
     public SimpleIntegerProperty idioma = new SimpleIntegerProperty();
@@ -49,7 +49,7 @@ public class ModeloBoletines {
         return isFase.get();
     }
 
-    public int getIsEstructura() {
+    public String getIsEstructura() {
         return isEstructura.get();
     }
     

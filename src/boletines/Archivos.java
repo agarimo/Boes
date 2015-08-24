@@ -102,8 +102,8 @@ public class Archivos {
         }
     }
 
-    public void creaArchivos(List bol, Date fecha, int struc, String codigoUn) {
-        if (struc == -1) {
+    public void creaArchivos(List bol, Date fecha, String struc, String codigoUn) {
+        if (struc == null) {
             caIn(bol, fecha);
         } else {
             caUn(bol, fecha, struc, codigoUn);
@@ -113,7 +113,7 @@ public class Archivos {
     /**
      * Crea archivos unidos
      */
-    private void caUn(List bol, Date fecha, int struc, String codigoUn) {
+    private void caUn(List bol, Date fecha, String struc, String codigoUn) {
         File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
 
         File file;
@@ -338,16 +338,16 @@ public class Archivos {
         int mes = cal.get(Calendar.MONTH);
         mes++;
         if (mes < 10) {
-            str = str + mes + "Z-";
+            str = str + mes + "A-";
         } else {
             if (mes == 10) {
-                str = str + "XZ-";
+                str = str + "XA-";
             }
             if (mes == 11) {
-                str = str + "YZ-";
+                str = str + "YA-";
             }
             if (mes == 12) {
-                str = str + "ZZ-";
+                str = str + "ZA-";
             }
         }
 
@@ -368,11 +368,11 @@ public class Archivos {
         return str;
     }
 
-    private String getNombreArchivoUn(int estructura, Date fecha, String codigoUn) {
+    private String getNombreArchivoUn(String estructura, Date fecha, String codigoUn) {
         String str = "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
-        String ori = "STRU" + estructura + "-" + codigoUn;
+        String ori = estructura + "-" + codigoUn;
 
         int dia = cal.get(Calendar.DAY_OF_MONTH);
         if (dia < 10) {
@@ -386,21 +386,21 @@ public class Archivos {
         String anno = Integer.toString(cal.get(Calendar.YEAR));
         str = str + anno.charAt(3);
 
-        str = str + "OO";
+        str = str + "00";
 
         int mes = cal.get(Calendar.MONTH);
         mes++;
         if (mes < 10) {
-            str = str + mes + "Z-";
+            str = str + mes + "A-";
         } else {
             if (mes == 10) {
-                str = str + "XZ-";
+                str = str + "XA-";
             }
             if (mes == 11) {
-                str = str + "YZ-";
+                str = str + "YA-";
             }
             if (mes == 12) {
-                str = str + "ZZ-";
+                str = str + "ZA-";
             }
         }
 

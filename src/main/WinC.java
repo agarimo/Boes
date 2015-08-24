@@ -185,7 +185,7 @@ public class WinC implements Initializable {
     private TableColumn<ModeloBoletines, Integer> faseCLB;
 
     @FXML
-    private TableColumn<ModeloBoletines, Integer> estructuraCLB;
+    private TableColumn<ModeloBoletines, String> estructuraCLB;
 
     @FXML
     private DatePicker dpFechaB;
@@ -1148,32 +1148,18 @@ public class WinC implements Initializable {
         });
         estructuraCLB.setCellValueFactory(new PropertyValueFactory<>("isEstructura"));
         estructuraCLB.setCellFactory(column -> {
-            return new TableCell<ModeloBoletines, Integer>() {
+            return new TableCell<ModeloBoletines, String>() {
                 @Override
-                protected void updateItem(Integer item, boolean empty) {
+                protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
 
                     if (item == null || empty) {
                         setText(null);
                         setStyle("");
                     } else {
-                        switch (item) {
-                            case 0:
-                                setText("");
-                                setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: red");
-                                break;
-                            case -1:
-                                setText("");
-                                setTextFill(Color.BLACK);
-                                setStyle("-fx-background-color: orange");
-                                break;
-                            default:
-                                setText(item.toString());
-                                setTextFill(Color.BLACK);
-                                setStyle("");
-                                break;
-                        }
+                        setText(item);
+                        setTextFill(Color.BLACK);
+                        setStyle("-fx-background-color: green");
                     }
                 }
             };
@@ -1205,9 +1191,9 @@ public class WinC implements Initializable {
         Date aux = Dates.asDate(dpFechaB.getValue());
         cargaDatosTablaBoletines(aux);
     }
-    
+
     @FXML
-    void procesarBoletines(ActionEvent event){
+    void procesarBoletines(ActionEvent event) {
         Date fecha = Dates.asDate(dpFechaB.getValue());
 
         if (fecha != null) {
@@ -1241,7 +1227,7 @@ public class WinC implements Initializable {
                     aux = (Boletin) list.get(i);
                     es.run(aux);
                 }
-                
+
                 Fases fs = new Fases(fecha);
                 list = fs.getBoletines();
 
@@ -1457,8 +1443,7 @@ public class WinC implements Initializable {
                 lbEstado.setText("GENERANDO ARCHIVOS .un");
             });
 
-            int struc;
-            String codigoUn;
+            String codigoUn, struc;
             Iterator it;
             Union un = new Union(fecha);
             Archivos ar = new Archivos();
@@ -1471,10 +1456,10 @@ public class WinC implements Initializable {
                     int contadour = contador + 1;
                     double counter = contador + 1;
                     double toutal = total;
-                    lbEstado.setText("GENERANDO PROVINCIA " + contadour + " de " + total);
+                    lbEstado.setText("GENERANDO ESTRUCTURA " + contadour + " de " + total);
                     pbEstado.setProgress(counter / toutal);
                 });
-                struc = (int) list.get(i);
+                struc = (String) list.get(i);
                 un.setMap(un.cargaMap(struc));
                 it = un.getKeySet().iterator();
 

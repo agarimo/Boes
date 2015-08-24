@@ -160,7 +160,7 @@ public class SqlBoe {
                 aux.tipo.set(rs.getString("tipo"));
                 aux.fase.set(rs.getString("fase"));
                 aux.isFase.set(rs.getInt("isFase"));
-                aux.isEstructura.set(rs.getInt("isEstructura"));
+                aux.isEstructura.set(rs.getString("isEstructura"));
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.link.set(rs.getString("link"));
                 aux.idioma.set(rs.getInt("idioma"));
@@ -190,7 +190,7 @@ public class SqlBoe {
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.fecha.set(rs.getString("fecha"));
                 aux.codigoUn.set(rs.getString("codigoUn"));
-                aux.estructura.set(rs.getInt("isEstructura"));
+                aux.estructura.set(rs.getString("isEstructura"));
                 aux.codigoProv.set(rs.getString("codigoProv"));
             }
 
@@ -319,7 +319,7 @@ public class SqlBoe {
                 aux.tipo.set(rs.getString("tipo"));
                 aux.fase.set(rs.getString("fase"));
                 aux.isFase.set(rs.getInt("isFase"));
-                aux.isEstructura.set(rs.getInt("isEstructura"));
+                aux.isEstructura.set(rs.getString("isEstructura"));
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.link.set(rs.getString("link"));
                 aux.idioma.set(rs.getInt("idioma"));
@@ -669,7 +669,7 @@ public class SqlBoe {
                 aux.idDescarga.set(rs.getInt("idDescarga"));
                 aux.fecha.set(rs.getString("fecha"));
                 aux.codigoUn.set(rs.getString("codigoUn"));
-                aux.estructura.set(rs.getInt("isEstructura"));
+                aux.estructura.set(rs.getString("isEstructura"));
                 aux.codigoProv.set(rs.getString("codigoProv"));
                 list.add(aux);
             }
@@ -689,14 +689,14 @@ public class SqlBoe {
         String query="select isEstructura from boes.vista_union "
                         + "where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+" "
                         + "group by isEstructura;";
-        int aux;
+        String aux;
 
         try {
             bd = new Sql(Variables.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux=rs.getInt("isEstructura");
+                aux=rs.getString("isEstructura");
                 list.add(aux);
             }
             rs.close();
