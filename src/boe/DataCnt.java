@@ -1,4 +1,4 @@
-package boes;
+package boe;
 
 /**
  *

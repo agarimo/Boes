@@ -1,10 +1,10 @@
 package main;
 
-import boes.Boe;
-import boes.Download;
-import boes.Insercion;
-import boes.Pdf;
-import boes.Publicacion;
+import boe.Boe;
+import boe.Download;
+import boe.Insercion;
+import boe.Pdf;
+import boe.Publicacion;
 import boletines.Archivos;
 import boletines.Estructuras;
 import boletines.Fases;
@@ -257,6 +257,7 @@ public class WinC implements Initializable {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
+                panelExtraccion.setVisible(false);
                 break;
             case 1:
                 panelInicio.setVisible(false);
@@ -265,6 +266,7 @@ public class WinC implements Initializable {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
+                panelExtraccion.setVisible(false);
                 break;
             case 2:
                 panelInicio.setVisible(false);
@@ -273,6 +275,7 @@ public class WinC implements Initializable {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
+                panelExtraccion.setVisible(false);
                 break;
             case 3:
                 panelInicio.setVisible(false);
@@ -281,6 +284,7 @@ public class WinC implements Initializable {
                 panelBoletines.setVisible(true);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
+                panelExtraccion.setVisible(false);
                 break;
 
             case 4:
@@ -290,6 +294,7 @@ public class WinC implements Initializable {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(true);
                 panelCabeceras.setVisible(false);
+                panelExtraccion.setVisible(false);
                 break;
 
             case 5:
@@ -299,6 +304,17 @@ public class WinC implements Initializable {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(true);
+                panelExtraccion.setVisible(false);
+                break;
+                
+            case 6:
+                panelInicio.setVisible(false);
+                panelEnlaces.setVisible(false);
+                panelClasificacion.setVisible(false);
+                panelBoletines.setVisible(false);
+                panelFases.setVisible(false);
+                panelCabeceras.setVisible(false);
+                panelExtraccion.setVisible(true);
                 break;
         }
     }
@@ -1639,6 +1655,13 @@ public class WinC implements Initializable {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="EXTRACCION">
+    
+    @FXML
+    private AnchorPane panelExtraccion;
+    
+    
+//</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML

@@ -1,4 +1,4 @@
-package boes;
+package boe;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;

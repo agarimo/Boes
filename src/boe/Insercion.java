@@ -1,4 +1,4 @@
-package boes;
+package boe;
 
 import enty.Boletin;
 import enty.Boletines_publicados;

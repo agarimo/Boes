@@ -1,4 +1,4 @@
-package boes;
+package boe;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
@@ -76,7 +76,7 @@ public class Download extends Thread {
             datos = datos.replace("'", "´");
             aux.setDatos(datos);
             bd.ejecutar(aux.SQLSetDatos());
-            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
+//            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
             
             new File("temp.txt").delete();
             new File("temp.pdf").delete();
@@ -103,7 +103,7 @@ public class Download extends Thread {
             datos = datos.replace("'", "´");
             aux.setDatos(datos);
             bd.ejecutar(aux.SQLSetDatos());
-            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
+//            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
 
             new File("temp.txt").delete();
             new File("temp.pdf").delete();

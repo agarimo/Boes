@@ -44,9 +44,9 @@
             <AnchorPane fx:id="panelInicio" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <Button fx:id="btDescargar" layoutX="459.0" layoutY="275.0" mnemonicParsing="false" onAction="#descargaPendientes" text="DESCARGAR" visible="false" />
-                  <Button fx:id="btDescargaBoletines" graphicTextGap="1.0" maxHeight="30.0" maxWidth="150.0" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" textOverrun="CLIP" />
-                  <Button fx:id="btEstructuras" mnemonicParsing="false" onAction="#comprobarEstructuras" prefHeight="30.0" prefWidth="150.0" text="ESTRUCTURAS" />
-                  <Button fx:id="btComprobarFases" mnemonicParsing="false" onAction="#comprobarFases" prefHeight="30.0" prefWidth="150.0" text="FASES" />
+                  <Button fx:id="btDescargaBoletines" graphicTextGap="1.0" layoutX="14.0" layoutY="60.0" maxHeight="30.0" maxWidth="150.0" mnemonicParsing="false" onAction="#descargarBoletines" prefHeight="30.0" prefWidth="150.0" text="DESCARGAR" textOverrun="CLIP" />
+                  <Button fx:id="btEstructuras" layoutX="309.0" layoutY="60.0" mnemonicParsing="false" onAction="#comprobarEstructuras" prefHeight="30.0" prefWidth="150.0" text="ESTRUCTURAS" />
+                  <Button fx:id="btComprobarFases" layoutX="309.0" layoutY="15.0" mnemonicParsing="false" onAction="#comprobarFases" prefHeight="30.0" prefWidth="150.0" text="FASES" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="panelEnlaces" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -261,6 +261,45 @@
                   </SplitPane>
                </children>
             </AnchorPane>
+            <AnchorPane fx:id="panelExtraccion" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <SplitPane dividerPositions="0.2022022022022022" prefHeight="573.0" prefWidth="1001.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="224.0">
+                           <children>
+                              <ToolBar prefHeight="40.0" prefWidth="200.0">
+                                <items>
+                                    <DatePicker prefHeight="30.0" prefWidth="150.0" />
+                                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
+                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
+                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
+                                </items>
+                              </ToolBar>
+                              <ListView layoutY="40.0" prefHeight="326.0" prefWidth="200.0" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <TableView layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="773.0">
+                                <columns>
+                                  <TableColumn prefWidth="75.0" text="Expediente" />
+                                  <TableColumn prefWidth="75.0" text="Sancionado" />
+                                    <TableColumn prefWidth="75.0" text="NIF" />
+                                    <TableColumn prefWidth="75.0" text="Localidad" />
+                                    <TableColumn prefWidth="75.0" text="Fecha" />
+                                    <TableColumn prefWidth="75.0" text="Matricula" />
+                                    <TableColumn prefWidth="75.0" text="Cuantia" />
+                                    <TableColumn prefWidth="75.0" text="Precepto" />
+                                    <TableColumn prefWidth="75.0" text="Artículo" />
+                                    <TableColumn prefWidth="75.0" text="Puntos" />
+                                    <TableColumn prefWidth="75.0" text="Req/Obs" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children></AnchorPane>
          </children>
       </StackPane>
    </children>

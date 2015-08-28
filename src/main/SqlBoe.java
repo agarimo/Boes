@@ -1,6 +1,6 @@
 package main;
 
-import boes.Boe;
+import boe.Boe;
 import enty.Boletin;
 import enty.Cabecera;
 import enty.Descarga;
