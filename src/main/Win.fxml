@@ -35,6 +35,7 @@
               <MenuItem mnemonicParsing="false" onAction="#iniciaBoletines" text="Boletines" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaFases" text="Fases" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaCabeceras" text="Cabeceras" />
+                  <MenuItem mnemonicParsing="false" onAction="#iniciarExtraccion" text="Extracción" />
             </items>
           </Menu>
         </menus>
@@ -261,7 +262,7 @@
                   </SplitPane>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelExtraccion" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="panelExtraccion" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <SplitPane dividerPositions="0.2022022022022022" prefHeight="573.0" prefWidth="1001.0">
                     <items>
@@ -269,13 +270,13 @@
                            <children>
                               <ToolBar prefHeight="40.0" prefWidth="200.0">
                                 <items>
-                                    <DatePicker prefHeight="30.0" prefWidth="150.0" />
-                                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
+                                    <DatePicker fx:id="dpExtract" onAction="#cargarEx" prefHeight="30.0" prefWidth="150.0" />
+                                  <Button fx:id="btProcesarEx" mnemonicParsing="false" onAction="#procesarEx" prefHeight="30.0" prefWidth="150.0" text="PROCESAR" />
                                     <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
                                     <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
                                 </items>
                               </ToolBar>
-                              <ListView layoutY="40.0" prefHeight="326.0" prefWidth="200.0" />
+                              <ListView fx:id="lvExtract" layoutY="40.0" prefHeight="326.0" prefWidth="200.0" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

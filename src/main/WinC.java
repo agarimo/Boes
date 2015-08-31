@@ -14,6 +14,7 @@ import enty.Boletin;
 import enty.Cabecera;
 import enty.Descarga;
 import enty.Fase;
+import enty.Procesar;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -238,6 +239,9 @@ public class WinC implements Initializable {
 
         final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
         ls5.addListener(selectorListaOrigenC);
+        
+        final ObservableList<Procesar> ls6 = lvExtract.getSelectionModel().getSelectedItems();
+        ls6.addListener(selectorListaExtraccion);
     }
 
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
@@ -1656,12 +1660,75 @@ public class WinC implements Initializable {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="EXTRACCION">
+    ObservableList<Procesar> listExtraccion;
     
     @FXML
     private AnchorPane panelExtraccion;
     
+    @FXML
+    private DatePicker dpExtract;
+    
+    @FXML
+    private ListView lvExtract;
+    
+    @FXML
+    private Button btProcesarEx;
+    
+    @FXML
+    void iniciarExtraccion(ActionEvent event){
+        mostrarPanel(6);
+        iniciarDatosEx();
+    }
+    
+    void iniciarDatosEx(){
+        listExtraccion=FXCollections.observableArrayList();
+        lvExtract.setItems(listExtraccion);
+        
+        lvExtract.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> list) {
+                final ListCell cell = new ListCell() {
+                    private Text text;
+
+                    @Override
+                    public void updateItem(Object item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            text = new Text(item.toString());
+                            text.setWrappingWidth(lvOrigen.getPrefWidth() - 30);
+                            setGraphic(text);
+                        } else {
+                            text = new Text("");
+                            setGraphic(text);
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+    }
+    
+    @FXML
+    void cargarEx(ActionEvent event){
+        Date aux = Dates.asDate(dpExtract.getValue());
+        
+        if(aux!=null){
+            
+        }
+    }
+    
+    void cargaBoletinExtraccion(){
+        
+    }
+    
+    @FXML
+    void procesarEx(ActionEvent event){
+        
+    }
+    
     
 //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML
@@ -2279,6 +2346,14 @@ public class WinC implements Initializable {
     private final ListChangeListener<ModeloCabeceras> selectorTablaCabeceras
             = (ListChangeListener.Change<? extends ModeloCabeceras> c) -> {
                 cargaDatosCabecera();
+            };
+    
+    /**
+     * Listener de la lista Extraccion
+     */
+    private final ListChangeListener<Procesar> selectorListaExtraccion
+            = (ListChangeListener.Change<? extends Procesar> c) -> {
+                cargaBoletinExtraccion();
             };
 //</editor-fold>
 }
