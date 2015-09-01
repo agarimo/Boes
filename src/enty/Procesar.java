@@ -1,5 +1,10 @@
 package enty;
 
+import java.util.Date;
+import main.Variables;
+import util.Dates;
+import util.Varios;
+
 /**
  *
  * @author Agarimo
@@ -7,6 +12,7 @@ package enty;
 public class Procesar {
 
     int id;
+    Date fecha;
     String codigo;
     String link;
     int estructura;
@@ -20,7 +26,8 @@ public class Procesar {
 
     }
 
-    public Procesar(String codigo, String link, int estructura, int estado) {
+    public Procesar(Date fecha,String codigo, String link, int estructura, int estado) {
+        this.fecha=fecha;
         this.codigo = codigo;
         this.link = link;
         this.estructura = estructura;
@@ -67,9 +74,27 @@ public class Procesar {
         this.link = link;
     }
 
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     @Override
     public String toString() {
         return this.codigo;
     }
-
+    
+    public String SQLCrear(){
+        return "INSERT into " + Variables.nombreBD + ".procesar (id,fecha,codigo,link,estructura,estado) values("
+                + this.id + ","
+                + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ","
+                + Varios.entrecomillar(this.codigo) + ","
+                + Varios.entrecomillar(this.link) + ","
+                + this.estructura + ","
+                + this.estado
+                + ");";
+    }
 }

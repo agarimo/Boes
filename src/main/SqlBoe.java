@@ -7,6 +7,7 @@ import enty.Descarga;
 import enty.Estructura;
 import enty.Fase;
 import enty.Origen;
+import enty.Procesar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -681,14 +682,14 @@ public class SqlBoe {
         }
         return list;
     }
-    
-    public static List listaEstructurasDia(Date fecha){
+
+    public static List listaEstructurasDia(Date fecha) {
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
-        String query="select isEstructura from boes.vista_union "
-                        + "where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+" "
-                        + "group by isEstructura;";
+        String query = "select isEstructura from boes.vista_union "
+                + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
+                + "group by isEstructura;";
         String aux;
 
         try {
@@ -696,7 +697,71 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux=rs.getString("isEstructura");
+                aux = rs.getString("isEstructura");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public static List listaProcesarPendiente(Date fecha) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String query = "select a.id,a.codigo,b.link,a.isEstructura from boes.boletin a "
+                + "left join boes.descarga b on a.idDescarga=b.id "
+                + "where a.idBoe=(select id from boes.boe where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+") "
+                + "and a.isEstructura in (select id from boes.estructura where isProcesable=1) "
+                + "and a.id not in (select id from boes.procesar)";
+        Procesar aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Procesar();
+                aux.setId(rs.getInt("id"));
+                aux.setFecha(fecha);
+                aux.setCodigo(rs.getString("codigo"));
+                aux.setLink(rs.getString("link"));
+                aux.setEstructura(rs.getInt("isEstructura"));
+                aux.setEstado(0);
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public static List listaProcesar(Date fecha) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String query = "select * from boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        Procesar aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Procesar();
+                aux.setId(rs.getInt("id"));
+                aux.setFecha(rs.getDate("fecha"));
+                aux.setCodigo(rs.getString("codigo"));
+                aux.setLink(rs.getString("link"));
+                aux.setEstructura(rs.getInt("estructura"));
+                aux.setEstado(rs.getInt("estado"));
                 list.add(aux);
             }
             rs.close();

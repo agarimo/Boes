@@ -239,7 +239,7 @@ public class WinC implements Initializable {
 
         final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
         ls5.addListener(selectorListaOrigenC);
-        
+
         final ObservableList<Procesar> ls6 = lvExtract.getSelectionModel().getSelectedItems();
         ls6.addListener(selectorListaExtraccion);
     }
@@ -310,7 +310,7 @@ public class WinC implements Initializable {
                 panelCabeceras.setVisible(true);
                 panelExtraccion.setVisible(false);
                 break;
-                
+
             case 6:
                 panelInicio.setVisible(false);
                 panelEnlaces.setVisible(false);
@@ -1661,34 +1661,48 @@ public class WinC implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="EXTRACCION">
     ObservableList<Procesar> listExtraccion;
-    
+
     @FXML
     private AnchorPane panelExtraccion;
-    
+
     @FXML
     private DatePicker dpExtract;
-    
+
     @FXML
     private ListView lvExtract;
-    
+
+    @FXML
+    private Button btPdfEx;
+
     @FXML
     private Button btProcesarEx;
-    
+
     @FXML
-    void iniciarExtraccion(ActionEvent event){
+    private Button btTrasvase;
+
+    @FXML
+    private Label lbTrasvase;
+
+    @FXML
+    private Button btRecargarEx;
+
+    @FXML
+    void iniciarExtraccion(ActionEvent event) {
         mostrarPanel(6);
+        dpExtract.setValue(null);
         iniciarDatosEx();
     }
-    
-    void iniciarDatosEx(){
-        listExtraccion=FXCollections.observableArrayList();
+
+    void iniciarDatosEx() {
+        btTrasvase.setVisible(false);
+        listExtraccion = FXCollections.observableArrayList();
         lvExtract.setItems(listExtraccion);
-        
-        lvExtract.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        lvExtract.setCellFactory(new Callback<ListView<Procesar>, ListCell<Procesar>>() {
             @Override
-            public ListCell<String> call(ListView<String> list) {
+            public ListCell<Procesar> call(ListView<Procesar> list) {
                 final ListCell cell = new ListCell() {
                     private Text text;
+                    private Procesar pr;
 
                     @Override
                     public void updateItem(Object item, boolean empty) {
@@ -1696,7 +1710,23 @@ public class WinC implements Initializable {
                         if (!isEmpty()) {
                             text = new Text(item.toString());
                             text.setWrappingWidth(lvOrigen.getPrefWidth() - 30);
+                            pr = (Procesar) item;
+
+                            switch (pr.getEstado()) {
+                                case 0:
+                                    text.setFill(Color.RED);
+                                    break;
+
+                                case 1:
+                                    text.setFill(Color.ORANGE);
+                                    break;
+
+                                case 2:
+                                    text.setFill(Color.GREEN);
+                                    break;
+                            }
                             setGraphic(text);
+
                         } else {
                             text = new Text("");
                             setGraphic(text);
@@ -1707,28 +1737,75 @@ public class WinC implements Initializable {
             }
         });
     }
-    
-    @FXML
-    void cargarEx(ActionEvent event){
-        Date aux = Dates.asDate(dpExtract.getValue());
-        
-        if(aux!=null){
-            
+
+    void comprobarTrasvase(Date fecha) {
+        List aux = SqlBoe.listaProcesarPendiente(fecha);
+
+        if (!aux.isEmpty()) {
+            btTrasvase.setVisible(true);
+            lbTrasvase.setText(Integer.toString(aux.size()));
+        } else {
+            btTrasvase.setVisible(false);
+            lbTrasvase.setText(Integer.toString(aux.size()));
         }
     }
-    
-    void cargaBoletinExtraccion(){
-        
-    }
-    
+
     @FXML
-    void procesarEx(ActionEvent event){
-        
+    void trasvaseEx(ActionEvent event) {
+        Procesar aux;
+        Date fecha = Dates.asDate(dpExtract.getValue());
+        Iterator it = SqlBoe.listaProcesarPendiente(fecha).iterator();
+
+        try {
+            bd = new Sql(Variables.con);
+
+            while (it.hasNext()) {
+                aux = (Procesar) it.next();
+                bd.ejecutar(aux.SQLCrear());
+            }
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cargarEx(fecha);
     }
-    
-    
+
+    @FXML
+    void cambioEnDatePickerExtract(ActionEvent event) {
+        btTrasvase.setVisible(false);
+        Date aux = Dates.asDate(dpExtract.getValue());
+
+        if (aux != null) {
+            cargarEx(aux);
+            comprobarTrasvase(aux);
+        }
+    }
+
+    void cargarEx(Date fecha) {
+        Procesar aux;
+        listExtraccion.clear();
+        Iterator it = SqlBoe.listaProcesar(fecha).iterator();
+
+        while (it.hasNext()) {
+            aux = (Procesar) it.next();
+            listExtraccion.add(aux);
+        }
+    }
+
+    @FXML
+    void generarPdfEx(ActionEvent event) {
+
+    }
+
+    @FXML
+    void procesarEx(ActionEvent event) {
+
+    }
+
+    void cargaBoletinExtraccion() {
+
+    }
 //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML
@@ -2347,7 +2424,7 @@ public class WinC implements Initializable {
             = (ListChangeListener.Change<? extends ModeloCabeceras> c) -> {
                 cargaDatosCabecera();
             };
-    
+
     /**
      * Listener de la lista Extraccion
      */
