@@ -1,8 +1,12 @@
 package enty;
 
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.Variables;
 import util.Dates;
+import util.Sql;
 import util.Varios;
 
 /**
@@ -96,5 +100,19 @@ public class Procesar {
                 + this.estructura + ","
                 + this.estado
                 + ");";
+    }
+    
+    public void SQLSetEstado(int estado){
+        String query="UPDATE " + Variables.nombreBD + ".procesar SET "
+                    + "estado=" + estado + " "
+                    + "WHERE id=" + this.id;
+        
+        try {
+            Sql bd = new Sql(Variables.con);
+            bd.ejecutar(query);
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Procesar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -50,6 +50,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -1687,9 +1688,17 @@ public class WinC implements Initializable {
     private Button btRecargarEx;
 
     @FXML
+    private ProgressIndicator piProgreso;
+
+    @FXML
+    private Label lbProgresoEx;
+
+    @FXML
     void iniciarExtraccion(ActionEvent event) {
         mostrarPanel(6);
         dpExtract.setValue(null);
+        piProgreso.setVisible(false);
+        lbProgresoEx.setVisible(false);
         iniciarDatosEx();
     }
 
@@ -1784,7 +1793,8 @@ public class WinC implements Initializable {
     void cargarEx(Date fecha) {
         Procesar aux;
         listExtraccion.clear();
-        Iterator it = SqlBoe.listaProcesar(fecha).iterator();
+        Iterator it = SqlBoe.listaProcesar("SELECT * FROM " + Variables.nombreBD + ".procesar "
+                + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))).iterator();
 
         while (it.hasNext()) {
             aux = (Procesar) it.next();
@@ -1794,12 +1804,73 @@ public class WinC implements Initializable {
 
     @FXML
     void generarPdfEx(ActionEvent event) {
+        Date fecha = Dates.asDate(dpExtract.getValue());
 
+        if (fecha != null) {
+            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)); 
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            fichero.mkdirs();
+
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    piProgreso.setVisible(true);
+                    piProgreso.setProgress(0);
+                    lbProgresoEx.setVisible(true);
+                    lbProgresoEx.setText("DESCARGANDO PDFs");
+                });
+
+                File destino;
+                Procesar aux;
+                List list = SqlBoe.listaProcesar(query);
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbProgresoEx.setText("DESCARGANDO " + contadour + " de " + total);
+                        piProgreso.setProgress(counter / toutal);
+                    });
+                    aux = (Procesar) list.get(i);
+                    destino = new File(fichero, aux.getCodigo()+".pdf");
+                    Download.descargaPDF(aux.getLink(), destino);
+                    aux.SQLSetEstado(1);
+                }
+
+                Platform.runLater(() -> {
+                    lbProgresoEx.setText("FINALIZADO");
+                    piProgreso.setProgress(1);
+                    piProgreso.setVisible(false);
+                    lbProgresoEx.setText("");
+                    lbProgresoEx.setVisible(false);
+
+                    cargarEx(fecha);
+                });
+            });
+            a.start();
+        }
     }
 
     @FXML
     void procesarEx(ActionEvent event) {
 
+    }
+
+    @FXML
+    void abrirCarpetaEx(ActionEvent event) {
+        Date fecha = Dates.asDate(dpExtract.getValue());
+
+        if (fecha != null) {
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            try {
+                Desktop.getDesktop().browse(fichero.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     void cargaBoletinExtraccion() {

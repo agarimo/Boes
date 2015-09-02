@@ -743,11 +743,10 @@ public class SqlBoe {
         return list;
     }
 
-    public static List listaProcesar(Date fecha) {
+    public static List listaProcesar(String query) {
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
-        String query = "select * from boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
         Procesar aux;
 
         try {

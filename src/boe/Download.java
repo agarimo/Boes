@@ -59,8 +59,8 @@ public class Download extends Thread {
             Variables.isDownloading = false;
         }
     }
-    
-    public List getListado(){
+
+    public List getListado() {
         return SqlBoe.listaDescargaPendiente();
     }
 
@@ -68,8 +68,8 @@ public class Download extends Thread {
         try {
             Sql bd;
             String datos;
-            
-            bd= new Sql(Variables.con);
+
+            bd = new Sql(Variables.con);
             descargaPDF(aux.getLink());
             convertirPDF();
             datos = Files.leeArchivo(new File("temp.txt"));
@@ -77,7 +77,7 @@ public class Download extends Thread {
             aux.setDatos(datos);
             bd.ejecutar(aux.SQLSetDatos());
 //            bd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET estado=1 where idDescarga=" + aux.getId());
-            
+
             new File("temp.txt").delete();
             new File("temp.pdf").delete();
             bd.close();
@@ -128,6 +128,28 @@ public class Download extends Thread {
             }
         }
         out.close();
+    }
+
+    public static void descargaPDF(String link, File destino) {
+        try {
+            URL enlace = new URL(link);
+            URLConnection connection = enlace.openConnection();
+
+            OutputStream out;
+            try (InputStream in = connection.getInputStream()) {
+                out = new DataOutputStream(new FileOutputStream(destino));
+                byte[] buffer = new byte[1024];
+                int sizeRead;
+                while ((sizeRead = in.read(buffer)) >= 0) {
+                    out.write(buffer, 0, sizeRead);
+                }
+            }
+            out.close();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Download.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void convertirPDF() {
