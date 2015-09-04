@@ -8,17 +8,21 @@ public class StrucData {
     int id;
     int idEstructura;
     
-    int expediente;
-    int sancionado;
-    int nif;
-    int localidad;
-    int fechaMulta;
-    int matricula;
-    int cuantia;
-    int precepto;
-    int articulo;
-    int puntos;
-    int reqObs;
+    public int expediente;
+    public int sancionado;
+    public int nif;
+    public int localidad;
+    public int fechaMulta;
+    public int matricula;
+    public int cuantia;
+    public int precepto;
+    public int articulo;
+    public int puntos;
+    public int reqObs;
+    
+    public StrucData(){
+        
+    }
     
     public StrucData(int idEstructura){
         this.idEstructura=idEstructura;
@@ -48,96 +52,48 @@ public class StrucData {
         this.id = id;
     }
 
-    public int getIdEstructura() {
-        return idEstructura;
-    }
-
     public void setIdEstructura(int idEstructura) {
         this.idEstructura = idEstructura;
-    }
-
-    public int getExpediente() {
-        return expediente;
     }
 
     public void setExpediente(int expediente) {
         this.expediente = expediente;
     }
 
-    public int getSancionado() {
-        return sancionado;
-    }
-
     public void setSancionado(int sancionado) {
         this.sancionado = sancionado;
-    }
-
-    public int getNif() {
-        return nif;
     }
 
     public void setNif(int nif) {
         this.nif = nif;
     }
 
-    public int getLocalidad() {
-        return localidad;
-    }
-
     public void setLocalidad(int localidad) {
         this.localidad = localidad;
-    }
-
-    public int getFechaMulta() {
-        return fechaMulta;
     }
 
     public void setFechaMulta(int fechaMulta) {
         this.fechaMulta = fechaMulta;
     }
 
-    public int getMatricula() {
-        return matricula;
-    }
-
     public void setMatricula(int matricula) {
         this.matricula = matricula;
-    }
-
-    public int getCuantia() {
-        return cuantia;
     }
 
     public void setCuantia(int cuantia) {
         this.cuantia = cuantia;
     }
 
-    public int getPrecepto() {
-        return precepto;
-    }
-
     public void setPrecepto(int precepto) {
         this.precepto = precepto;
-    }
-
-    public int getArticulo() {
-        return articulo;
     }
 
     public void setArticulo(int articulo) {
         this.articulo = articulo;
     }
 
-    public int getPuntos() {
-        return puntos;
-    }
-
     public void setPuntos(int puntos) {
         this.puntos = puntos;
-    }
-
-    public int getReqObs() {
-        return reqObs;
     }
 
     public void setReqObs(int reqObs) {

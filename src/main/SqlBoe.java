@@ -8,6 +8,8 @@ import enty.Estructura;
 import enty.Fase;
 import enty.Origen;
 import enty.Procesar;
+import enty.StrucData;
+import enty.VistaExtraccion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -195,6 +197,63 @@ public class SqlBoe {
                 aux.codigoProv.set(rs.getString("codigoProv"));
             }
 
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+    
+    public static VistaExtraccion getVistaExtraccion(String query) {
+        Sql bd;
+        ResultSet rs;
+        VistaExtraccion aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new VistaExtraccion(rs.getString("codigo"), rs.getString("entidad"), rs.getString("origen"),
+                rs.getDate("fecha"),rs.getString("tipo"),rs.getString("fase"));
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+    
+    public static StrucData getStrucData(String query) {
+        Sql bd;
+        ResultSet rs;
+        StrucData aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new StrucData();
+                
+                aux.setId(rs.getInt("id"));
+                aux.setIdEstructura(rs.getInt("idEstructura"));
+                aux.setExpediente(rs.getInt("expediente"));
+                aux.setSancionado(rs.getInt("sancionado"));
+                aux.setNif(rs.getInt("nif"));
+                aux.setLocalidad(rs.getInt("localidad"));
+                aux.setFechaMulta(rs.getInt("fechaMulta"));
+                aux.setMatricula(rs.getInt("matricula"));
+                aux.setCuantia(rs.getInt("cuantia"));
+                aux.setPrecepto(rs.getInt("precepto"));
+                aux.setArticulo(rs.getInt("articulo"));
+                aux.setPuntos(rs.getInt("puntos"));
+                aux.setReqObs(rs.getInt("reqObs"));
+            }
             rs.close();
             bd.close();
         } catch (SQLException ex) {

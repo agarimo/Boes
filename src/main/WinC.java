@@ -1874,7 +1874,7 @@ public class WinC implements Initializable {
     }
 
     void cargaBoletinExtraccion() {
-
+        
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="FASES">
