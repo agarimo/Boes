@@ -222,9 +222,8 @@ public class WinC implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        origen_descartado = SqlBoe.listaOrigenDescartado();
-        texto_descartado = SqlBoe.listaTextoDescartado();
-        iniciaTablaBoes();
+//        origen_descartado = SqlBoe.listaOrigenDescartado();
+//        texto_descartado = SqlBoe.listaTextoDescartado();
 
         final ObservableList<Boe> ls1 = lvBoe.getSelectionModel().getSelectedItems();
         ls1.addListener(selectorListaBoe);
@@ -517,12 +516,12 @@ public class WinC implements Initializable {
 
     @FXML
     void iniciaClasificacion(ActionEvent event) {
+        iniciaTablaBoes();
+        limpiarClasificacion();
         autoScroll = true;
         cbAutoScroll.setSelected(autoScroll);
         mostrarPanel(2);
         setProcesandoC(false);
-        limpiarClasificacion();
-        iniciaTablaBoes();
     }
 
     private void iniciaTablaBoes() {
@@ -1807,7 +1806,7 @@ public class WinC implements Initializable {
         Date fecha = Dates.asDate(dpExtract.getValue());
 
         if (fecha != null) {
-            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)); 
+            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
             File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
             fichero.mkdirs();
 
@@ -1835,7 +1834,7 @@ public class WinC implements Initializable {
                         piProgreso.setProgress(counter / toutal);
                     });
                     aux = (Procesar) list.get(i);
-                    destino = new File(fichero, aux.getCodigo()+".pdf");
+                    destino = new File(fichero, aux.getCodigo() + ".pdf");
                     Download.descargaPDF(aux.getLink(), destino);
                     aux.SQLSetEstado(1);
                 }
@@ -1874,7 +1873,7 @@ public class WinC implements Initializable {
     }
 
     void cargaBoletinExtraccion() {
-        
+
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="FASES">

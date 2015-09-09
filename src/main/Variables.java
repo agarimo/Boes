@@ -23,15 +23,15 @@ public class Variables {
 
     public static void inicializar() {
         driver();
+        setConexion();
         ficheroPdf = new File(new File("data"), "pdfData");
         ficheroTxt = new File(new File("data"), "txtData");
         ficheroBoe = new File(new File("data"), "boeData");
         ficheroUnion = new File(new File("data"), "unionData");
-        ficheroEx = new File (new File("data"),"exData");
+        ficheroEx = new File(new File("data"), "exData");
         isClasificando = false;
         isDownloading = false;
         initFiles();
-        setConexion();
     }
 
     private static void initFiles() {
@@ -53,6 +53,7 @@ public class Variables {
 
     private static void setConexion() {
         con = new Conexion();
+//        con.setDireccion("oficina.redcedeco.net");
         con.setDireccion("192.168.1.40");
 //        con.setDireccion("localhost");
         con.setUsuario("admin");

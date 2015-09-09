@@ -91,8 +91,8 @@
                <children>
                   <TableView fx:id="tvBoes" layoutY="53.0" prefHeight="308.0" prefWidth="1001.0" rotate="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="codigoCL" prefWidth="115.0" resizable="false" text="CODIGO" />
-                      <TableColumn fx:id="origenCL" prefWidth="250.0" resizable="false" text="ORIGEN" />
+                      <TableColumn fx:id="codigoCL" prefWidth="159.0" resizable="false" text="CODIGO" />
+                      <TableColumn fx:id="origenCL" prefWidth="206.0" resizable="false" text="ORIGEN" />
                         <TableColumn fx:id="descripcionCL" prefWidth="633.0" resizable="false" text="DESCRIPCION" />
                     </columns>
                   </TableView>
