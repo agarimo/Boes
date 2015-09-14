@@ -1,12 +1,16 @@
 package main;
 
+import enty.Procesar;
+import extraccion.Extraccion;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import util.Dates;
 
 /**
  *
@@ -29,14 +33,27 @@ public class Boes extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+//                launch(args);
+
+        
+        Variables.inicializar();
+        Procesar pr;
+        Extraccion ex = new Extraccion(getFecha());
+        List<Procesar> list = ex.getBoletines();
+        
+        pr = list.get(1);
+        System.out.println(pr.getCodigo());
+        
+        ex.procesaXLSX(pr);
+        
+        System.exit(0);
     }
 
     public static Date getFecha() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
         cal.set(Calendar.MONTH, Calendar.AUGUST);
-        cal.set(Calendar.DAY_OF_MONTH, 17);
+        cal.set(Calendar.DAY_OF_MONTH, 31);
         return cal.getTime();
     }
 }

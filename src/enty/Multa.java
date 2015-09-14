@@ -1,6 +1,7 @@
 package enty;
 
 import java.util.Date;
+import java.util.Objects;
 import main.Variables;
 import util.Dates;
 import util.Varios;
@@ -19,7 +20,7 @@ public class Multa {
     String boe;
     String fase;
     String tipoJuridico;
-    String plazo;
+    int plazo;
     String expediente;
     Date fechaMulta;
     String articulo;
@@ -36,7 +37,7 @@ public class Multa {
 
     }
 
-    public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion, String organismo, String boe, String fase, String tipoJuridico, String plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
+    public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.idBoletin = idBoletin;
         this.codigoSancion = codigoSancion;
         this.fechaPublicacion = fechaPublicacion;
@@ -58,7 +59,7 @@ public class Multa {
         this.linea = linea;
     }
 
-    public Multa(int id, int idBoletin, String codigoSancion, Date fechaPublicacion, String organismo, String boe, String fase, String tipoJuridico, String plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
+    public Multa(int id, int idBoletin, String codigoSancion, Date fechaPublicacion, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.id = id;
         this.idBoletin = idBoletin;
         this.codigoSancion = codigoSancion;
@@ -145,11 +146,11 @@ public class Multa {
         this.tipoJuridico = tipoJuridico;
     }
 
-    public String getPlazo() {
+    public int getPlazo() {
         return plazo;
     }
 
-    public void setPlazo(String plazo) {
+    public void setPlazo(int plazo) {
         this.plazo = plazo;
     }
 
@@ -241,6 +242,37 @@ public class Multa {
         this.linea = linea;
     }
 
+    @Override
+    public String toString() {
+        return "Multa{" + "id=" + id + ", idBoletin=" + idBoletin + ", codigoSancion=" + codigoSancion + ", fechaPublicacion=" + fechaPublicacion + ", organismo=" + organismo + ", boe=" + boe + ", fase=" + fase + ", tipoJuridico=" + tipoJuridico + ", plazo=" + plazo + ", expediente=" + expediente + ", fechaMulta=" + fechaMulta + ", articulo=" + articulo + ", nif=" + nif + ", sancionado=" + sancionado + ", localidad=" + localidad + ", matricula=" + matricula + ", cuantia=" + cuantia + ", puntos=" + puntos + ", reqObs=" + reqObs + ", linea=" + linea + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.idBoletin;
+        hash = 67 * hash + Objects.hashCode(this.expediente);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Multa other = (Multa) obj;
+        if (this.idBoletin != other.idBoletin) {
+            return false;
+        }
+        if (!Objects.equals(this.expediente, other.expediente)) {
+            return false;
+        }
+        return true;
+    }
+
     public String SQLCrear() {
         return "INSERT into " + Variables.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
                 + this.idBoletin + ","
@@ -250,7 +282,7 @@ public class Multa {
                 + Varios.entrecomillar(this.boe) + ","
                 + Varios.entrecomillar(this.fase) + ","
                 + Varios.entrecomillar(this.tipoJuridico) + ","
-                + Varios.entrecomillar(this.plazo) + ","
+                + this.plazo + ","
                 + Varios.entrecomillar(this.expediente) + ","
                 + Varios.entrecomillar(Dates.imprimeFecha(this.fechaMulta)) + ","
                 + Varios.entrecomillar(this.articulo) + ","
