@@ -2,8 +2,11 @@ package main;
 
 import enty.Procesar;
 import extraccion.Extraccion;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -37,15 +40,27 @@ public class Boes extends Application {
 
         
         Variables.inicializar();
-        Procesar pr;
-        Extraccion ex = new Extraccion(getFecha());
-        List<Procesar> list = ex.getBoletines();
+        String fecha="06/04/2015";
+        Date date;
         
-        pr = list.get(1);
-        System.out.println(pr.getCodigo());
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");
+
+            try {
+                date = formato.parse(fecha);
+            } catch (ParseException ex) {
+                date = null;
+            }
+        System.out.println(Dates.imprimeFecha(date));
         
-        ex.procesaXLSX(pr);
-        
+//        Procesar pr;
+//        Extraccion ex = new Extraccion(getFecha());
+//        List<Procesar> list = ex.getBoletines();
+//        
+//        pr = list.get(1);
+//        System.out.println(pr.getCodigo());
+//        
+//        ex.procesaXLSX(pr);
+//        
         System.exit(0);
     }
 
@@ -55,5 +70,27 @@ public class Boes extends Application {
         cal.set(Calendar.MONTH, Calendar.AUGUST);
         cal.set(Calendar.DAY_OF_MONTH, 31);
         return cal.getTime();
+    }
+    
+    private static Date setFecha(String fecha) {
+        Iterator<String> it = SqlBoe.listaEstructurasFechas().iterator();
+        String aux;
+        Date date = null;
+
+        while (it.hasNext()) {
+            aux = it.next();
+
+            SimpleDateFormat formato = new SimpleDateFormat(aux);
+
+            try {
+                System.out.println(aux);
+                date = formato.parse(fecha);
+            } catch (ParseException ex) {
+                System.err.println(aux);
+                date = null;
+            }
+        }
+
+        return date;
     }
 }
