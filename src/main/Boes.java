@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,29 +40,17 @@ public class Boes extends Application {
     public static void main(String[] args) {
 //                launch(args);
 
-        
         Variables.inicializar();
-        String fecha="06/04/2015";
-        Date date;
-        
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");
 
-            try {
-                date = formato.parse(fecha);
-            } catch (ParseException ex) {
-                date = null;
-            }
-        System.out.println(Dates.imprimeFecha(date));
+        Procesar pr;
+        Extraccion ex = new Extraccion(getFecha());
+        List<Procesar> list = ex.getBoletines();
         
-//        Procesar pr;
-//        Extraccion ex = new Extraccion(getFecha());
-//        List<Procesar> list = ex.getBoletines();
-//        
-//        pr = list.get(1);
-//        System.out.println(pr.getCodigo());
-//        
-//        ex.procesaXLSX(pr);
-//        
+        pr = list.get(0);
+        System.out.println(pr.getCodigo());
+        
+        ex.procesaXLSX(pr);
+        
         System.exit(0);
     }
 
@@ -71,26 +61,25 @@ public class Boes extends Application {
         cal.set(Calendar.DAY_OF_MONTH, 31);
         return cal.getTime();
     }
+
     
-    private static Date setFecha(String fecha) {
+    private static Date parseFecha(String fecha){
+        Date date= null;
         Iterator<String> it = SqlBoe.listaEstructurasFechas().iterator();
         String aux;
-        Date date = null;
-
-        while (it.hasNext()) {
-            aux = it.next();
-
-            SimpleDateFormat formato = new SimpleDateFormat(aux);
-
+        SimpleDateFormat df;
+        
+        while(it.hasNext()){
+            aux=it.next();
+            df = new SimpleDateFormat(aux);
+            df.setLenient(false);
+            
             try {
-                System.out.println(aux);
-                date = formato.parse(fecha);
+                date=df.parse(fecha);
             } catch (ParseException ex) {
-                System.err.println(aux);
-                date = null;
+//                Logger.getLogger(Boes.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         return date;
     }
 }

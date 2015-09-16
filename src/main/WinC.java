@@ -14,6 +14,7 @@ import enty.Boletin;
 import enty.Cabecera;
 import enty.Descarga;
 import enty.Fase;
+import enty.Multa;
 import enty.Procesar;
 import java.awt.Desktop;
 import java.io.File;
@@ -69,6 +70,7 @@ import model.ModeloBoletines;
 import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
+import model.ModeloMultas;
 import util.Dates;
 import util.Files;
 import util.Sql;
@@ -1661,6 +1663,7 @@ public class WinC implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="EXTRACCION">
     ObservableList<Procesar> listExtraccion;
+    ObservableList<ModeloMultas> multasList;
 
     @FXML
     private AnchorPane panelExtraccion;
@@ -1691,6 +1694,39 @@ public class WinC implements Initializable {
 
     @FXML
     private Label lbProgresoEx;
+    
+    @FXML
+    private TableView<ModeloMultas> tvMultas;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> expedienteCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> sancionadoCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> nifCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> localidadCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> fechaCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> matriculaCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> cuantiaCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> articuloCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> puntosCLM;
+    
+    @FXML
+    private TableColumn<ModeloMultas,String> reqObsCLM;
 
     @FXML
     void iniciarExtraccion(ActionEvent event) {
@@ -1698,6 +1734,7 @@ public class WinC implements Initializable {
         dpExtract.setValue(null);
         piProgreso.setVisible(false);
         lbProgresoEx.setVisible(false);
+        iniciarTablaMultas();
         iniciarDatosEx();
     }
 
@@ -1744,6 +1781,53 @@ public class WinC implements Initializable {
                 return cell;
             }
         });
+    }
+    
+    void iniciarTablaMultas(){
+        expedienteCLM.setCellValueFactory(new PropertyValueFactory<>("expediente"));
+        sancionadoCLM.setCellValueFactory(new PropertyValueFactory<>("sancionado"));
+        nifCLM.setCellValueFactory(new PropertyValueFactory<>("nif"));
+        localidadCLM.setCellValueFactory(new PropertyValueFactory<>("localidad"));
+        fechaCLM.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        matriculaCLM.setCellValueFactory(new PropertyValueFactory<>("matricula"));
+        cuantiaCLM.setCellValueFactory(new PropertyValueFactory<>("cuantia"));
+        articuloCLM.setCellValueFactory(new PropertyValueFactory<>("articulo"));
+        puntosCLM.setCellValueFactory(new PropertyValueFactory<>("puntos"));
+        reqObsCLM.setCellValueFactory(new PropertyValueFactory<>("reqObs"));
+        
+        multasList = FXCollections.observableArrayList();
+        tvMultas.setItems(multasList);
+    }
+    
+    void cargarDatosTablaMultas(List<Multa> multas){
+        multasList.clear();
+        ModeloMultas modelo;
+        Multa multa;
+        Iterator<Multa> it = multas.iterator();
+        
+        while(it.hasNext()){
+            multa=it.next();
+            
+            modelo = new ModeloMultas();
+            modelo.expediente.set(multa.getExpediente());
+            modelo.sancionado.set(multa.getSancionado());
+            modelo.nif.set(multa.getNif());
+            modelo.localidad.set(multa.getLocalidad());
+            modelo.fecha.set(Dates.imprimeFecha(multa.getFechaMulta()));
+            modelo.matricula.set(multa.getMatricula());
+            modelo.cuantia.set(multa.getCuantia());
+            modelo.articulo.set(multa.getArticulo());
+            modelo.puntos.set(multa.getPuntos());
+            modelo.reqObs.set(multa.getReqObs());
+            
+            multasList.add(modelo);
+        }
+    }
+    
+    void cargarDatosTablaMultas(Procesar aux){
+        String query = "SELECT * FROM " + Variables.nombreBD + ".multa where idBoletin=" + aux.getId();
+        List<Multa> list = SqlBoe.listaMultas(query);
+        cargarDatosTablaMultas(list);
     }
 
     void comprobarTrasvase(Date fecha) {
@@ -1876,6 +1960,7 @@ public class WinC implements Initializable {
 
     }
 //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML

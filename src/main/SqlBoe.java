@@ -6,6 +6,7 @@ import enty.Cabecera;
 import enty.Descarga;
 import enty.Estructura;
 import enty.Fase;
+import enty.Multa;
 import enty.Origen;
 import enty.Procesar;
 import enty.StrucData;
@@ -844,6 +845,49 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = rs.getString("estructura");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List listaMultas(String query) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Multa aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Multa();
+                aux.setId(rs.getInt("id"));
+                aux.setIdBoletin(rs.getInt("idBoletin"));
+                aux.setCodigoSancion(rs.getString("codigoSancion"));
+                aux.setFechaPublicacion(rs.getDate("fechaPublicacion"));
+                aux.setOrganismo(rs.getString("organismo"));
+                aux.setBoe(rs.getString("boe"));
+                aux.setFase(rs.getString("fase"));
+                aux.setTipoJuridico(rs.getString("tipoJuridico"));
+                aux.setPlazo(rs.getInt("plazo"));
+                aux.setExpediente(rs.getString("expediente"));
+                aux.setFechaMulta(rs.getDate("fechaMulta"));
+                aux.setArticulo(rs.getString("articulo"));
+                aux.setNif(rs.getString("nif"));
+                aux.setSancionado(rs.getString("sancionado"));
+                aux.setLocalidad(rs.getString("localidad"));
+                aux.setMatricula(rs.getString("matricula"));
+                aux.setCuantia(rs.getString("cuantia"));
+                aux.setPuntos(rs.getString("puntos"));
+                aux.setReqObs(rs.getString("reqObs"));
+                aux.setLinea(rs.getString("linea"));
                 list.add(aux);
             }
             rs.close();

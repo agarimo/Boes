@@ -59,8 +59,26 @@ public class XLSXProcess {
         multas = clearMultas(multas);
         insertMultas(multas);
     }
+    
+    public List<Multa> splitXLSX(){
+        List<Multa> multas = new ArrayList();
+        
+        Multa multa;
+        Row linea;
+        Iterator<Row> it = rows.iterator();
 
-    private void insertMultas(List<Multa> multas) {
+        while (it.hasNext()) {
+            linea = it.next();
+            multa = splitLinea(linea);
+            multas.add(multa);
+        }
+
+        multas = clearMultas(multas);
+        
+        return multas;
+    }
+
+    public static void insertMultas(List<Multa> multas) {
         Sql bd;
         Multa multa;
         Iterator<Multa> it = multas.iterator();
@@ -104,10 +122,9 @@ public class XLSXProcess {
         multa.setPlazo(ve.getPlazo());
 
         if (sd.expediente != 0) {
-            multa.setExpediente(getCelda(linea, sd.expediente).trim());
+            multa.setExpediente(getCelda(linea, sd.expediente).trim().toUpperCase());
         }
         if (sd.fechaMulta != 0) {
-            System.out.println(getCelda(linea,sd.fechaMulta));
             multa.setFechaMulta(setFecha(getCelda(linea, sd.fechaMulta)));
         }
         
@@ -118,28 +135,28 @@ public class XLSXProcess {
             art = getCelda(linea, sd.articulo).trim();
         }
         
-        multa.setArticulo((art + " " + prec).trim());
+        multa.setArticulo((art + " " + prec).trim().toUpperCase());
 
         if (sd.nif != 0) {
-            multa.setNif(setNif(getCelda(linea, sd.nif)).trim());
+            multa.setNif(setNif(getCelda(linea, sd.nif)).trim().toUpperCase());
         }
         if (sd.sancionado != 0) {
-            multa.setSancionado(getCelda(linea, sd.sancionado).trim());
+            multa.setSancionado(getCelda(linea, sd.sancionado).trim().toUpperCase());
         }
         if (sd.localidad != 0) {
-            multa.setLocalidad(getCelda(linea, sd.localidad).trim());
+            multa.setLocalidad(getCelda(linea, sd.localidad).trim().toUpperCase());
         }
         if (sd.matricula != 0) {
-            multa.setMatricula(getCelda(linea, sd.matricula).trim());
+            multa.setMatricula(getCelda(linea, sd.matricula).trim().toUpperCase());
         }
         if (sd.cuantia != 0) {
-            multa.setCuantia(getCelda(linea, sd.cuantia).trim());
+            multa.setCuantia(getCelda(linea, sd.cuantia).trim().toUpperCase());
         }
         if (sd.puntos != 0) {
-            multa.setPuntos(getCelda(linea, sd.puntos).trim());
+            multa.setPuntos(getCelda(linea, sd.puntos).trim().toUpperCase());
         }
         if (sd.reqObs != 0) {
-            multa.setReqObs(getCelda(linea, sd.reqObs).trim());
+            multa.setReqObs(getCelda(linea, sd.reqObs).trim().toUpperCase());
         }
 
         multa.setLinea(getLinea(linea));
@@ -212,22 +229,21 @@ public class XLSXProcess {
 
     private Date setFecha(String fecha) {
         Iterator<String> it = strucFecha.iterator();
+        SimpleDateFormat formato;
         String aux;
         Date date = null;
 
         while (it.hasNext()) {
             aux = it.next();
-
-            SimpleDateFormat formato = new SimpleDateFormat(aux);
+            formato = new SimpleDateFormat(aux);
+            formato.setLenient(false);
 
             try {
                 date = formato.parse(fecha);
-                break;
             } catch (ParseException ex) {
-                date = null;
+                //
             }
         }
-
         return date;
     }
 

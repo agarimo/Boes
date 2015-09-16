@@ -1,5 +1,6 @@
 package extraccion;
 
+import enty.Multa;
 import enty.Procesar;
 import enty.StrucData;
 import enty.VistaExtraccion;
@@ -52,6 +53,15 @@ public class Extraccion {
         XLSXProcess process = new XLSXProcess(getRows(file),aux,ve,sd);
         
         process.run();
+    }
+    
+    public List<Multa> previewXLSX(Procesar aux){
+        File file = new File (this.fichero,aux.getCodigo()+".xlsx");
+        VistaExtraccion ve=SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
+        StrucData sd =SqlBoe.getStrucData(StrucData.SQLBuscar(aux.getEstructura()));
+        XLSXProcess process = new XLSXProcess(getRows(file),aux,ve,sd);
+        
+        return process.splitXLSX();
     }
 
     private List<Row> getRows(File archivo) {
