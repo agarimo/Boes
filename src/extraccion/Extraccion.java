@@ -35,6 +35,16 @@ public class Extraccion {
         this.lista = cargaBoletines();
         this.fichero = new File(Variables.ficheroEx,Dates.imprimeFecha(fecha));
     }
+    
+    public boolean fileExist(Procesar aux){
+        File file = new File (this.fichero,aux.getCodigo()+".xlsx");
+        
+        if(file.exists()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     private List<Procesar> cargaBoletines() {
         return SqlBoe.listaProcesar("SELECT * FROM " + Variables.nombreBD + ".procesar "

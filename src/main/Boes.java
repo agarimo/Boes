@@ -38,8 +38,8 @@ public class Boes extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//                launch(args);
-
+//        launch(args);
+        
         Variables.inicializar();
 
         Procesar pr;
@@ -58,28 +58,7 @@ public class Boes extends Application {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
         cal.set(Calendar.MONTH, Calendar.AUGUST);
-        cal.set(Calendar.DAY_OF_MONTH, 31);
+        cal.set(Calendar.DAY_OF_MONTH, 14);
         return cal.getTime();
-    }
-
-    
-    private static Date parseFecha(String fecha){
-        Date date= null;
-        Iterator<String> it = SqlBoe.listaEstructurasFechas().iterator();
-        String aux;
-        SimpleDateFormat df;
-        
-        while(it.hasNext()){
-            aux=it.next();
-            df = new SimpleDateFormat(aux);
-            df.setLenient(false);
-            
-            try {
-                date=df.parse(fecha);
-            } catch (ParseException ex) {
-//                Logger.getLogger(Boes.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return date;
     }
 }

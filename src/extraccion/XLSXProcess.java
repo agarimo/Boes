@@ -167,22 +167,8 @@ public class XLSXProcess {
     private String getCelda(Row linea, int celda) {
         StringBuilder sb = new StringBuilder();
         Cell cell = linea.getCell(celda - 1);
-
-        switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
-                if (DateUtil.isCellDateFormatted(cell)) {
-                    sb.append(cell.getDateCellValue());
-                } else {
-                    sb.append(cell.getNumericCellValue());
-                }
-                break;
-            case Cell.CELL_TYPE_STRING:
-                sb.append(cell.getStringCellValue());
-                break;
-            case Cell.CELL_TYPE_BOOLEAN:
-                sb.append(cell.getBooleanCellValue());
-                break;
-        }
+        cell.setCellType(Cell.CELL_TYPE_STRING);
+        sb.append(cell.getStringCellValue());
 
         return sb.toString().trim();
     }
@@ -203,26 +189,9 @@ public class XLSXProcess {
         StringBuilder sb = new StringBuilder();
         while (cellIterator.hasNext()) {
             celda = cellIterator.next();
-
-            switch (celda.getCellType()) {
-                case Cell.CELL_TYPE_NUMERIC:
-                    if (DateUtil.isCellDateFormatted(celda)) {
-                        sb.append(celda.getDateCellValue());
-                        sb.append(" ");
-                    } else {
-                        sb.append(celda.getNumericCellValue());
-                        sb.append(" ");
-                    }
-                    break;
-                case Cell.CELL_TYPE_STRING:
-                    sb.append(celda.getStringCellValue());
-                    sb.append(" ");
-                    break;
-                case Cell.CELL_TYPE_BOOLEAN:
-                    sb.append(celda.getBooleanCellValue());
-                    sb.append(" ");
-                    break;
-            }
+            celda.setCellType(Cell.CELL_TYPE_STRING);
+            sb.append(celda.getStringCellValue());
+            sb.append(" ");
         }
         return sb.toString().trim();
     }
@@ -256,7 +225,7 @@ public class XLSXProcess {
         CalculaNif cn = new CalculaNif();
         String aux;
 
-        if (nif.length() < 9) {
+        if (nif.length() < 9 && !"E".equals(cn.getTipoJuridico(nif))) {
             nif = cn.completaCeros(nif, 9);
         }
 
