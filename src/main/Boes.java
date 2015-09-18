@@ -2,20 +2,15 @@ package main;
 
 import enty.Procesar;
 import extraccion.Extraccion;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import util.Dates;
 
 /**
  *
@@ -39,18 +34,29 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
 //        launch(args);
-        
+
         Variables.inicializar();
 
         Procesar pr;
         Extraccion ex = new Extraccion(getFecha());
         List<Procesar> list = ex.getBoletines();
-        
-        pr = list.get(0);
-        System.out.println(pr.getCodigo());
-        
-        ex.procesaXLSX(pr);
-        
+
+        Iterator<Procesar> it = list.iterator();
+
+        while (it.hasNext()) {
+            pr = it.next();
+
+            try {
+                if (!ex.procesaXLSX(pr)) {
+                    System.out.println("No se encuentra el archivo.");
+                } else {
+                    System.out.println(pr.getCodigo());
+                }
+            } catch (Exception exc) {
+                System.err.println("Error en archivo : " + pr.getCodigo());
+            }
+        }
+
         System.exit(0);
     }
 

@@ -33,15 +33,15 @@ public class Extraccion {
     public Extraccion(Date fecha) {
         this.fecha = fecha;
         this.lista = cargaBoletines();
-        this.fichero = new File(Variables.ficheroEx,Dates.imprimeFecha(fecha));
+        this.fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
     }
-    
-    public boolean fileExist(Procesar aux){
-        File file = new File (this.fichero,aux.getCodigo()+".xlsx");
-        
-        if(file.exists()){
+
+    public boolean fileExist(Procesar aux) {
+        File file = new File(this.fichero, aux.getCodigo() + ".xlsx");
+
+        if (file.exists()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -55,22 +55,27 @@ public class Extraccion {
     public List<Procesar> getBoletines() {
         return this.lista;
     }
-    
-    public void procesaXLSX(Procesar aux){
-        File file = new File (this.fichero,aux.getCodigo()+".xlsx");
-        VistaExtraccion ve=SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
-        StrucData sd =SqlBoe.getStrucData(StrucData.SQLBuscar(aux.getEstructura()));
-        XLSXProcess process = new XLSXProcess(getRows(file),aux,ve,sd);
-        
-        process.run();
+
+    public boolean procesaXLSX(Procesar aux) {
+        File file = new File(this.fichero, aux.getCodigo() + ".xlsx");
+        VistaExtraccion ve = SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
+        StrucData sd = SqlBoe.getStrucData(StrucData.SQLBuscar(aux.getEstructura()));
+        XLSXProcess process = new XLSXProcess(getRows(file), aux, ve, sd);
+
+        if (file.exists()) {
+            process.run();
+            return true;
+        } else {
+            return false;
+        }
     }
-    
-    public List<Multa> previewXLSX(Procesar aux){
-        File file = new File (this.fichero,aux.getCodigo()+".xlsx");
-        VistaExtraccion ve=SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
-        StrucData sd =SqlBoe.getStrucData(StrucData.SQLBuscar(aux.getEstructura()));
-        XLSXProcess process = new XLSXProcess(getRows(file),aux,ve,sd);
-        
+
+    public List<Multa> previewXLSX(Procesar aux) {
+        File file = new File(this.fichero, aux.getCodigo() + ".xlsx");
+        VistaExtraccion ve = SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
+        StrucData sd = SqlBoe.getStrucData(StrucData.SQLBuscar(aux.getEstructura()));
+        XLSXProcess process = new XLSXProcess(getRows(file), aux, ve, sd);
+
         return process.splitXLSX();
     }
 
@@ -81,7 +86,7 @@ public class Extraccion {
             List<XSSFSheet> paginas;
             List<Row> filas = new ArrayList();
             XSSFSheet pagina;
-            
+
             paginas = getPaginas(excel);
             Iterator<XSSFSheet> ite = paginas.iterator();
 

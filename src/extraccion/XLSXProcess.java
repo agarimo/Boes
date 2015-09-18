@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import main.SqlBoe;
 import main.Variables;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import util.CalculaNif;
 import util.Sql;
@@ -59,10 +58,10 @@ public class XLSXProcess {
         multas = clearMultas(multas);
         insertMultas(multas);
     }
-    
-    public List<Multa> splitXLSX(){
+
+    public List<Multa> splitXLSX() {
         List<Multa> multas = new ArrayList();
-        
+
         Multa multa;
         Row linea;
         Iterator<Row> it = rows.iterator();
@@ -74,7 +73,7 @@ public class XLSXProcess {
         }
 
         multas = clearMultas(multas);
-        
+
         return multas;
     }
 
@@ -123,40 +122,65 @@ public class XLSXProcess {
 
         if (sd.expediente != 0) {
             multa.setExpediente(getCelda(linea, sd.expediente).trim().toUpperCase());
+        } else {
+            multa.setExpediente("");
         }
+
         if (sd.fechaMulta != 0) {
             multa.setFechaMulta(setFecha(getCelda(linea, sd.fechaMulta)));
+        } else {
+            multa.setFechaMulta(null);
         }
-        
+
         if (sd.precepto != 0) {
             prec = getCelda(linea, sd.precepto).trim();
         }
         if (sd.articulo != 0) {
             art = getCelda(linea, sd.articulo).trim();
         }
-        
+
         multa.setArticulo((art + " " + prec).trim().toUpperCase());
 
         if (sd.nif != 0) {
             multa.setNif(setNif(getCelda(linea, sd.nif)).trim().toUpperCase());
+        } else {
+            multa.setNif("");
         }
+
         if (sd.sancionado != 0) {
             multa.setSancionado(getCelda(linea, sd.sancionado).trim().toUpperCase());
+        } else {
+            multa.setSancionado("");
         }
+
         if (sd.localidad != 0) {
             multa.setLocalidad(getCelda(linea, sd.localidad).trim().toUpperCase());
+        } else {
+            multa.setLocalidad("");
         }
+
         if (sd.matricula != 0) {
             multa.setMatricula(getCelda(linea, sd.matricula).trim().toUpperCase());
+        } else {
+            multa.setMatricula("");
         }
+
         if (sd.cuantia != 0) {
             multa.setCuantia(getCelda(linea, sd.cuantia).trim().toUpperCase());
+        } else {
+            multa.setCuantia("");
         }
+
         if (sd.puntos != 0) {
             multa.setPuntos(getCelda(linea, sd.puntos).trim().toUpperCase());
+        } else {
+            multa.setPuntos("");
         }
+
         if (sd.reqObs != 0) {
             multa.setReqObs(getCelda(linea, sd.reqObs).trim().toUpperCase());
+        } else {
+            multa.setReqObs("");
         }
 
         multa.setLinea(getLinea(linea));
@@ -170,12 +194,11 @@ public class XLSXProcess {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         sb.append(cell.getStringCellValue());
 
-        return sb.toString().trim();
+        return sb.toString().trim().replace("'", "\\'");
     }
 
     private String getCodigoMulta() {
-        String aux = this.ve.getCodigo().replace("BOE-N-", "");
-
+        String aux = this.ve.getCodigo().replace("BOE-N-20", "");
         aux = aux + "-" + Integer.toString(contador);
         contador++;
 
@@ -193,7 +216,7 @@ public class XLSXProcess {
             sb.append(celda.getStringCellValue());
             sb.append(" ");
         }
-        return sb.toString().trim();
+        return sb.toString().trim().replace("'", "\\'");
     }
 
     private Date setFecha(String fecha) {
@@ -225,17 +248,16 @@ public class XLSXProcess {
         CalculaNif cn = new CalculaNif();
         String aux;
 
-        if (nif.length() < 9 && !"E".equals(cn.getTipoJuridico(nif))) {
-            nif = cn.completaCeros(nif, 9);
+        try {
+            if (cn.isvalido(nif)) {
+                aux = nif;
+            } else {
+                aux = cn.calcular(nif);
+            }
+            return aux;
+        } catch (Exception ex) {
+            return nif;
         }
-
-        if (cn.isvalido(nif)) {
-            aux = nif;
-        } else {
-            aux = cn.calcular(nif);
-        }
-
-        return aux;
     }
 
 }
