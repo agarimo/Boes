@@ -81,7 +81,7 @@ import util.Varios;
  *
  * @author Agarimo
  */
-public class WinC implements Initializable {
+public class WinC implements Initializable, ControlledScreen {
 
     //<editor-fold defaultstate="collapsed" desc="FXML Var">
     @FXML
@@ -214,6 +214,7 @@ public class WinC implements Initializable {
     private Button btRecargarBoletines;
 
 //</editor-fold>
+    ScreensController myController;
     Sql bd;
     ObservableList<ModeloBoes> publicacion;
     ObservableList<Boe> boesList;
@@ -223,6 +224,16 @@ public class WinC implements Initializable {
     List origen_descartado;
     List texto_descartado;
 
+    @Override
+    public void setScreenParent(ScreensController screenParent){
+        myController = screenParent;
+    }
+    
+    @FXML
+    public void cargaExtraccion(ActionEvent event){
+        myController.setScreen(Boes.screen2ID);
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        origen_descartado = SqlBoe.listaOrigenDescartado();

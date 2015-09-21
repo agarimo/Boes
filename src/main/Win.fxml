@@ -35,7 +35,7 @@
               <MenuItem mnemonicParsing="false" onAction="#iniciaBoletines" text="Boletines" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaFases" text="Fases" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaCabeceras" text="Cabeceras" />
-                  <MenuItem mnemonicParsing="false" onAction="#iniciarExtraccion" text="Extracción" />
+                  <MenuItem mnemonicParsing="false" onAction="#cargaExtraccion" text="Extracción" />
             </items>
           </Menu>
         </menus>
@@ -87,7 +87,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelClasificacion" prefHeight="403.0" prefWidth="800.0" visible="false">
+            <AnchorPane fx:id="panelClasificacion" prefHeight="403.0" prefWidth="800.0" style="-fx-background-color: #f2f2f2;" visible="false">
                <children>
                   <TableView fx:id="tvBoes" layoutY="53.0" prefHeight="308.0" prefWidth="1001.0" rotate="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columns>
