@@ -1,4 +1,4 @@
-package main;
+package view;
 
 import boe.Boe;
 import boe.Download;
@@ -66,6 +66,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import main.Boes;
+import main.ControlledScreen;
+import main.ScreensController;
+import main.SqlBoe;
+import main.Variables;
 import model.ModeloBoes;
 import model.ModeloBoletines;
 import model.ModeloCabeceras;

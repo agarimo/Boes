@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
 import main.Variables;
-import main.WinC;
+import view.WinC;
 import util.Files;
 import util.Sql;
 import util.Varios;
