@@ -76,7 +76,7 @@ import model.ModeloBoletines;
 import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
-import model.ModeloMultas;
+import model.ModeloPreview;
 import util.Dates;
 import util.Files;
 import util.Sql;
@@ -230,15 +230,15 @@ public class WinC implements Initializable, ControlledScreen {
     List texto_descartado;
 
     @Override
-    public void setScreenParent(ScreensController screenParent){
+    public void setScreenParent(ScreensController screenParent) {
         myController = screenParent;
     }
-    
+
     @FXML
-    public void cargaExtraccion(ActionEvent event){
+    public void cargaExtraccion(ActionEvent event) {
         myController.setScreen(Boes.screen2ID);
     }
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        origen_descartado = SqlBoe.listaOrigenDescartado();
@@ -1230,6 +1230,23 @@ public class WinC implements Initializable, ControlledScreen {
         Date aux = Dates.asDate(dpFechaB.getValue());
         cargaDatosTablaBoletines(aux);
     }
+    
+    void trasvaseEx(Date fecha) {
+        Procesar aux;
+        Iterator it = SqlBoe.listaProcesarPendiente(fecha).iterator();
+
+        try {
+            bd = new Sql(Variables.con);
+
+            while (it.hasNext()) {
+                aux = (Procesar) it.next();
+                bd.ejecutar(aux.SQLCrear());
+            }
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @FXML
     void procesarBoletines(ActionEvent event) {
@@ -1247,6 +1264,8 @@ public class WinC implements Initializable, ControlledScreen {
                     pbEstado.setProgress(0);
                     lbEstado.setText("INICIANDO ESTRUCTURAS");
                 });
+                
+                trasvaseEx(fecha);
 
                 Boletin aux;
                 Estructuras es = new Estructuras(fecha);
@@ -1680,7 +1699,7 @@ public class WinC implements Initializable, ControlledScreen {
 
     //<editor-fold defaultstate="collapsed" desc="EXTRACCION">
     ObservableList<Procesar> listExtraccion;
-    ObservableList<ModeloMultas> multasList;
+    ObservableList<ModeloPreview> multasList;
 
     @FXML
     private AnchorPane panelExtraccion;
@@ -1716,37 +1735,37 @@ public class WinC implements Initializable, ControlledScreen {
     private Label lbProgresoEx;
 
     @FXML
-    private TableView<ModeloMultas> tvMultas;
+    private TableView<ModeloPreview> tvMultas;
 
     @FXML
-    private TableColumn<ModeloMultas, String> expedienteCLM;
+    private TableColumn<ModeloPreview, String> expedienteCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> sancionadoCLM;
+    private TableColumn<ModeloPreview, String> sancionadoCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> nifCLM;
+    private TableColumn<ModeloPreview, String> nifCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> localidadCLM;
+    private TableColumn<ModeloPreview, String> localidadCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> fechaCLM;
+    private TableColumn<ModeloPreview, String> fechaCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> matriculaCLM;
+    private TableColumn<ModeloPreview, String> matriculaCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> cuantiaCLM;
+    private TableColumn<ModeloPreview, String> cuantiaCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> articuloCLM;
+    private TableColumn<ModeloPreview, String> articuloCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> puntosCLM;
+    private TableColumn<ModeloPreview, String> puntosCLM;
 
     @FXML
-    private TableColumn<ModeloMultas, String> reqObsCLM;
+    private TableColumn<ModeloPreview, String> reqObsCLM;
 
     @FXML
     void iniciarExtraccion(ActionEvent event) {
@@ -1821,14 +1840,14 @@ public class WinC implements Initializable, ControlledScreen {
 
     void cargarDatosTablaMultas(List<Multa> multas) {
         multasList.clear();
-        ModeloMultas modelo;
+        ModeloPreview modelo;
         Multa multa;
         Iterator<Multa> it = multas.iterator();
 
         while (it.hasNext()) {
             multa = it.next();
 
-            modelo = new ModeloMultas();
+            modelo = new ModeloPreview();
             modelo.expediente.set(multa.getExpediente());
             modelo.sancionado.set(multa.getSancionado());
             modelo.nif.set(multa.getNif());
@@ -1991,7 +2010,7 @@ public class WinC implements Initializable, ControlledScreen {
             System.out.println(aux.getCodigo());
 
             ex = new Extraccion(fecha);
-            if (ex.fileExist(aux)) {
+            if (ex.fileExist(aux.getCodigo())) {
                 cargarDatosTablaMultas(ex.previewXLSX(aux));
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);

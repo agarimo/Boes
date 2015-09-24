@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
  *
  * @author Agarimo
  */
-public class ModeloMultas {
+public class ModeloPreview {
 
     public SimpleStringProperty expediente = new SimpleStringProperty();
     public SimpleStringProperty sancionado = new SimpleStringProperty();

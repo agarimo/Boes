@@ -40,7 +40,7 @@ public class Boes extends Application {
         stage.setTitle("BOEXT");
         stage.setResizable(false);
         stage.setWidth(1005);
-        stage.setHeight(605);
+        stage.setHeight(625);
         stage.show();
 
     }

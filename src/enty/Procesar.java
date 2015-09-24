@@ -1,5 +1,6 @@
 package enty;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -21,8 +22,9 @@ public class Procesar {
     String link;
     int estructura;
     /**
-     * Estado= 0 (Sin procesar) Estado=1 (Generado PDF) Estado=2 (Procesado
-     * Excel)
+     * Estado= 0 (Sin procesar) Estado=1 (Ready to process) Estado=2 (Procesado
+     * Excel) Estado= 3 (Error al procesar) Estado=4 (Falta PDF) Estado=5 (Falta
+     * XLSX)
      */
     int estado;
 
@@ -30,8 +32,8 @@ public class Procesar {
 
     }
 
-    public Procesar(Date fecha,String codigo, String link, int estructura, int estado) {
-        this.fecha=fecha;
+    public Procesar(Date fecha, String codigo, String link, int estructura, int estado) {
+        this.fecha = fecha;
         this.codigo = codigo;
         this.link = link;
         this.estructura = estructura;
@@ -63,7 +65,11 @@ public class Procesar {
     }
 
     public void setEstado(int estado) {
-        this.estado = estado;
+        if (estado != 1) {
+            this.estado = estado;
+        } else {
+            this.estado = checkEstado();
+        }
     }
 
     public void setEstructura(int estructura) {
@@ -90,8 +96,25 @@ public class Procesar {
     public String toString() {
         return this.codigo;
     }
-    
-    public String SQLCrear(){
+
+    private int checkEstado() {
+        int a = 1;
+        File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+        File fileXLSX = new File(fichero, codigo + ".xlsx");
+        File filePDF = new File(fichero, codigo + ".pdf");
+
+        if (!fileXLSX.exists()) {
+            a = 5;
+        }
+
+        if (!filePDF.exists()) {
+            a = 4;
+        }
+
+        return a;
+    }
+
+    public String SQLCrear() {
         return "INSERT into " + Variables.nombreBD + ".procesar (id,fecha,codigo,link,estructura,estado) values("
                 + this.id + ","
                 + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ","
@@ -101,12 +124,12 @@ public class Procesar {
                 + this.estado
                 + ");";
     }
-    
-    public void SQLSetEstado(int estado){
-        String query="UPDATE " + Variables.nombreBD + ".procesar SET "
-                    + "estado=" + estado + " "
-                    + "WHERE id=" + this.id;
-        
+
+    public void SQLSetEstado(int estado) {
+        String query = "UPDATE " + Variables.nombreBD + ".procesar SET "
+                + "estado=" + estado + " "
+                + "WHERE id=" + this.id;
+
         try {
             Sql bd = new Sql(Variables.con);
             bd.ejecutar(query);

@@ -36,8 +36,8 @@ public class Extraccion {
         this.fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
     }
 
-    public boolean fileExist(Procesar aux) {
-        File file = new File(this.fichero, aux.getCodigo() + ".xlsx");
+    public boolean fileExist(String codigo) {
+        File file = new File(this.fichero, codigo + ".xlsx");
 
         if (file.exists()) {
             return true;

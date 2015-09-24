@@ -128,7 +128,7 @@
                   <Label fx:id="lbContadorT" alignment="CENTER_RIGHT" layoutX="891.0" layoutY="373.0" prefHeight="17.0" prefWidth="50.0" text="..." />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0" visible="false">
+            <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0">
                <children>
                   <ToolBar maxWidth="189.0" prefHeight="52.0" prefWidth="189.0" AnchorPane.leftAnchor="0.0">
                     <items>

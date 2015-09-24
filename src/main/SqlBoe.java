@@ -776,7 +776,6 @@ public class SqlBoe {
         String query = "select a.id,a.codigo,b.link,a.isEstructura from boes.boletin a "
                 + "left join boes.descarga b on a.idDescarga=b.id "
                 + "where a.idBoe=(select id from boes.boe where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+") "
-                + "and a.isEstructura in (select id from boes.estructura where isProcesable=1) "
                 + "and a.id not in (select id from boes.procesar)";
         Procesar aux;
 
@@ -898,5 +897,30 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List<Integer> listaEstructurasCreadas() {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".strucdata";
+        List<Integer> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        int aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getInt("idEstructura");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
 //</editor-fold>
 }
