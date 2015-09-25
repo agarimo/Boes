@@ -54,8 +54,8 @@ import util.Varios;
 public class ExtC implements Initializable, ControlledScreen {
 
     ScreensController myController;
-    int PanelProcesar = 1;
-    int PanelPreview = 2;
+    int PanelPreview = 1;
+    int PanelProcesar = 2;
     boolean isPreview;
     List<Integer> listaEstructurasCreadas;
 
@@ -140,6 +140,9 @@ public class ExtC implements Initializable, ControlledScreen {
     @FXML
     private Label lbProgreso;
 
+    @FXML
+    private Button btRefrescar;
+
     ObservableList<ModeloProcesar> procesarList;
     ObservableList<ModeloPreview> previewList;
 
@@ -149,6 +152,7 @@ public class ExtC implements Initializable, ControlledScreen {
         panelPreview.setOpacity(0.0);
         panelPreview.setVisible(false);
         panelProcesar.setOpacity(1.0);
+        panelProcesar.setVisible(true);
         iniciarTablaProcesar();
         iniciarTablaPreview();
 
@@ -159,6 +163,12 @@ public class ExtC implements Initializable, ControlledScreen {
         ls2.addListener(selectorTablaPreview);
     }
 
+    private void clearWindow() {
+        dpFecha.setValue(null);
+        procesarList.clear();
+        previewList.clear();
+    }
+
     @Override
     public void setScreenParent(ScreensController screenParent) {
         myController = screenParent;
@@ -166,6 +176,7 @@ public class ExtC implements Initializable, ControlledScreen {
 
     @FXML
     public void cargaMain(ActionEvent event) {
+        clearWindow();
         myController.setScreen(Boes.screen1ID);
     }
 
@@ -217,16 +228,15 @@ public class ExtC implements Initializable, ControlledScreen {
         btProcesar.setDisable(aux);
     }
 
-    @FXML
-    void showPreview(ActionEvent event) {
+    void showPreview() {
         isPreview = !isPreview;
 
         if (isPreview) {
             btPreview.setText("Volver");
-            mostrarPanel(this.PanelProcesar);
+            mostrarPanel(this.PanelPreview);
         } else {
             btPreview.setText("Previsualizar Extracción");
-            mostrarPanel(this.PanelPreview);
+            mostrarPanel(this.PanelProcesar);
         }
         switchControles(isPreview);
     }
@@ -271,10 +281,10 @@ public class ExtC implements Initializable, ControlledScreen {
                                 break;
                             default:
                                 if (listaEstructurasCreadas.contains(item)) {
-                                    setText("OK : "+Integer.toString(item));
+                                    setText("OK : " + Integer.toString(item));
                                     setTextFill(Color.GREEN);
                                 } else {
-                                    setText("Estructura no creada : "+Integer.toString(item));
+                                    setText("Estructura no creada : " + Integer.toString(item));
                                     setTextFill(Color.RED);
                                 }
 
@@ -348,6 +358,7 @@ public class ExtC implements Initializable, ControlledScreen {
             procesar = it.next();
 
             modelo = new ModeloProcesar();
+            modelo.id.set(procesar.getId());
             modelo.codigo.set(procesar.getCodigo());
             modelo.estructura.set(procesar.getEstructura());
             modelo.estado.set(procesar.getEstado());
@@ -401,11 +412,14 @@ public class ExtC implements Initializable, ControlledScreen {
 
     @FXML
     void cambioEnDatePicker(ActionEvent event) {
-        Date fecha = Dates.asDate(dpFecha.getValue());
+        try {
+            Date fecha = Dates.asDate(dpFecha.getValue());
 
-        if (fecha != null) {
-            String query = "SELECT * FROM boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
-            cargarDatosProcesar(SqlBoe.listaProcesar(query));
+            if (fecha != null) {
+                String query = "SELECT * FROM boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+                cargarDatosProcesar(SqlBoe.listaProcesar(query));
+            }
+        } catch (NullPointerException ex) {
         }
     }
 
@@ -469,8 +483,8 @@ public class ExtC implements Initializable, ControlledScreen {
     @FXML
     void verPdf() {
         ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
-        
-        if(pr!=null){
+
+        if (pr != null) {
             try {
                 Desktop.getDesktop().browse(new URI(pr.link.get()));
             } catch (IOException ex) {
@@ -494,24 +508,41 @@ public class ExtC implements Initializable, ControlledScreen {
             }
         }
     }
-    
+
     @FXML
     void previsualizar(ActionEvent event) {
         Date fecha = Dates.asDate(dpFecha.getValue());
         ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
         Extraccion ex;
 
-        if (fecha != null || aux != null) {
-            System.out.println(aux.getCodigo());
-
-            ex = new Extraccion(fecha);
-            if (ex.fileExist(aux.getCodigo())) {
-//                cargarDatosPreview(ex.previewXLSX(aux));
+        if (isPreview) {
+            showPreview();
+        } else {
+            if (fecha != null || aux != null) {
+                ex = new Extraccion(fecha);
+                if (ex.fileExist(aux.getCodigo())) {
+                    if (listaEstructurasCreadas.contains(aux.getEstructura())) {
+                        cargarDatosPreview(ex.previewXLSX(SqlBoe.getProcesar(aux.getCodigo())));
+                        showPreview();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("ERROR");
+                        alert.setHeaderText("STRUCDATA NO CREADO");
+                        alert.setContentText("Debe crear el STRUCDATA para previsualizar el boletín");
+                        alert.showAndWait();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("FICHERO NO ENCONTRADO");
+                    alert.setContentText("Debe generar el fichero .xlsx para previsualizar el contenido.");
+                    alert.showAndWait();
+                }
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("ERROR");
-                alert.setHeaderText("FICHERO NO ENCONTRADO");
-                alert.setContentText("Debe generar el fichero .xlsx para previsualizar el contenido.");
+                alert.setHeaderText("ERROR EN SELECCIÓN");
+                alert.setContentText("Debe seleccionar un boletín para su visualización");
                 alert.showAndWait();
             }
         }

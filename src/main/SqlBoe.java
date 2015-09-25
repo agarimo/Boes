@@ -206,7 +206,7 @@ public class SqlBoe {
         }
         return aux;
     }
-    
+
     public static VistaExtraccion getVistaExtraccion(String query) {
         Sql bd;
         ResultSet rs;
@@ -218,7 +218,7 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new VistaExtraccion(rs.getString("codigo"), rs.getString("entidad"), rs.getString("origen"),
-                rs.getDate("fecha"),rs.getString("tipo"),rs.getString("fase"));
+                        rs.getDate("fecha"), rs.getString("tipo"), rs.getString("fase"));
             }
             rs.close();
             bd.close();
@@ -228,7 +228,7 @@ public class SqlBoe {
         }
         return aux;
     }
-    
+
     public static StrucData getStrucData(String query) {
         Sql bd;
         ResultSet rs;
@@ -240,7 +240,7 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new StrucData();
-                
+
                 aux.setId(rs.getInt("id"));
                 aux.setIdEstructura(rs.getInt("idEstructura"));
                 aux.setExpediente(rs.getInt("expediente"));
@@ -255,6 +255,35 @@ public class SqlBoe {
                 aux.setPuntos(rs.getInt("puntos"));
                 aux.setReqObs(rs.getInt("reqObs"));
             }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+
+    public static Procesar getProcesar(String codigo) {
+        Sql bd;
+        ResultSet rs;
+        String query = "SELECT * FROM boes.procesar where codigo=" + Varios.entrecomillar(codigo);
+        Procesar aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Procesar();
+                aux.setId(rs.getInt("id"));
+                aux.setCodigo(rs.getString("codigo"));
+                aux.setEstructura(rs.getInt("estructura"));
+                aux.setFecha(rs.getDate("fecha"));
+                aux.setLink(rs.getString("link"));
+                aux.setEstado(rs.getInt("estado"));
+            }
+
             rs.close();
             bd.close();
         } catch (SQLException ex) {
@@ -775,7 +804,7 @@ public class SqlBoe {
         ResultSet rs;
         String query = "select a.id,a.codigo,b.link,a.isEstructura from boes.boletin a "
                 + "left join boes.descarga b on a.idDescarga=b.id "
-                + "where a.idBoe=(select id from boes.boe where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+") "
+                + "where a.idBoe=(select id from boes.boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + ") "
                 + "and a.id not in (select id from boes.procesar)";
         Procesar aux;
 
@@ -830,7 +859,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaEstructurasFechas() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".strucfecha";
         List list = new ArrayList();
@@ -854,7 +883,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaMultas(String query) {
         List list = new ArrayList();
         Sql bd;
@@ -897,7 +926,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<Integer> listaEstructurasCreadas() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".strucdata";
         List<Integer> list = new ArrayList();
@@ -921,6 +950,6 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
 //</editor-fold>
 }

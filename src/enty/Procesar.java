@@ -121,7 +121,7 @@ public class Procesar {
                 + Varios.entrecomillar(this.codigo) + ","
                 + Varios.entrecomillar(this.link) + ","
                 + this.estructura + ","
-                + this.estado
+                + 1
                 + ");";
     }
 

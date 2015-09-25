@@ -1233,11 +1233,14 @@ public class WinC implements Initializable, ControlledScreen {
     
     void trasvaseEx(Date fecha) {
         Procesar aux;
-        Iterator it = SqlBoe.listaProcesarPendiente(fecha).iterator();
+        Iterator it;
 
         try {
             bd = new Sql(Variables.con);
+            bd.ejecutar("DELETE FROM boes.procesar where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha)));
 
+            it = SqlBoe.listaProcesarPendiente(fecha).iterator();
+            
             while (it.hasNext()) {
                 aux = (Procesar) it.next();
                 bd.ejecutar(aux.SQLCrear());
@@ -1265,8 +1268,6 @@ public class WinC implements Initializable, ControlledScreen {
                     lbEstado.setText("INICIANDO ESTRUCTURAS");
                 });
                 
-                trasvaseEx(fecha);
-
                 Boletin aux;
                 Estructuras es = new Estructuras(fecha);
                 es.limpiarEstructuras();
@@ -1302,6 +1303,8 @@ public class WinC implements Initializable, ControlledScreen {
                     aux = (Boletin) list.get(i);
                     fs.runFase(aux);
                 }
+                
+                trasvaseEx(fecha);
 
                 Platform.runLater(() -> {
                     lbEstado.setText("COMPROBACIÓN FINALIZADA");
@@ -1360,6 +1363,8 @@ public class WinC implements Initializable, ControlledScreen {
                     aux = (Boletin) list.get(i);
                     es.run(aux);
                 }
+                
+                trasvaseEx(fecha);
 
                 Platform.runLater(() -> {
                     lbEstado.setText("COMPROBACIÓN FINALIZADA");

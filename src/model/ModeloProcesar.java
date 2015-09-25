@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class ModeloProcesar {
 
+    public SimpleIntegerProperty id = new SimpleIntegerProperty();
     public SimpleStringProperty codigo = new SimpleStringProperty();
     public SimpleIntegerProperty estructura = new SimpleIntegerProperty();
     public SimpleIntegerProperty estado = new SimpleIntegerProperty();
@@ -16,6 +17,10 @@ public class ModeloProcesar {
     public SimpleStringProperty fecha = new SimpleStringProperty();
     
 
+    public int getId(){
+        return id.get();
+    }
+    
     public String getCodigo() {
         return codigo.get();
     }

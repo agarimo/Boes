@@ -27,7 +27,7 @@
                            <children>
                               <DatePicker fx:id="dpFecha" layoutX="14.0" layoutY="14.0" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="14.0" />
                               <Button fx:id="btGenerarPdf" layoutX="14.0" layoutY="60.0" mnemonicParsing="false" onAction="#generarPdf" prefHeight="30.0" prefWidth="150.0" text="Generar PDF" />
-                              <Button fx:id="btPreview" layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#showPreview" prefHeight="30.0" prefWidth="150.0" text="Previsualizar Extracción" />
+                              <Button fx:id="btPreview" layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#previsualizar" prefHeight="30.0" prefWidth="150.0" text="Previsualizar Extracción" />
                               <Button fx:id="btVerPdf" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#verPdf" prefHeight="30.0" prefWidth="150.0" text="Ver PDF" />
                               <Button fx:id="btProcesar" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
                               <Separator layoutX="14.0" layoutY="340.0" prefHeight="30.0" prefWidth="150.0" />
@@ -41,7 +41,7 @@
                            <children>
                               <StackPane fx:id="spTablas" prefHeight="560.0" prefWidth="815.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <AnchorPane fx:id="panelProcesar" opacity="0.0" prefHeight="200.0" prefWidth="200.0">
+                                    <AnchorPane fx:id="panelProcesar" opacity="0.0" prefHeight="200.0" prefWidth="200.0" visible="false">
                                        <children>
                                           <TableView fx:id="tvProcesar" layoutX="14.0" layoutY="14.0" prefHeight="460.0" prefWidth="787.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                                             <columns>
@@ -50,9 +50,10 @@
                                                 <TableColumn fx:id="clEstado" prefWidth="261.0" resizable="false" text="ESTADO" />
                                             </columns>
                                           </TableView>
+                                          <Button layoutX="14.0" layoutY="474.0" mnemonicParsing="false" onAction="#cambioEnDatePicker" prefHeight="25.0" prefWidth="787.0" text="Refrescar" />
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane fx:id="panelPreview" opacity="0.0" prefHeight="200.0" prefWidth="200.0">
+                                    <AnchorPane fx:id="panelPreview" opacity="0.0" prefHeight="200.0" prefWidth="200.0" visible="false">
                                        <children>
                                           <TableView fx:id="tvPreview" layoutX="14.0" layoutY="14.0" prefHeight="460.0" prefWidth="782.0" tableMenuButtonVisible="true">
                                              <columns>

@@ -35,9 +35,13 @@
               <MenuItem mnemonicParsing="false" onAction="#iniciaBoletines" text="Boletines" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaFases" text="Fases" />
                   <MenuItem mnemonicParsing="false" onAction="#iniciaCabeceras" text="Cabeceras" />
-                  <MenuItem mnemonicParsing="false" onAction="#cargaExtraccion" text="Extracción" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Extracción">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#cargaExtraccion" text="Extracción" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
       <StackPane prefHeight="575.0" prefWidth="1000.0">
@@ -128,7 +132,7 @@
                   <Label fx:id="lbContadorT" alignment="CENTER_RIGHT" layoutX="891.0" layoutY="373.0" prefHeight="17.0" prefWidth="50.0" text="..." />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0">
+            <AnchorPane fx:id="panelBoletines" prefHeight="571.0" prefWidth="1000.0" visible="false">
                <children>
                   <ToolBar maxWidth="189.0" prefHeight="52.0" prefWidth="189.0" AnchorPane.leftAnchor="0.0">
                     <items>
