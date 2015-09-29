@@ -29,7 +29,7 @@
                               <Button fx:id="btGenerarPdf" layoutX="14.0" layoutY="60.0" mnemonicParsing="false" onAction="#generarPdf" prefHeight="30.0" prefWidth="150.0" text="Generar PDF" />
                               <Button fx:id="btPreview" layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#previsualizar" prefHeight="30.0" prefWidth="150.0" text="Previsualizar Extracción" />
                               <Button fx:id="btVerPdf" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#verPdf" prefHeight="30.0" prefWidth="150.0" text="Ver PDF" />
-                              <Button fx:id="btProcesar" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
+                              <Button fx:id="btProcesar" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" onAction="#procesar" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
                               <Separator layoutX="14.0" layoutY="340.0" prefHeight="30.0" prefWidth="150.0" />
                               <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" onAction="#abrirCarpeta" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
                               <ProgressIndicator fx:id="piProgreso" layoutX="14.0" layoutY="405.0" prefHeight="85.0" prefWidth="150.0" progress="0.0" visible="false" />
@@ -49,6 +49,15 @@
                                               <TableColumn fx:id="clEstructura" prefWidth="262.0" resizable="false" text="ESTRUCTURA" />
                                                 <TableColumn fx:id="clEstado" prefWidth="261.0" resizable="false" text="ESTADO" />
                                             </columns>
+                                             <contextMenu>
+                                                <ContextMenu>
+                                                  <items>
+                                                    <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                                  </items>
+                                                </ContextMenu>
+                                             </contextMenu>
                                           </TableView>
                                           <Button layoutX="14.0" layoutY="474.0" mnemonicParsing="false" onAction="#cambioEnDatePicker" prefHeight="25.0" prefWidth="787.0" text="Refrescar" />
                                        </children>
@@ -68,6 +77,13 @@
                                                 <TableColumn fx:id="clPuntos" maxWidth="50.0" minWidth="-Infinity" prefWidth="50.0" text="Puntos" />
                                                 <TableColumn fx:id="clReqObs" maxWidth="50.0" minWidth="-Infinity" prefWidth="50.0" text="Req/Obs" />
                                              </columns>
+                                             <contextMenu>
+                                                <ContextMenu>
+                                                  <items>
+                                                    <MenuItem mnemonicParsing="false" text="Eliminar linea" />
+                                                  </items>
+                                                </ContextMenu>
+                                             </contextMenu>
                                           </TableView>
                                        </children>
                                     </AnchorPane>

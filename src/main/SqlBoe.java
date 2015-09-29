@@ -144,6 +144,27 @@ public class SqlBoe {
         }
         return aux;
     }
+    
+    public static String getEstructura(int id) {
+        Sql bd;
+        ResultSet rs;
+        String aux = null;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs("SELECT estructura FROM boes.estructura where id="+id);
+
+            while (rs.next()) {
+                aux = rs.getString("estructura");
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
 
     public static ModeloBoletines getModeloBoletines(String codigo) {
         Sql bd;
@@ -250,8 +271,13 @@ public class SqlBoe {
                 aux.setFechaMulta(rs.getInt("fechaMulta"));
                 aux.setMatricula(rs.getInt("matricula"));
                 aux.setCuantia(rs.getInt("cuantia"));
-                aux.setPrecepto(rs.getInt("precepto"));
-                aux.setArticulo(rs.getInt("articulo"));
+                aux.setPreceptoA(rs.getInt("preceptoA"));
+                aux.setPreceptoB(rs.getInt("preceptoB"));
+                aux.setPreceptoC(rs.getInt("preceptoC"));
+                aux.setArticuloA(rs.getInt("articuloA"));
+                aux.setArticuloB(rs.getInt("articuloB"));
+                aux.setArticuloC(rs.getInt("articuloC"));
+                aux.setArticuloD(rs.getInt("articuloD"));
                 aux.setPuntos(rs.getInt("puntos"));
                 aux.setReqObs(rs.getInt("reqObs"));
             }

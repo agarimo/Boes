@@ -37,7 +37,7 @@ public class Boes extends Application {
         root.getChildren().addAll(mainContainer);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("BOEXT");
+        stage.setTitle("BOEAPP");
         stage.setResizable(false);
         stage.setWidth(1005);
         stage.setHeight(625);
@@ -50,30 +50,6 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-
-//        Variables.inicializar();
-//
-//        Procesar pr;
-//        Extraccion ex = new Extraccion(getFecha());
-//        List<Procesar> list = ex.getBoletines();
-//
-//        Iterator<Procesar> it = list.iterator();
-//
-//        while (it.hasNext()) {
-//            pr = it.next();
-//
-//            try {
-//                if (!ex.procesaXLSX(pr)) {
-//                    System.out.println("No se encuentra el archivo.");
-//                } else {
-//                    System.out.println(pr.getCodigo());
-//                }
-//            } catch (Exception exc) {
-//                System.err.println("Error en archivo : " + pr.getCodigo());
-//            }
-//        }
-//
-//        System.exit(0);
     }
 
     public static Date getFecha() {

@@ -547,6 +547,20 @@ public class ExtC implements Initializable, ControlledScreen {
             }
         }
     }
+    
+    @FXML
+    void procesar(){
+        ModeloProcesar modelo;
+        Iterator<ModeloProcesar> it = procesarList.iterator();
+        
+        while(it.hasNext()){
+            modelo= it.next();
+            
+            if(modelo.getEstado()==1 && listaEstructurasCreadas.contains(modelo.getEstructura())){
+                System.out.println(modelo.getCodigo());
+            }
+        }
+    }
 
     //<editor-fold defaultstate="collapsed" desc="LISTENER">
     /**
@@ -565,5 +579,4 @@ public class ExtC implements Initializable, ControlledScreen {
 //                cargaDatosFase();
             };
 //</editor-fold>
-
 }

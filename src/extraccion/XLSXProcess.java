@@ -61,15 +61,23 @@ public class XLSXProcess {
 
     public List<Multa> splitXLSX() {
         List<Multa> multas = new ArrayList();
-
+        String estructura = SqlBoe.getEstructura(pr.getEstructura());
         Multa multa;
         Row linea;
         Iterator<Row> it = rows.iterator();
 
         while (it.hasNext()) {
             linea = it.next();
-            multa = splitLinea(linea);
-            multas.add(multa);
+
+            if (!getLinea(linea).equals(estructura)) {
+                try {
+                    multa = splitLinea(linea);
+                    multas.add(multa);
+                } catch (IndexOutOfBoundsException ex) {
+                    multa = new Multa();
+                    multas.add(multa);
+                }
+            }
         }
 
         multas = clearMultas(multas);
@@ -117,7 +125,11 @@ public class XLSXProcess {
         multa.setOrganismo(ve.getOrigen());
         multa.setBoe(ve.getBoe());
         multa.setFase(ve.getFase());
-        multa.setTipoJuridico(setTipoJuridico(getCelda(linea, sd.nif)));
+        if (sd.nif != 0) {
+            multa.setTipoJuridico(setTipoJuridico(getCelda(linea, sd.nif)));
+        } else {
+            multa.setTipoJuridico("P");
+        }
         multa.setPlazo(ve.getPlazo());
 
         if (sd.expediente != 0) {
@@ -132,17 +144,38 @@ public class XLSXProcess {
             multa.setFechaMulta(null);
         }
 
-        if (sd.precepto != 0) {
-            prec = getCelda(linea, sd.precepto).trim();
-        }
-        if (sd.articulo != 0) {
-            art = getCelda(linea, sd.articulo).trim();
+        if (sd.preceptoA != 0) {
+            prec += " " + getCelda(linea, sd.preceptoA).trim();
         }
 
-        multa.setArticulo((art + " " + prec).trim().toUpperCase());
+        if (sd.preceptoB != 0) {
+            prec += " " + getCelda(linea, sd.preceptoB).trim();
+        }
+
+        if (sd.preceptoC != 0) {
+            prec += " " + getCelda(linea, sd.preceptoC).trim();
+        }
+
+        if (sd.articuloA != 0) {
+            art += " " + getCelda(linea, sd.articuloA).trim();
+        }
+
+        if (sd.articuloB != 0) {
+            art += " " + getCelda(linea, sd.articuloB).trim();
+        }
+
+        if (sd.articuloC != 0) {
+            art += " " + getCelda(linea, sd.articuloC).trim();
+        }
+
+        if (sd.articuloD != 0) {
+            art += " " + getCelda(linea, sd.articuloD).trim();
+        }
+
+        multa.setArticulo((art.trim() + " " + prec.trim()).toUpperCase());
 
         if (sd.nif != 0) {
-            multa.setNif(setNif(getCelda(linea, sd.nif)).trim().toUpperCase());
+            multa.setNif(getCelda(linea, sd.nif).trim().toUpperCase());
         } else {
             multa.setNif("");
         }
@@ -243,21 +276,4 @@ public class XLSXProcess {
         CalculaNif cn = new CalculaNif();
         return cn.getTipoJuridico(nif);
     }
-
-    private String setNif(String nif) {
-        CalculaNif cn = new CalculaNif();
-        String aux;
-
-        try {
-            if (cn.isvalido(nif)) {
-                aux = nif;
-            } else {
-                aux = cn.calcular(nif);
-            }
-            return aux;
-        } catch (Exception ex) {
-            return nif;
-        }
-    }
-
 }

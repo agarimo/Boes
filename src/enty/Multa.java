@@ -2,7 +2,10 @@ package enty;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import main.Variables;
+import util.CalculaNif;
 import util.Dates;
 import util.Varios;
 
@@ -183,7 +186,7 @@ public class Multa {
     }
 
     public void setNif(String nif) {
-        this.nif = nif;
+        this.nif = checkNif(limpia(nif));
     }
 
     public String getSancionado() {
@@ -207,7 +210,7 @@ public class Multa {
     }
 
     public void setMatricula(String matricula) {
-        this.matricula = matricula;
+        this.matricula = limpia(matricula);
     }
 
     public String getCuantia() {
@@ -271,6 +274,32 @@ public class Multa {
             return false;
         }
         return true;
+    }
+    
+    private String limpia(String str) {
+        Pattern p = Pattern.compile("[^0-9A-Z]");
+        Matcher m = p.matcher(str);
+
+        if (m.find()) {
+            str = m.replaceAll("");
+        }
+        return str.trim();
+    }
+    
+    private String checkNif(String nif) {
+        CalculaNif cn = new CalculaNif();
+        String aux;
+
+        try {
+            if (cn.isvalido(nif)) {
+                aux = nif;
+            } else {
+                aux = cn.calcular(nif);
+            }
+            return aux;
+        } catch (Exception ex) {
+            return nif;
+        }
     }
 
     public String SQLCrear() {

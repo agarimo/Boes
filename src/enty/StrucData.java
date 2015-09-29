@@ -15,8 +15,13 @@ public class StrucData {
     public int fechaMulta;
     public int matricula;
     public int cuantia;
-    public int precepto;
-    public int articulo;
+    public int preceptoA;
+    public int preceptoB;
+    public int preceptoC;
+    public int articuloA;
+    public int articuloB;
+    public int articuloC;
+    public int articuloD;
     public int puntos;
     public int reqObs;
     
@@ -26,22 +31,6 @@ public class StrucData {
     
     public StrucData(int idEstructura){
         this.idEstructura=idEstructura;
-    }
-
-    public StrucData(int id, int idEstructura, int expediente, int sancionado, int nif, int localidad, int fechaMulta, int matricula, int cuantia, int precepto, int articulo, int puntos, int reqObs) {
-        this.id = id;
-        this.idEstructura = idEstructura;
-        this.expediente = expediente;
-        this.sancionado = sancionado;
-        this.nif = nif;
-        this.localidad = localidad;
-        this.fechaMulta = fechaMulta;
-        this.matricula = matricula;
-        this.cuantia = cuantia;
-        this.precepto = precepto;
-        this.articulo = articulo;
-        this.puntos = puntos;
-        this.reqObs = reqObs;
     }
 
     public int getId() {
@@ -84,12 +73,32 @@ public class StrucData {
         this.cuantia = cuantia;
     }
 
-    public void setPrecepto(int precepto) {
-        this.precepto = precepto;
+    public void setPreceptoA(int preceptoA) {
+        this.preceptoA = preceptoA;
     }
 
-    public void setArticulo(int articulo) {
-        this.articulo = articulo;
+    public void setPreceptoB(int preceptoB) {
+        this.preceptoB = preceptoB;
+    }
+
+    public void setPreceptoC(int preceptoC) {
+        this.preceptoC = preceptoC;
+    }
+
+    public void setArticuloA(int articuloA) {
+        this.articuloA = articuloA;
+    }
+
+    public void setArticuloB(int articuloB) {
+        this.articuloB = articuloB;
+    }
+
+    public void setArticuloC(int articuloC) {
+        this.articuloC = articuloC;
+    }
+    
+    public void setArticuloD(int articuloD){
+        this.articuloD = articuloD;
     }
 
     public void setPuntos(int puntos) {

@@ -137,7 +137,7 @@ public class Extraccion {
             row = it.next();
             aux.add(row);
         }
-        aux.remove(0);
+//        aux.remove(0);
 
         return aux;
     }
