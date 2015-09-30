@@ -4,12 +4,15 @@ import boe.Download;
 import enty.Multa;
 import enty.Procesar;
 import extraccion.Extraccion;
+import extraccion.XLSXProcess;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +48,7 @@ import main.Variables;
 import model.ModeloPreview;
 import model.ModeloProcesar;
 import util.Dates;
+import util.Sql;
 import util.Varios;
 
 /**
@@ -424,7 +428,7 @@ public class ExtC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void generarPdf() {
+    void generarPdf(ActionEvent event) {
         Date fecha = Dates.asDate(dpFecha.getValue());
 
         if (fecha != null) {
@@ -479,9 +483,66 @@ public class ExtC implements Initializable, ControlledScreen {
             a.start();
         }
     }
+    
+    @FXML
+    void generarPdfI(ActionEvent event){
+        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null && pr!=null) {
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            fichero.mkdirs();
+
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btGenerarPdf.setDisable(true);
+                    piProgreso.setVisible(true);
+                    piProgreso.setProgress(0);
+                    lbProgreso.setVisible(true);
+                    lbProgreso.setText("");
+                    lbProceso.setVisible(true);
+                    lbProceso.setText("GENERANDO PDFs");
+                });
+
+                File destino;
+                ModeloProcesar aux;
+                List list = new ArrayList();
+                list.add(pr);
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbProgreso.setText("DESCARGANDO " + contadour + " de " + total);
+                        piProgreso.setProgress(counter / toutal);
+                    });
+                    aux = (ModeloProcesar) list.get(i);
+                    destino = new File(fichero, aux.getCodigo() + ".pdf");
+                    Download.descargaPDF(aux.getLink(), destino);
+                }
+
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(1);
+                    piProgreso.setVisible(false);
+                    lbProgreso.setText("");
+                    lbProgreso.setVisible(false);
+                    lbProceso.setText("");
+                    lbProceso.setVisible(false);
+                    btGenerarPdf.setDisable(false);
+
+                    cambioEnDatePicker(new ActionEvent());
+                });
+            });
+            a.start();
+        }
+    }
 
     @FXML
-    void verPdf() {
+    void verPdf(ActionEvent event) {
         ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
 
         if (pr != null) {
@@ -492,6 +553,24 @@ public class ExtC implements Initializable, ControlledScreen {
             } catch (URISyntaxException ex) {
                 Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+    
+    @FXML
+    void verXLSX(ActionEvent event){
+        Date fecha = Dates.asDate(dpFecha.getValue());
+        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+        
+        if(pr!=null && fecha!=null){
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            File archivo = new File (fichero,pr.getCodigo()+".xlsx");
+            
+            try {
+                Desktop.getDesktop().browse(archivo.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }
 
@@ -509,6 +588,14 @@ public class ExtC implements Initializable, ControlledScreen {
         }
     }
 
+    @FXML
+    void resetearEstado(ActionEvent event){
+        ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+        Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
+        pr.SQLSetEstado(1);
+        cambioEnDatePicker(new ActionEvent());
+    }
+    
     @FXML
     void previsualizar(ActionEvent event) {
         Date fecha = Dates.asDate(dpFecha.getValue());
@@ -548,8 +635,7 @@ public class ExtC implements Initializable, ControlledScreen {
         }
     }
     
-    @FXML
-    void procesar(){
+    void preprocesar(){
         ModeloProcesar modelo;
         Iterator<ModeloProcesar> it = procesarList.iterator();
         
@@ -559,6 +645,86 @@ public class ExtC implements Initializable, ControlledScreen {
             if(modelo.getEstado()==1 && listaEstructurasCreadas.contains(modelo.getEstructura())){
                 System.out.println(modelo.getCodigo());
             }
+        }
+    }
+    
+    private List<ModeloProcesar> getBoletinesProcesar(){
+        ModeloProcesar modelo;
+        List<ModeloProcesar> list = new ArrayList();
+        Iterator<ModeloProcesar> it = procesarList.iterator();
+        
+        while(it.hasNext()){
+            modelo= it.next();
+            
+            if(modelo.getEstado()==1 && listaEstructurasCreadas.contains(modelo.getEstructura())){
+                list.add(modelo);
+            }
+        }
+        return list;
+    }
+    
+    @FXML
+    void procesar(ActionEvent event){
+        Date fecha = Dates.asDate(dpFecha.getValue());
+        List<ModeloProcesar> list = getBoletinesProcesar();
+        
+        if (!list.isEmpty() && fecha!=null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btGenerarPdf.setDisable(true);
+                    piProgreso.setVisible(true);
+                    piProgreso.setProgress(0);
+                    lbProgreso.setVisible(true);
+                    lbProgreso.setText("");
+                    lbProceso.setVisible(true);
+                    lbProceso.setText("PROCESANDO BOLETINES");
+                });
+
+                Sql bd;
+                Extraccion ex = new Extraccion(fecha);
+                List<Multa> procesado;
+                ModeloProcesar aux;
+                Procesar pr;
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbProgreso.setText("PROCESANDO " + contadour + " de " + total);
+                        piProgreso.setProgress(counter / toutal);
+                    });
+                    aux = (ModeloProcesar) list.get(i);
+                    pr = SqlBoe.getProcesar(aux.getCodigo());
+                    procesado = ex.previewXLSX(pr);
+                    
+                    if(procesado.contains(new Multa())){
+                        pr.SQLSetEstado(3);
+                    }else{
+                        Platform.runLater(() -> {
+                        lbProgreso.setText("INSERTANDO MULTAS");
+                    });
+                        XLSXProcess.insertMultas(procesado);
+                        pr.SQLSetEstado(2);
+                    }
+                }
+
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(1);
+                    piProgreso.setVisible(false);
+                    lbProgreso.setText("");
+                    lbProgreso.setVisible(false);
+                    lbProceso.setText("");
+                    lbProceso.setVisible(false);
+                    btGenerarPdf.setDisable(false);
+
+                    cambioEnDatePicker(new ActionEvent());
+                });
+            });
+            a.start();
         }
     }
 

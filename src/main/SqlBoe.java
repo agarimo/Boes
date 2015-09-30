@@ -43,6 +43,19 @@ public class SqlBoe {
 
         alert.showAndWait();
     }
+    
+    public static boolean ejecutar(String query){
+        Sql bd;
+        try {
+            bd = new Sql(Variables.con);
+            bd.ejecutar(query);
+            bd.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
 
     public static void eliminaBoletin(String codigo) {
         Sql bd;

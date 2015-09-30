@@ -52,9 +52,18 @@
                                              <contextMenu>
                                                 <ContextMenu>
                                                   <items>
-                                                    <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                                      <Menu mnemonicParsing="false" text="VER">
+                                                        <items>
+                                                            <MenuItem mnemonicParsing="false" onAction="#verPdf" text="Ver PDF" />
+                                                          <MenuItem mnemonicParsing="false" onAction="#verXLSX" text="Ver XLSX" />
+                                                        </items>
+                                                      </Menu>
+                                                      <Menu mnemonicParsing="false" text="GENERAR">
+                                                        <items>
+                                                            <MenuItem mnemonicParsing="false" onAction="#generarPdfI" text="Generar PDF" />
+                                                        </items>
+                                                      </Menu>
+                                                      <MenuItem mnemonicParsing="false" onAction="#resetearEstado" text="Resetear Estado" />
                                                   </items>
                                                 </ContextMenu>
                                              </contextMenu>

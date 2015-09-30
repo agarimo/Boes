@@ -72,7 +72,10 @@ public class XLSXProcess {
             if (!getLinea(linea).equals(estructura)) {
                 try {
                     multa = splitLinea(linea);
-                    multas.add(multa);
+
+                    if (!multa.getExpediente().equals("EXPEDIENTE")) {
+                        multas.add(multa);
+                    }
                 } catch (IndexOutOfBoundsException ex) {
                     multa = new Multa();
                     multas.add(multa);
