@@ -21,12 +21,7 @@ public class Procesar {
     String codigo;
     String link;
     int estructura;
-    /**
-     * Estado= 0 (Sin procesar) Estado=1 (Ready to process) Estado=2 (Procesado
-     * Excel) Estado= 3 (Error al procesar) Estado=4 (Falta PDF) Estado=5 (Falta
-     * XLSX)
-     */
-    int estado;
+    Estado estado;
 
     public Procesar() {
 
@@ -37,14 +32,14 @@ public class Procesar {
         this.codigo = codigo;
         this.link = link;
         this.estructura = estructura;
-        this.estado = estado;
+        this.estado = pickEstado(estado);
     }
 
     public String getCodigo() {
         return codigo;
     }
 
-    public int getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
@@ -66,7 +61,7 @@ public class Procesar {
 
     public void setEstado(int estado) {
         if (estado != 1) {
-            this.estado = estado;
+            this.estado = pickEstado(estado);
         } else {
             this.estado = checkEstado();
         }
@@ -97,18 +92,39 @@ public class Procesar {
         return this.codigo;
     }
 
-    private int checkEstado() {
-        int a = 1;
+    private Estado pickEstado(int estado) {
+        switch (estado) {
+            case 0:
+                return Estado.SIN_PROCESAR;
+            case 1:
+                return Estado.LISTO_PROCESAR;
+            case 2:
+                return Estado.PROCESADO_XLSX;
+            case 3:
+                return Estado.ERROR_PROCESAR;
+            case 4:
+                return Estado.ERROR_PROCESAR;
+            case 5:
+                return Estado.PDF_NO_GENERADO;
+            case 6:
+                return Estado.XLSX_NO_GENERADO;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private Estado checkEstado() {
+        Estado a = Estado.LISTO_PROCESAR;
         File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
         File fileXLSX = new File(fichero, codigo + ".xlsx");
         File filePDF = new File(fichero, codigo + ".pdf");
 
         if (!fileXLSX.exists()) {
-            a = 5;
+            a = Estado.XLSX_NO_GENERADO;
         }
 
         if (!filePDF.exists()) {
-            a = 4;
+            a = Estado.PDF_NO_GENERADO;
         }
 
         return a;

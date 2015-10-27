@@ -14,9 +14,7 @@ import enty.Boletin;
 import enty.Cabecera;
 import enty.Descarga;
 import enty.Fase;
-import enty.Multa;
 import enty.Procesar;
-import extraccion.Extraccion;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +50,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -76,7 +73,6 @@ import model.ModeloBoletines;
 import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
-import model.ModeloPreview;
 import util.Dates;
 import util.Files;
 import util.Sql;
@@ -241,9 +237,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        origen_descartado = SqlBoe.listaOrigenDescartado();
-//        texto_descartado = SqlBoe.listaTextoDescartado();
-
         final ObservableList<Boe> ls1 = lvBoe.getSelectionModel().getSelectedItems();
         ls1.addListener(selectorListaBoe);
 
@@ -258,11 +251,7 @@ public class WinC implements Initializable, ControlledScreen {
 
         final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
         ls5.addListener(selectorListaOrigenC);
-
-        final ObservableList<Procesar> ls6 = lvExtract.getSelectionModel().getSelectedItems();
-        ls6.addListener(selectorListaExtraccion);
     }
-
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
     @FXML
     void iniciaInicio() {
@@ -280,7 +269,6 @@ public class WinC implements Initializable, ControlledScreen {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
-                panelExtraccion.setVisible(false);
                 break;
             case 1:
                 panelInicio.setVisible(false);
@@ -289,7 +277,6 @@ public class WinC implements Initializable, ControlledScreen {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
-                panelExtraccion.setVisible(false);
                 break;
             case 2:
                 panelInicio.setVisible(false);
@@ -298,7 +285,6 @@ public class WinC implements Initializable, ControlledScreen {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
-                panelExtraccion.setVisible(false);
                 break;
             case 3:
                 panelInicio.setVisible(false);
@@ -307,7 +293,6 @@ public class WinC implements Initializable, ControlledScreen {
                 panelBoletines.setVisible(true);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(false);
-                panelExtraccion.setVisible(false);
                 break;
 
             case 4:
@@ -317,7 +302,6 @@ public class WinC implements Initializable, ControlledScreen {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(true);
                 panelCabeceras.setVisible(false);
-                panelExtraccion.setVisible(false);
                 break;
 
             case 5:
@@ -327,17 +311,6 @@ public class WinC implements Initializable, ControlledScreen {
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
                 panelCabeceras.setVisible(true);
-                panelExtraccion.setVisible(false);
-                break;
-
-            case 6:
-                panelInicio.setVisible(false);
-                panelEnlaces.setVisible(false);
-                panelClasificacion.setVisible(false);
-                panelBoletines.setVisible(false);
-                panelFases.setVisible(false);
-                panelCabeceras.setVisible(false);
-                panelExtraccion.setVisible(true);
                 break;
         }
     }
@@ -355,8 +328,8 @@ public class WinC implements Initializable, ControlledScreen {
             Download dw = new Download();
             List list = dw.getListado();
 
-            for (int i = 0; i < list.size(); i++) {
-                aux = (Descarga) list.get(i);
+            for (Object list1 : list) {
+                aux = (Descarga) list1;
                 dw.descarga(aux);
             }
 
@@ -394,7 +367,6 @@ public class WinC implements Initializable, ControlledScreen {
     @FXML
     void addBoe(ActionEvent event) {
         Boe aux;
-        Sql bd;
 
         aux = new Boe(Dates.asDate(dpFecha.getValue()), tfLink.getText());
         try {
@@ -1702,332 +1674,6 @@ public class WinC implements Initializable, ControlledScreen {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="EXTRACCION">
-    ObservableList<Procesar> listExtraccion;
-    ObservableList<ModeloPreview> multasList;
-
-    @FXML
-    private AnchorPane panelExtraccion;
-
-    @FXML
-    private DatePicker dpExtract;
-
-    @FXML
-    private ListView<Procesar> lvExtract;
-
-    @FXML
-    private Button btPdfEx;
-
-    @FXML
-    private Button btProcesarEx;
-
-    @FXML
-    private Button btPreview;
-
-    @FXML
-    private Button btTrasvase;
-
-    @FXML
-    private Label lbTrasvase;
-
-    @FXML
-    private Button btRecargarEx;
-
-    @FXML
-    private ProgressIndicator piProgreso;
-
-    @FXML
-    private Label lbProgresoEx;
-
-    @FXML
-    private TableView<ModeloPreview> tvMultas;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> expedienteCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> sancionadoCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> nifCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> localidadCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> fechaCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> matriculaCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> cuantiaCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> articuloCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> puntosCLM;
-
-    @FXML
-    private TableColumn<ModeloPreview, String> reqObsCLM;
-
-    @FXML
-    void iniciarExtraccion(ActionEvent event) {
-        mostrarPanel(6);
-        dpExtract.setValue(null);
-        piProgreso.setVisible(false);
-        lbProgresoEx.setVisible(false);
-        iniciarTablaMultas();
-        iniciarDatosEx();
-    }
-
-    void iniciarDatosEx() {
-        btTrasvase.setVisible(false);
-        listExtraccion = FXCollections.observableArrayList();
-        lvExtract.setItems(listExtraccion);
-        lvExtract.setCellFactory(new Callback<ListView<Procesar>, ListCell<Procesar>>() {
-            @Override
-            public ListCell<Procesar> call(ListView<Procesar> list) {
-                final ListCell cell = new ListCell() {
-                    private Text text;
-                    private Procesar pr;
-
-                    @Override
-                    public void updateItem(Object item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!isEmpty()) {
-                            text = new Text(item.toString());
-                            text.setWrappingWidth(lvOrigen.getPrefWidth() - 30);
-                            pr = (Procesar) item;
-
-                            switch (pr.getEstado()) {
-                                case 0:
-                                    text.setFill(Color.RED);
-                                    break;
-
-                                case 1:
-                                    text.setFill(Color.ORANGE);
-                                    break;
-
-                                case 2:
-                                    text.setFill(Color.GREEN);
-                                    break;
-                            }
-                            setGraphic(text);
-
-                        } else {
-                            text = new Text("");
-                            setGraphic(text);
-                        }
-                    }
-                };
-                return cell;
-            }
-        });
-    }
-
-    void iniciarTablaMultas() {
-        expedienteCLM.setCellValueFactory(new PropertyValueFactory<>("expediente"));
-        sancionadoCLM.setCellValueFactory(new PropertyValueFactory<>("sancionado"));
-        nifCLM.setCellValueFactory(new PropertyValueFactory<>("nif"));
-        localidadCLM.setCellValueFactory(new PropertyValueFactory<>("localidad"));
-        fechaCLM.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        matriculaCLM.setCellValueFactory(new PropertyValueFactory<>("matricula"));
-        cuantiaCLM.setCellValueFactory(new PropertyValueFactory<>("cuantia"));
-        articuloCLM.setCellValueFactory(new PropertyValueFactory<>("articulo"));
-        puntosCLM.setCellValueFactory(new PropertyValueFactory<>("puntos"));
-        reqObsCLM.setCellValueFactory(new PropertyValueFactory<>("reqObs"));
-
-        multasList = FXCollections.observableArrayList();
-        tvMultas.setItems(multasList);
-    }
-
-    void cargarDatosTablaMultas(List<Multa> multas) {
-        multasList.clear();
-        ModeloPreview modelo;
-        Multa multa;
-        Iterator<Multa> it = multas.iterator();
-
-        while (it.hasNext()) {
-            multa = it.next();
-
-            modelo = new ModeloPreview();
-            modelo.expediente.set(multa.getExpediente());
-            modelo.sancionado.set(multa.getSancionado());
-            modelo.nif.set(multa.getNif());
-            modelo.localidad.set(multa.getLocalidad());
-            modelo.fecha.set(Dates.imprimeFecha(multa.getFechaMulta()));
-            modelo.matricula.set(multa.getMatricula());
-            modelo.cuantia.set(multa.getCuantia());
-            modelo.articulo.set(multa.getArticulo());
-            modelo.puntos.set(multa.getPuntos());
-            modelo.reqObs.set(multa.getReqObs());
-
-            multasList.add(modelo);
-        }
-    }
-
-    void cargarDatosTablaMultas(Procesar aux) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".multa where idBoletin=" + aux.getId();
-        List<Multa> list = SqlBoe.listaMultas(query);
-        cargarDatosTablaMultas(list);
-    }
-
-    void comprobarTrasvase(Date fecha) {
-        List aux = SqlBoe.listaProcesarPendiente(fecha);
-
-        if (!aux.isEmpty()) {
-            btTrasvase.setVisible(true);
-            lbTrasvase.setText(Integer.toString(aux.size()));
-        } else {
-            btTrasvase.setVisible(false);
-            lbTrasvase.setText(Integer.toString(aux.size()));
-        }
-    }
-
-    @FXML
-    void trasvaseEx(ActionEvent event) {
-        Procesar aux;
-        Date fecha = Dates.asDate(dpExtract.getValue());
-        Iterator it = SqlBoe.listaProcesarPendiente(fecha).iterator();
-
-        try {
-            bd = new Sql(Variables.con);
-
-            while (it.hasNext()) {
-                aux = (Procesar) it.next();
-                bd.ejecutar(aux.SQLCrear());
-            }
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        cargarEx(fecha);
-    }
-
-    @FXML
-    void cambioEnDatePickerExtract(ActionEvent event) {
-        btTrasvase.setVisible(false);
-        Date aux = Dates.asDate(dpExtract.getValue());
-
-        if (aux != null) {
-            multasList.clear();
-            cargarEx(aux);
-            comprobarTrasvase(aux);
-        }
-    }
-
-    void cargarEx(Date fecha) {
-        Procesar aux;
-        listExtraccion.clear();
-        Iterator it = SqlBoe.listaProcesar("SELECT * FROM " + Variables.nombreBD + ".procesar "
-                + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))).iterator();
-
-        while (it.hasNext()) {
-            aux = (Procesar) it.next();
-            listExtraccion.add(aux);
-        }
-    }
-
-    @FXML
-    void generarPdfEx(ActionEvent event) {
-        Date fecha = Dates.asDate(dpExtract.getValue());
-
-        if (fecha != null) {
-            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
-            fichero.mkdirs();
-
-            Thread a = new Thread(() -> {
-
-                Platform.runLater(() -> {
-                    piProgreso.setVisible(true);
-                    piProgreso.setProgress(0);
-                    lbProgresoEx.setVisible(true);
-                    lbProgresoEx.setText("DESCARGANDO PDFs");
-                });
-
-                File destino;
-                Procesar aux;
-                List list = SqlBoe.listaProcesar(query);
-
-                for (int i = 0; i < list.size(); i++) {
-                    final int contador = i;
-                    final int total = list.size();
-                    Platform.runLater(() -> {
-                        int contadour = contador + 1;
-                        double counter = contador + 1;
-                        double toutal = total;
-                        lbProgresoEx.setText("DESCARGANDO " + contadour + " de " + total);
-                        piProgreso.setProgress(counter / toutal);
-                    });
-                    aux = (Procesar) list.get(i);
-                    destino = new File(fichero, aux.getCodigo() + ".pdf");
-                    Download.descargaPDF(aux.getLink(), destino);
-                    aux.SQLSetEstado(1);
-                }
-
-                Platform.runLater(() -> {
-                    lbProgresoEx.setText("FINALIZADO");
-                    piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
-                    lbProgresoEx.setText("");
-                    lbProgresoEx.setVisible(false);
-
-                    cargarEx(fecha);
-                });
-            });
-            a.start();
-        }
-    }
-
-    @FXML
-    void procesarEx(ActionEvent event) {
-
-    }
-
-    @FXML
-    void abrirCarpetaEx(ActionEvent event) {
-        Date fecha = Dates.asDate(dpExtract.getValue());
-
-        if (fecha != null) {
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
-            try {
-                Desktop.getDesktop().browse(fichero.toURI());
-            } catch (IOException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    void cargaBoletinExtraccion() {
-
-    }
-
-    @FXML
-    void previsualizarEx(ActionEvent event) {
-        Date fecha = Dates.asDate(dpExtract.getValue());
-        Procesar aux = lvExtract.getSelectionModel().getSelectedItem();
-        Extraccion ex;
-
-        if (fecha != null || aux != null) {
-            System.out.println(aux.getCodigo());
-
-            ex = new Extraccion(fecha);
-            if (ex.fileExist(aux.getCodigo())) {
-                cargarDatosTablaMultas(ex.previewXLSX(aux));
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("FICHERO NO ENCONTRADO");
-                alert.setContentText("Debe generar el fichero .xlsx para previsualizar el contenido.");
-                alert.showAndWait();
-            }
-        }
-    }
-//</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="FASES">
     //<editor-fold defaultstate="collapsed" desc="Variables FXML">
     @FXML
@@ -2125,7 +1771,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void editaFase(ActionEvent event) {
-        Sql bd;
         Fase aux = getDatosFase();
 
         try {
@@ -2147,7 +1792,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void borraFase(ActionEvent event) {
-        Sql bd;
         Fase aux = getDatosFase();
 
         try {
@@ -2169,7 +1813,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void guardaFase(ActionEvent event) {
-        Sql bd;
         Fase aux = getDatosFase();
 
         try {
@@ -2448,7 +2091,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void editaCabecera(ActionEvent event) {
-        Sql bd;
         Cabecera aux = getDatosCabecera();
 
         try {
@@ -2470,7 +2112,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void borraCabecera(ActionEvent event) {
-        Sql bd;
         Cabecera aux = getDatosCabecera();
 
         try {
@@ -2492,7 +2133,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void guardaCabecera(ActionEvent event) {
-        Sql bd;
         Cabecera aux = getDatosCabecera();
 
         try {
@@ -2645,14 +2285,6 @@ public class WinC implements Initializable, ControlledScreen {
     private final ListChangeListener<ModeloCabeceras> selectorTablaCabeceras
             = (ListChangeListener.Change<? extends ModeloCabeceras> c) -> {
                 cargaDatosCabecera();
-            };
-
-    /**
-     * Listener de la lista Extraccion
-     */
-    private final ListChangeListener<Procesar> selectorListaExtraccion
-            = (ListChangeListener.Change<? extends Procesar> c) -> {
-                cargaBoletinExtraccion();
             };
 //</editor-fold>
 }

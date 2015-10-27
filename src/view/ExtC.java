@@ -1,6 +1,7 @@
 package view;
 
 import boe.Download;
+import enty.Estado;
 import enty.Multa;
 import enty.Procesar;
 import extraccion.Extraccion;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -62,93 +62,295 @@ public class ExtC implements Initializable, ControlledScreen {
     int PanelProcesar = 2;
     boolean isPreview;
     List<Integer> listaEstructurasCreadas;
-
+    private final int procesar_to_preview = 1;
+    private final int preview_to_procesar = 2;
+    private final int procesar_to_wait = 3;
+    private final int wait_to_preview = 4;
+    private final int wait_to_procesar = 5;
+    //<editor-fold defaultstate="collapsed" desc="FXML VAR">
     @FXML
     private AnchorPane rootPane;
-
     @FXML
     private AnchorPane panelProcesar;
-
     @FXML
     private AnchorPane panelPreview;
-
+    @FXML
+    private AnchorPane panelEspera;
     @FXML
     private DatePicker dpFecha;
-
     @FXML
     private Button btPreview;
-
     @FXML
     private Button btGenerarPdf;
-
     @FXML
     private Button btVerPdf;
-
     @FXML
     private Button btAbrirCarpeta;
-
     @FXML
     private Button btProcesar;
-
     @FXML
     private TableView tvProcesar;
-
     @FXML
     private TableColumn clCodigo;
-
     @FXML
     private TableColumn clEstructura;
-
     @FXML
     private TableColumn clEstado;
-
     @FXML
     private TableView tvPreview;
-
     @FXML
     private TableColumn clExpediente;
-
     @FXML
     private TableColumn clSancionado;
-
     @FXML
     private TableColumn clNif;
-
     @FXML
     private TableColumn clLocalidad;
-
     @FXML
     private TableColumn clFecha;
-
     @FXML
     private TableColumn clMatricula;
-
     @FXML
     private TableColumn clCuantia;
-
     @FXML
     private TableColumn clArticulo;
-
     @FXML
     private TableColumn clPuntos;
-
     @FXML
     private TableColumn clReqObs;
-
     @FXML
     private ProgressIndicator piProgreso;
-
     @FXML
     private Label lbProceso;
-
     @FXML
     private Label lbProgreso;
-
     @FXML
     private Button btRefrescar;
+//</editor-fold>
 
     ObservableList<ModeloProcesar> procesarList;
     ObservableList<ModeloPreview> previewList;
+
+    @FXML
+    void abrirCarpeta(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null) {
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            try {
+                Desktop.getDesktop().browse(fichero.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @FXML
+    void cambioEnDatePicker(ActionEvent event) {
+        try {
+            Date fecha = Dates.asDate(dpFecha.getValue());
+
+            if (fecha != null) {
+                String query = "SELECT * FROM boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+                cargarDatosProcesar(SqlBoe.listaProcesar(query));
+            }
+        } catch (NullPointerException ex) {
+            //
+        }
+    }
+
+    @FXML
+    public void cargaMain(ActionEvent event) {
+        clearWindow();
+        myController.setScreen(Boes.screen1ID);
+    }
+
+    void cargarDatosPreview(List<Multa> list) {
+        previewList.clear();
+        ModeloPreview modelo;
+        Multa multa;
+        Iterator<Multa> it = list.iterator();
+
+        while (it.hasNext()) {
+            multa = it.next();
+
+            modelo = new ModeloPreview();
+            modelo.expediente.set(multa.getExpediente());
+            modelo.sancionado.set(multa.getSancionado());
+            modelo.nif.set(multa.getNif());
+            modelo.localidad.set(multa.getLocalidad());
+            modelo.fecha.set(Dates.imprimeFecha(multa.getFechaMulta()));
+            modelo.matricula.set(multa.getMatricula());
+            modelo.cuantia.set(multa.getCuantia());
+            modelo.articulo.set(multa.getArticulo());
+            modelo.puntos.set(multa.getPuntos());
+            modelo.reqObs.set(multa.getReqObs());
+
+            previewList.add(modelo);
+        }
+    }
+
+    void cargarDatosProcesar(List<Procesar> list) {
+        listaEstructurasCreadas = SqlBoe.listaEstructurasCreadas();
+        procesarList.clear();
+        ModeloProcesar modelo;
+        Procesar procesar;
+        Iterator<Procesar> it = list.iterator();
+
+        while (it.hasNext()) {
+            procesar = it.next();
+
+            modelo = new ModeloProcesar();
+            modelo.id.set(procesar.getId());
+            modelo.codigo.set(procesar.getCodigo());
+            modelo.estructura.set(procesar.getEstructura());
+            modelo.estado.set(procesar.getEstado().getValue());
+            modelo.link.set(procesar.getLink());
+            modelo.fecha.set(Dates.imprimeFecha(procesar.getFecha()));
+
+            procesarList.add(modelo);
+        }
+    }
+
+    private void clearWindow() {
+        dpFecha.setValue(null);
+        procesarList.clear();
+        previewList.clear();
+    }
+
+    @FXML
+    void generarPdf(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null) {
+            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            fichero.mkdirs();
+
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btGenerarPdf.setDisable(true);
+                    piProgreso.setVisible(true);
+                    piProgreso.setProgress(0);
+                    lbProgreso.setVisible(true);
+                    lbProgreso.setText("");
+                    lbProceso.setVisible(true);
+                    lbProceso.setText("GENERANDO PDFs");
+                });
+
+                File destino;
+                Procesar aux;
+                List list = SqlBoe.listaProcesar(query);
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbProgreso.setText("DESCARGANDO " + contadour + " de " + total);
+                        piProgreso.setProgress(counter / toutal);
+                    });
+                    aux = (Procesar) list.get(i);
+                    destino = new File(fichero, aux.getCodigo() + ".pdf");
+                    Download.descargaPDF(aux.getLink(), destino);
+                    aux.SQLSetEstado(1);
+                }
+
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(1);
+                    piProgreso.setVisible(false);
+                    lbProgreso.setText("");
+                    lbProgreso.setVisible(false);
+                    lbProceso.setText("");
+                    lbProceso.setVisible(false);
+                    btGenerarPdf.setDisable(false);
+
+                    cambioEnDatePicker(new ActionEvent());
+                });
+            });
+            a.start();
+        }
+    }
+
+    /**
+     * Generar PDF individual.
+     *
+     * @param event
+     */
+    @FXML
+    void generarPdfI(ActionEvent event) {
+        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null && pr != null) {
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            fichero.mkdirs();
+
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btGenerarPdf.setDisable(true);
+                    piProgreso.setVisible(true);
+                    piProgreso.setProgress(0);
+                    lbProgreso.setVisible(true);
+                    lbProgreso.setText("");
+                    lbProceso.setVisible(true);
+                    lbProceso.setText("GENERANDO PDFs");
+                });
+
+                File destino;
+                ModeloProcesar aux;
+                List list = new ArrayList();
+                list.add(pr);
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbProgreso.setText("DESCARGANDO " + contadour + " de " + total);
+                        piProgreso.setProgress(counter / toutal);
+                    });
+                    aux = (ModeloProcesar) list.get(i);
+                    destino = new File(fichero, aux.getCodigo() + ".pdf");
+                    Download.descargaPDF(aux.getLink(), destino);
+                }
+
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(1);
+                    piProgreso.setVisible(false);
+                    lbProgreso.setText("");
+                    lbProgreso.setVisible(false);
+                    lbProceso.setText("");
+                    lbProceso.setVisible(false);
+                    btGenerarPdf.setDisable(false);
+
+                    cambioEnDatePicker(new ActionEvent());
+                });
+            });
+            a.start();
+        }
+    }
+
+    private List<ModeloProcesar> getBoletinesProcesar() {
+        ModeloProcesar modelo;
+        List<ModeloProcesar> list = new ArrayList();
+        Iterator<ModeloProcesar> it = procesarList.iterator();
+
+        while (it.hasNext()) {
+            modelo = it.next();
+
+            if (modelo.getEstado() == 1 && listaEstructurasCreadas.contains(modelo.getEstructura())) {
+                list.add(modelo);
+            }
+        }
+        return list;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -157,6 +359,8 @@ public class ExtC implements Initializable, ControlledScreen {
         panelPreview.setVisible(false);
         panelProcesar.setOpacity(1.0);
         panelProcesar.setVisible(true);
+        panelEspera.setOpacity(0.0);
+        panelEspera.setVisible(false);
         iniciarTablaProcesar();
         iniciarTablaPreview();
 
@@ -167,82 +371,20 @@ public class ExtC implements Initializable, ControlledScreen {
         ls2.addListener(selectorTablaPreview);
     }
 
-    private void clearWindow() {
-        dpFecha.setValue(null);
-        procesarList.clear();
-        previewList.clear();
-    }
+    private void iniciarTablaPreview() {
+        clExpediente.setCellValueFactory(new PropertyValueFactory<>("expediente"));
+        clSancionado.setCellValueFactory(new PropertyValueFactory<>("sancionado"));
+        clNif.setCellValueFactory(new PropertyValueFactory<>("nif"));
+        clLocalidad.setCellValueFactory(new PropertyValueFactory<>("localidad"));
+        clFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        clMatricula.setCellValueFactory(new PropertyValueFactory<>("matricula"));
+        clCuantia.setCellValueFactory(new PropertyValueFactory<>("cuantia"));
+        clArticulo.setCellValueFactory(new PropertyValueFactory<>("articulo"));
+        clPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
+        clReqObs.setCellValueFactory(new PropertyValueFactory<>("reqObs"));
 
-    @Override
-    public void setScreenParent(ScreensController screenParent) {
-        myController = screenParent;
-    }
-
-    @FXML
-    public void cargaMain(ActionEvent event) {
-        clearWindow();
-        myController.setScreen(Boes.screen1ID);
-    }
-
-    private void mostrarPanel(int panel) {
-        FadeTransition fade;
-
-        switch (panel) {
-            case 1:
-                fade = new FadeTransition(Duration.millis(1000), panelProcesar);
-                fade.setFromValue(1.0);
-                fade.setToValue(0.0);
-                fade.setAutoReverse(false);
-                fade.play();
-                panelProcesar.setVisible(false);
-
-                panelPreview.setVisible(true);
-                fade = new FadeTransition(Duration.millis(1000), panelPreview);
-                fade.setFromValue(0.0);
-                fade.setToValue(1.0);
-                fade.setAutoReverse(false);
-                fade.play();
-
-                break;
-
-            case 2:
-                fade = new FadeTransition(Duration.millis(1000), panelPreview);
-                fade.setFromValue(1.0);
-                fade.setToValue(0.0);
-                fade.setAutoReverse(false);
-                fade.play();
-                panelPreview.setVisible(false);
-
-                panelProcesar.setVisible(true);
-                fade = new FadeTransition(Duration.millis(1000), panelProcesar);
-                fade.setFromValue(0.0);
-                fade.setToValue(1.0);
-                fade.setAutoReverse(false);
-                fade.play();
-
-                break;
-        }
-    }
-
-    void switchControles(boolean aux) {
-        dpFecha.setDisable(aux);
-        btGenerarPdf.setDisable(aux);
-        btVerPdf.setDisable(aux);
-        btAbrirCarpeta.setDisable(aux);
-        btProcesar.setDisable(aux);
-    }
-
-    void showPreview() {
-        isPreview = !isPreview;
-
-        if (isPreview) {
-            btPreview.setText("Volver");
-            mostrarPanel(this.PanelPreview);
-        } else {
-            btPreview.setText("Previsualizar Extracción");
-            mostrarPanel(this.PanelProcesar);
-        }
-        switchControles(isPreview);
+        previewList = FXCollections.observableArrayList();
+        tvPreview.setItems(previewList);
     }
 
     private void iniciarTablaProcesar() {
@@ -313,32 +455,32 @@ public class ExtC implements Initializable, ControlledScreen {
 
                         switch (item) {
                             case 0:
-                                setText("Sin procesar");
+                                setText(Estado.SIN_PROCESAR.toString());
                                 setTextFill(Color.BLACK);
                                 break;
 
                             case 1:
-                                setText("Listo para procesar");
+                                setText(Estado.LISTO_PROCESAR.toString());
                                 setTextFill(Color.ORCHID);
                                 break;
 
                             case 2:
-                                setText("Procesado XLSX");
+                                setText(Estado.PROCESADO_XLSX.toString());
                                 setTextFill(Color.GREEN);
                                 break;
 
                             case 3:
-                                setText("Error al procesar");
+                                setText(Estado.ERROR_PROCESAR.toString());
                                 setTextFill(Color.RED);
                                 break;
 
                             case 4:
-                                setText("PDF no generado");
+                                setText(Estado.PDF_NO_GENERADO.toString());
                                 setTextFill(Color.ORANGERED);
                                 break;
 
                             case 5:
-                                setText("XLSX no generado");
+                                setText(Estado.XLSX_NO_GENERADO.toString());
                                 setTextFill(Color.ORANGE);
                                 break;
                         }
@@ -351,251 +493,6 @@ public class ExtC implements Initializable, ControlledScreen {
         tvProcesar.setItems(procesarList);
     }
 
-    void cargarDatosProcesar(List<Procesar> list) {
-        listaEstructurasCreadas = SqlBoe.listaEstructurasCreadas();
-        procesarList.clear();
-        ModeloProcesar modelo;
-        Procesar procesar;
-        Iterator<Procesar> it = list.iterator();
-
-        while (it.hasNext()) {
-            procesar = it.next();
-
-            modelo = new ModeloProcesar();
-            modelo.id.set(procesar.getId());
-            modelo.codigo.set(procesar.getCodigo());
-            modelo.estructura.set(procesar.getEstructura());
-            modelo.estado.set(procesar.getEstado());
-            modelo.link.set(procesar.getLink());
-            modelo.fecha.set(Dates.imprimeFecha(procesar.getFecha()));
-
-            procesarList.add(modelo);
-        }
-    }
-
-    private void iniciarTablaPreview() {
-        clExpediente.setCellValueFactory(new PropertyValueFactory<>("expediente"));
-        clSancionado.setCellValueFactory(new PropertyValueFactory<>("sancionado"));
-        clNif.setCellValueFactory(new PropertyValueFactory<>("nif"));
-        clLocalidad.setCellValueFactory(new PropertyValueFactory<>("localidad"));
-        clFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        clMatricula.setCellValueFactory(new PropertyValueFactory<>("matricula"));
-        clCuantia.setCellValueFactory(new PropertyValueFactory<>("cuantia"));
-        clArticulo.setCellValueFactory(new PropertyValueFactory<>("articulo"));
-        clPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
-        clReqObs.setCellValueFactory(new PropertyValueFactory<>("reqObs"));
-
-        previewList = FXCollections.observableArrayList();
-        tvPreview.setItems(previewList);
-    }
-
-    void cargarDatosPreview(List<Multa> list) {
-        previewList.clear();
-        ModeloPreview modelo;
-        Multa multa;
-        Iterator<Multa> it = list.iterator();
-
-        while (it.hasNext()) {
-            multa = it.next();
-
-            modelo = new ModeloPreview();
-            modelo.expediente.set(multa.getExpediente());
-            modelo.sancionado.set(multa.getSancionado());
-            modelo.nif.set(multa.getNif());
-            modelo.localidad.set(multa.getLocalidad());
-            modelo.fecha.set(Dates.imprimeFecha(multa.getFechaMulta()));
-            modelo.matricula.set(multa.getMatricula());
-            modelo.cuantia.set(multa.getCuantia());
-            modelo.articulo.set(multa.getArticulo());
-            modelo.puntos.set(multa.getPuntos());
-            modelo.reqObs.set(multa.getReqObs());
-
-            previewList.add(modelo);
-        }
-    }
-
-    @FXML
-    void cambioEnDatePicker(ActionEvent event) {
-        try {
-            Date fecha = Dates.asDate(dpFecha.getValue());
-
-            if (fecha != null) {
-                String query = "SELECT * FROM boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
-                cargarDatosProcesar(SqlBoe.listaProcesar(query));
-            }
-        } catch (NullPointerException ex) {
-        }
-    }
-
-    @FXML
-    void generarPdf(ActionEvent event) {
-        Date fecha = Dates.asDate(dpFecha.getValue());
-
-        if (fecha != null) {
-            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
-            fichero.mkdirs();
-
-            Thread a = new Thread(() -> {
-
-                Platform.runLater(() -> {
-                    btGenerarPdf.setDisable(true);
-                    piProgreso.setVisible(true);
-                    piProgreso.setProgress(0);
-                    lbProgreso.setVisible(true);
-                    lbProgreso.setText("");
-                    lbProceso.setVisible(true);
-                    lbProceso.setText("GENERANDO PDFs");
-                });
-
-                File destino;
-                Procesar aux;
-                List list = SqlBoe.listaProcesar(query);
-
-                for (int i = 0; i < list.size(); i++) {
-                    final int contador = i;
-                    final int total = list.size();
-                    Platform.runLater(() -> {
-                        int contadour = contador + 1;
-                        double counter = contador + 1;
-                        double toutal = total;
-                        lbProgreso.setText("DESCARGANDO " + contadour + " de " + total);
-                        piProgreso.setProgress(counter / toutal);
-                    });
-                    aux = (Procesar) list.get(i);
-                    destino = new File(fichero, aux.getCodigo() + ".pdf");
-                    Download.descargaPDF(aux.getLink(), destino);
-                    aux.SQLSetEstado(1);
-                }
-
-                Platform.runLater(() -> {
-                    piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
-                    lbProgreso.setText("");
-                    lbProgreso.setVisible(false);
-                    lbProceso.setText("");
-                    lbProceso.setVisible(false);
-                    btGenerarPdf.setDisable(false);
-
-                    cambioEnDatePicker(new ActionEvent());
-                });
-            });
-            a.start();
-        }
-    }
-    
-    @FXML
-    void generarPdfI(ActionEvent event){
-        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
-        Date fecha = Dates.asDate(dpFecha.getValue());
-
-        if (fecha != null && pr!=null) {
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
-            fichero.mkdirs();
-
-            Thread a = new Thread(() -> {
-
-                Platform.runLater(() -> {
-                    btGenerarPdf.setDisable(true);
-                    piProgreso.setVisible(true);
-                    piProgreso.setProgress(0);
-                    lbProgreso.setVisible(true);
-                    lbProgreso.setText("");
-                    lbProceso.setVisible(true);
-                    lbProceso.setText("GENERANDO PDFs");
-                });
-
-                File destino;
-                ModeloProcesar aux;
-                List list = new ArrayList();
-                list.add(pr);
-
-                for (int i = 0; i < list.size(); i++) {
-                    final int contador = i;
-                    final int total = list.size();
-                    Platform.runLater(() -> {
-                        int contadour = contador + 1;
-                        double counter = contador + 1;
-                        double toutal = total;
-                        lbProgreso.setText("DESCARGANDO " + contadour + " de " + total);
-                        piProgreso.setProgress(counter / toutal);
-                    });
-                    aux = (ModeloProcesar) list.get(i);
-                    destino = new File(fichero, aux.getCodigo() + ".pdf");
-                    Download.descargaPDF(aux.getLink(), destino);
-                }
-
-                Platform.runLater(() -> {
-                    piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
-                    lbProgreso.setText("");
-                    lbProgreso.setVisible(false);
-                    lbProceso.setText("");
-                    lbProceso.setVisible(false);
-                    btGenerarPdf.setDisable(false);
-
-                    cambioEnDatePicker(new ActionEvent());
-                });
-            });
-            a.start();
-        }
-    }
-
-    @FXML
-    void verPdf(ActionEvent event) {
-        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
-
-        if (pr != null) {
-            try {
-                Desktop.getDesktop().browse(new URI(pr.link.get()));
-            } catch (IOException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    @FXML
-    void verXLSX(ActionEvent event){
-        Date fecha = Dates.asDate(dpFecha.getValue());
-        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
-        
-        if(pr!=null && fecha!=null){
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
-            File archivo = new File (fichero,pr.getCodigo()+".xlsx");
-            
-            try {
-                Desktop.getDesktop().browse(archivo.toURI());
-            } catch (IOException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-    }
-
-    @FXML
-    void abrirCarpeta(ActionEvent event) {
-        Date fecha = Dates.asDate(dpFecha.getValue());
-
-        if (fecha != null) {
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
-            try {
-                Desktop.getDesktop().browse(fichero.toURI());
-            } catch (IOException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    @FXML
-    void resetearEstado(ActionEvent event){
-        ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
-        Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
-        pr.SQLSetEstado(1);
-        cambioEnDatePicker(new ActionEvent());
-    }
-    
     @FXML
     void previsualizar(ActionEvent event) {
         Date fecha = Dates.asDate(dpFecha.getValue());
@@ -634,41 +531,137 @@ public class ExtC implements Initializable, ControlledScreen {
             }
         }
     }
-    
-    void preprocesar(){
+
+    @FXML
+    void resetearEstado(ActionEvent event) {
+        ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+        Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
+        pr.SQLSetEstado(1);
+        cambioEnDatePicker(new ActionEvent());
+    }
+
+    void showPreview() {
+        isPreview = !isPreview;
+
+        if (isPreview) {
+            btPreview.setText("Volver");
+            mostrarPanel(this.PanelPreview);
+        } else {
+            btPreview.setText("Previsualizar Extracción");
+            mostrarPanel(this.PanelProcesar);
+        }
+        switchControles(isPreview);
+    }
+
+    private void mostrarPanel(int panel) {
+        FadeTransition fade;
+
+        switch (panel) {
+            case procesar_to_preview:
+                fade = new FadeTransition(Duration.millis(1000), panelProcesar);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setAutoReverse(false);
+                fade.play();
+                panelProcesar.setVisible(false);
+
+                panelPreview.setVisible(true);
+                fade = new FadeTransition(Duration.millis(1000), panelPreview);
+                fade.setFromValue(0.0);
+                fade.setToValue(1.0);
+                fade.setAutoReverse(false);
+                fade.play();
+
+                break;
+
+            case preview_to_procesar:
+                fade = new FadeTransition(Duration.millis(1000), panelPreview);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setAutoReverse(false);
+                fade.play();
+                panelPreview.setVisible(false);
+
+                panelProcesar.setVisible(true);
+                fade = new FadeTransition(Duration.millis(1000), panelProcesar);
+                fade.setFromValue(0.0);
+                fade.setToValue(1.0);
+                fade.setAutoReverse(false);
+                fade.play();
+
+                break;
+            case procesar_to_wait:
+                fade = new FadeTransition(Duration.millis(1000), panelProcesar);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setAutoReverse(false);
+                fade.play();
+                panelProcesar.setVisible(false);
+
+                panelEspera.setVisible(true);
+                fade = new FadeTransition(Duration.millis(1000), panelEspera);
+                fade.setFromValue(0.0);
+                fade.setToValue(1.0);
+                fade.setAutoReverse(false);
+                fade.play();
+
+                break;
+
+            case wait_to_procesar:
+                fade = new FadeTransition(Duration.millis(1000), panelEspera);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setAutoReverse(false);
+                fade.play();
+                panelEspera.setVisible(false);
+
+                panelProcesar.setVisible(true);
+                fade = new FadeTransition(Duration.millis(1000), panelProcesar);
+                fade.setFromValue(0.0);
+                fade.setToValue(1.0);
+                fade.setAutoReverse(false);
+                fade.play();
+
+                break;
+
+            case wait_to_preview:
+                fade = new FadeTransition(Duration.millis(1000), panelEspera);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setAutoReverse(false);
+                fade.play();
+                panelEspera.setVisible(false);
+
+                panelPreview.setVisible(true);
+                fade = new FadeTransition(Duration.millis(1000), panelPreview);
+                fade.setFromValue(0.0);
+                fade.setToValue(1.0);
+                fade.setAutoReverse(false);
+                fade.play();
+
+                break;
+        }
+    }
+
+    void preprocesar() {
         ModeloProcesar modelo;
         Iterator<ModeloProcesar> it = procesarList.iterator();
-        
-        while(it.hasNext()){
-            modelo= it.next();
-            
-            if(modelo.getEstado()==1 && listaEstructurasCreadas.contains(modelo.getEstructura())){
+
+        while (it.hasNext()) {
+            modelo = it.next();
+
+            if (modelo.getEstado() == 1 && listaEstructurasCreadas.contains(modelo.getEstructura())) {
                 System.out.println(modelo.getCodigo());
             }
         }
     }
-    
-    private List<ModeloProcesar> getBoletinesProcesar(){
-        ModeloProcesar modelo;
-        List<ModeloProcesar> list = new ArrayList();
-        Iterator<ModeloProcesar> it = procesarList.iterator();
-        
-        while(it.hasNext()){
-            modelo= it.next();
-            
-            if(modelo.getEstado()==1 && listaEstructurasCreadas.contains(modelo.getEstructura())){
-                list.add(modelo);
-            }
-        }
-        return list;
-    }
-    
+
     @FXML
-    void procesar(ActionEvent event){
+    void procesar(ActionEvent event) {
         Date fecha = Dates.asDate(dpFecha.getValue());
         List<ModeloProcesar> list = getBoletinesProcesar();
-        
-        if (!list.isEmpty() && fecha!=null) {
+
+        if (!list.isEmpty() && fecha != null) {
             Thread a = new Thread(() -> {
 
                 Platform.runLater(() -> {
@@ -681,7 +674,6 @@ public class ExtC implements Initializable, ControlledScreen {
                     lbProceso.setText("PROCESANDO BOLETINES");
                 });
 
-                Sql bd;
                 Extraccion ex = new Extraccion(fecha);
                 List<Multa> procesado;
                 ModeloProcesar aux;
@@ -700,13 +692,13 @@ public class ExtC implements Initializable, ControlledScreen {
                     aux = (ModeloProcesar) list.get(i);
                     pr = SqlBoe.getProcesar(aux.getCodigo());
                     procesado = ex.previewXLSX(pr);
-                    
-                    if(procesado.contains(new Multa())){
+
+                    if (procesado.contains(new Multa())) {
                         pr.SQLSetEstado(3);
-                    }else{
+                    } else {
                         Platform.runLater(() -> {
-                        lbProgreso.setText("INSERTANDO MULTAS");
-                    });
+                            lbProgreso.setText("INSERTANDO MULTAS");
+                        });
                         XLSXProcess.insertMultas(procesado);
                         pr.SQLSetEstado(2);
                     }
@@ -725,6 +717,52 @@ public class ExtC implements Initializable, ControlledScreen {
                 });
             });
             a.start();
+        }
+    }
+
+    @Override
+    public void setScreenParent(ScreensController screenParent) {
+        myController = screenParent;
+    }
+
+    void switchControles(boolean aux) {
+        dpFecha.setDisable(aux);
+        btGenerarPdf.setDisable(aux);
+        btVerPdf.setDisable(aux);
+        btAbrirCarpeta.setDisable(aux);
+        btProcesar.setDisable(aux);
+    }
+
+    @FXML
+    void verPdf(ActionEvent event) {
+        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+
+        if (pr != null) {
+            try {
+                Desktop.getDesktop().browse(new URI(pr.link.get()));
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @FXML
+    void verXLSX(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFecha.getValue());
+        ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+
+        if (pr != null && fecha != null) {
+            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            File archivo = new File(fichero, pr.getCodigo() + ".xlsx");
+
+            try {
+                Desktop.getDesktop().browse(archivo.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 
