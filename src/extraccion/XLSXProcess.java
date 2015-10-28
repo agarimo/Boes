@@ -60,6 +60,7 @@ public class XLSXProcess {
     }
 
     public List<Multa> splitXLSX() {
+        List<String> header = SqlBoe.listaEstructurasHeader();
         List<Multa> multas = new ArrayList();
         String estructura = SqlBoe.getEstructura(pr.getEstructura());
         Multa multa;
@@ -73,9 +74,10 @@ public class XLSXProcess {
                 try {
                     multa = splitLinea(linea);
 
-                    if (!multa.getExpediente().equals("EXPEDIENTE")) {
+                    if(!header.contains(multa.getExpediente())){
                         multas.add(multa);
                     }
+                    
                 } catch (IndexOutOfBoundsException ex) {
                     multa = new Multa();
                     multas.add(multa);

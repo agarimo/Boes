@@ -44,18 +44,18 @@ public class SqlBoe {
         alert.showAndWait();
     }
     
-    public static boolean ejecutar(String query){
-        Sql bd;
-        try {
-            bd = new Sql(Variables.con);
-            bd.ejecutar(query);
-            bd.close();
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
+//    public static boolean ejecutar(String query){
+//        Sql bd;
+//        try {
+//            bd = new Sql(Variables.con);
+//            bd.ejecutar(query);
+//            bd.close();
+//            return true;
+//        } catch (SQLException ex) {
+//            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+//            return false;
+//        }
+//    }
 
     public static void eliminaBoletin(String codigo) {
         Sql bd;
@@ -901,6 +901,30 @@ public class SqlBoe {
 
     public static List listaEstructurasFechas() {
         String query = "SELECT * FROM " + Variables.nombreBD + ".strucfecha";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Variables.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("estructura");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List listaEstructurasHeader() {
+        String query = "SELECT * FROM " + Variables.nombreBD + ".strucheader";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;

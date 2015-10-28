@@ -30,8 +30,10 @@
                               <Button fx:id="btPreview" layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#previsualizar" prefHeight="30.0" prefWidth="150.0" text="Previsualizar Extracción" />
                               <Button fx:id="btVerPdf" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#verPdf" prefHeight="30.0" prefWidth="150.0" text="Ver PDF" />
                               <Button fx:id="btProcesar" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" onAction="#procesar" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
-                              <Separator layoutX="14.0" layoutY="340.0" prefHeight="30.0" prefWidth="150.0" />
+                              <Separator layoutX="14.0" layoutY="270.0" prefHeight="30.0" prefWidth="150.0" />
                               <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" onAction="#abrirCarpeta" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
+                              <Separator layoutX="14.0" layoutY="377.0" prefHeight="30.0" prefWidth="150.0" />
+                              <Button fx:id="btGenerarArchivos" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="435.0" prefWidth="443.0">
@@ -93,7 +95,7 @@
                                           </TableView>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane fx:id="panelEspera" prefHeight="200.0" prefWidth="200.0">
+                                    <AnchorPane fx:id="panelEspera" prefHeight="200.0" prefWidth="200.0" visible="false">
                                        <children>
                                           <ProgressIndicator fx:id="piProgreso" layoutX="14.0" layoutY="211.0" prefHeight="139.0" prefWidth="787.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
                                           <Label fx:id="lbProgreso" alignment="CENTER" layoutX="333.0" layoutY="380.0" prefHeight="46.0" prefWidth="150.0" text="PROGRESO" textAlignment="CENTER" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
