@@ -1,10 +1,12 @@
 package main;
 
+import extraccion.BB0;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.geometry.NodeOrientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -24,7 +26,6 @@ public class Boes extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Variables.inicializar();
 
         ScreensController mainContainer = new ScreensController();
         mainContainer.loadScreen(Boes.screen1ID, Boes.screen1File);
@@ -49,14 +50,32 @@ public class Boes extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+        Variables.inicializar();
+//        launch(args);
+        test();
+        System.exit(0);
+    }
+    
+    public static void test(){
+        BB0 bb = new BB0(getFecha());
+        
+        String[] aux;
+        Iterator<String[]> it = bb.getData().iterator();
+        
+        while(it.hasNext()){
+            aux=it.next();
+            System.out.println(bb.getLineaBB1(aux));
+        }
+        
+        
+        
     }
 
     public static Date getFecha() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
-        cal.set(Calendar.MONTH, Calendar.AUGUST);
-        cal.set(Calendar.DAY_OF_MONTH, 14);
+        cal.set(Calendar.MONTH, Calendar.OCTOBER);
+        cal.set(Calendar.DAY_OF_MONTH, 3);
         return cal.getTime();
     }
 }
