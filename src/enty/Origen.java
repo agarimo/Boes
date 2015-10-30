@@ -1,6 +1,6 @@
 package enty;
 
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -96,22 +96,22 @@ public class Origen {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".origen (idEntidad ,nombre) values("
+        return "INSERT into " + Var.nombreBD + ".origen (idEntidad ,nombre) values("
                 + this.idEntidad + ","
                 + Varios.entrecomillar(this.nombre)
                 + ");";
     }
     
     public String SQLBuscar(){
-        return "SELECT * FROM "+ Variables.nombreBD + ".origen WHERE nombre="+ Varios.entrecomillar(this.nombre)+" "
+        return "SELECT * FROM "+ Var.nombreBD + ".origen WHERE nombre="+ Varios.entrecomillar(this.nombre)+" "
                 + "and idEntidad="+this.idEntidad;
     }
 
     public String SQLBuscarNombre() {
-        return "SELECT * FROM " + Variables.nombreBD + ".origen WHERE nombre=" + util.Varios.entrecomillar(this.nombre);
+        return "SELECT * FROM " + Var.nombreBD + ".origen WHERE nombre=" + util.Varios.entrecomillar(this.nombre);
     }
 
     public String SQLBuscarCodigo() {
-        return "SELECT * FROM " + Variables.nombreBD + ".origen WHERE codigo=" + util.Varios.entrecomillar(this.codigo);
+        return "SELECT * FROM " + Var.nombreBD + ".origen WHERE codigo=" + util.Varios.entrecomillar(this.codigo);
     }
 }

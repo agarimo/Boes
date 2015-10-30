@@ -1,6 +1,6 @@
 package enty;
 
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -63,7 +63,7 @@ public class Descarga {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".descarga (codigo,link,datos) values("
+        return "INSERT into " + Var.nombreBD + ".descarga (codigo,link,datos) values("
                 + Varios.entrecomillar(this.codigo) + ","
                 + Varios.entrecomillar(this.link) + ","
                 + Varios.entrecomillar(this.datos)
@@ -71,12 +71,12 @@ public class Descarga {
     }
 
     public String SQLSetDatos() {
-        return "UPDATE " + Variables.nombreBD + ".descarga SET "
+        return "UPDATE " + Var.nombreBD + ".descarga SET "
                 + "datos=" + Varios.entrecomillar(this.datos) + " "
                 + "WHERE id=" + this.id;
     }
 
     public String SQLBuscar() {
-        return "SELECT * from " + Variables.nombreBD + ".descarga where codigo=" + Varios.entrecomillar(this.codigo);
+        return "SELECT * from " + Var.nombreBD + ".descarga where codigo=" + Varios.entrecomillar(this.codigo);
     }
 }

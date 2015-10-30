@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -31,8 +31,8 @@ public class Fases {
     }
 
     private List getBol() {
-        return SqlBoe.listaBoletin("SELECT * FROM " + Variables.nombreBD + ".boletin where idBoe in "
-                + "(SELECT id FROM " + Variables.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
+        return SqlBoe.listaBoletin("SELECT * FROM " + Var.nombreBD + ".boletin where idBoe in "
+                + "(SELECT id FROM " + Var.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
     }
 
     public List getBoletines() {
@@ -44,8 +44,8 @@ public class Fases {
         String str = null;
 
         try {
-            bd = new Sql(Variables.con);
-            str = bd.getString("SELECT datos FROM " + Variables.nombreBD + ".descarga where id=" + id);
+            bd = new Sql(Var.con);
+            str = bd.getString("SELECT datos FROM " + Var.nombreBD + ".descarga where id=" + id);
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +74,7 @@ public class Fases {
             }
 
             try {
-                bd = new Sql(Variables.con);
+                bd = new Sql(Var.con);
                 bd.ejecutar(aux.SQLEditar());
                 bd.close();
             } catch (SQLException ex) {
@@ -100,7 +100,7 @@ public class Fases {
         }
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLEditar());
             bd.close();
         } catch (SQLException ex) {
@@ -128,13 +128,13 @@ public class Fases {
         String str = "";
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             if (estructura == -1) {
                 str = "BCN1null";
             } else {
-                str = bd.getString("SELECT nombre FROM " + Variables.nombreBD + ".estructura where id=" + estructura);
+                str = bd.getString("SELECT nombre FROM " + Var.nombreBD + ".estructura where id=" + estructura);
             }
-            str = str + bd.getString("SELECT codigoUn FROM " + Variables.nombreBD + ".origen where id=" + idOrigen);
+            str = str + bd.getString("SELECT codigoUn FROM " + Var.nombreBD + ".origen where id=" + idOrigen);
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
@@ -149,7 +149,7 @@ public class Fases {
         Iterator it;
         Origen or = SqlBoe.getOrigen(id);
 
-        it = SqlBoe.listaFase("SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id).iterator();
+        it = SqlBoe.listaFase("SELECT * FROM " + Var.nombreBD + ".fase where idOrigen=" + id).iterator();
 
         while (it.hasNext()) {
             aux = (Fase) it.next();

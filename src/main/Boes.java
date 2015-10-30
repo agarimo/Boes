@@ -50,7 +50,7 @@ public class Boes extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Variables.inicializar();
+        Var.inicializar();
 //        launch(args);
         test();
         System.exit(0);
@@ -58,17 +58,7 @@ public class Boes extends Application {
     
     public static void test(){
         BB0 bb = new BB0(getFecha());
-        
-        String[] aux;
-        Iterator<String[]> it = bb.getData().iterator();
-        
-        while(it.hasNext()){
-            aux=it.next();
-            System.out.println(bb.getLineaBB1(aux));
-        }
-        
-        
-        
+        bb.run();
     }
 
     public static Date getFecha() {

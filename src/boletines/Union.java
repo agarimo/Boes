@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import model.ModeloBoletines;
 import model.ModeloUnion;
 import org.apache.commons.collections4.map.MultiValueMap;
@@ -33,11 +33,11 @@ public class Union {
         Iterator it;
 
         if (estructura == null) {
-            it = SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union "
+            it = SqlBoe.listaUnion("SELECT * FROM " + Var.nombreBD + ".vista_union "
                     + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
                     + "and isEstructura is null").iterator();
         } else {
-            it = SqlBoe.listaUnion("SELECT * FROM " + Variables.nombreBD + ".vista_union "
+            it = SqlBoe.listaUnion("SELECT * FROM " + Var.nombreBD + ".vista_union "
                     + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
                     + "and isEstructura=" + Varios.entrecomillar(estructura)).iterator();
         }

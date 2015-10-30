@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Variables;
+import main.Var;
 import util.Dates;
 import util.Varios;
 
@@ -173,7 +173,7 @@ public class Boe {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".boe (fecha,link,isClas) values("
+        return "INSERT into " + Var.nombreBD + ".boe (fecha,link,isClas) values("
                 + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ","
                 + Varios.entrecomillar(this.link) + ","
                 + this.isClas
@@ -181,11 +181,11 @@ public class Boe {
     }
 
     public String SQLBuscar() {
-        return "SELECT * FROM " + Variables.nombreBD + ".boe WHERE fecha=" + util.Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
+        return "SELECT * FROM " + Var.nombreBD + ".boe WHERE fecha=" + util.Varios.entrecomillar(Dates.imprimeFecha(this.fecha));
     }
     
     public String SQLSetClas(){
-        return "UPDATE "+Variables.nombreBD + ".boe SET isClas=1 where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        return "UPDATE "+Var.nombreBD + ".boe SET isClas=1 where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha));
     }
 
 }

@@ -1,6 +1,6 @@
 package enty;
 
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -122,7 +122,7 @@ public class Boletin {
     }
     
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,isFase,isEstructura,idioma) values("
+        return "INSERT into " + Var.nombreBD + ".boletin (idOrigen,idBoe,idDescarga,codigo,tipo,fase,isFase,isEstructura,idioma) values("
                 + this.idOrigen + ","
                 + this.idBoe + ","
                 + this.idDescarga + ","
@@ -136,7 +136,7 @@ public class Boletin {
     }
     
     public String SQLEditar(){
-        return "UPDATE " + Variables.nombreBD + ".boletin SET "
+        return "UPDATE " + Var.nombreBD + ".boletin SET "
                 + "tipo=" + Varios.entrecomillar(this.tipo) + ","
                 + "fase=" + Varios.entrecomillar(this.fase) + ","
                 + "isFase=" + this.isFase + ","
@@ -146,6 +146,6 @@ public class Boletin {
     }
     
     public String SQLBuscar(){
-        return "SELECT * from "+Variables.nombreBD+".boletin where codigo="+Varios.entrecomillar(this.codigo);
+        return "SELECT * from "+Var.nombreBD+".boletin where codigo="+Varios.entrecomillar(this.codigo);
     }
 }

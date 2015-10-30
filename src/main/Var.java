@@ -9,7 +9,7 @@ import util.Conexion;
  *
  * @author Agarimo
  */
-public class Variables {
+public class Var {
 
     public static Conexion con;
     public static String nombreBD = "boes";
@@ -47,7 +47,7 @@ public class Variables {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Variables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Var.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

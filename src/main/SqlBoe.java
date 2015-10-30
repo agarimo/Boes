@@ -60,7 +60,7 @@ public class SqlBoe {
     public static void eliminaBoletin(String codigo) {
         Sql bd;
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar("DELETE FROM boes.boletin where codigo=" + Varios.entrecomillar(codigo));
             bd.ejecutarQueryRs("UPDATE stats.boletines_publicados SET tipo=0 where codigo=" + Varios.entrecomillar(codigo));
             bd.close();
@@ -73,10 +73,10 @@ public class SqlBoe {
         Sql bd;
         ResultSet rs;
         Boe aux = null;
-        String query = "SELECT * from " + Variables.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        String query = "SELECT * from " + Var.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             if (rs.next()) {
@@ -95,10 +95,10 @@ public class SqlBoe {
         Sql bd;
         ResultSet rs;
         Origen aux = null;
-        String query = "SELECT * from " + Variables.nombreBD + ".origen where id=" + id;
+        String query = "SELECT * from " + Var.nombreBD + ".origen where id=" + id;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             if (rs.next()) {
@@ -120,7 +120,7 @@ public class SqlBoe {
         Boletin aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -143,7 +143,7 @@ public class SqlBoe {
         Estructura aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -164,7 +164,7 @@ public class SqlBoe {
         String aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs("SELECT estructura FROM boes.estructura where id="+id);
 
             while (rs.next()) {
@@ -186,7 +186,7 @@ public class SqlBoe {
         String query = "SELECT * FROM boes.vista_boletines where codigo=" + Varios.entrecomillar(codigo);
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -219,7 +219,7 @@ public class SqlBoe {
         ModeloUnion aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -247,7 +247,7 @@ public class SqlBoe {
         VistaExtraccion aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -269,7 +269,7 @@ public class SqlBoe {
         StrucData aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -310,7 +310,7 @@ public class SqlBoe {
         Procesar aux = null;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -340,7 +340,7 @@ public class SqlBoe {
         Boe aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -364,7 +364,7 @@ public class SqlBoe {
         Boletin aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -390,7 +390,7 @@ public class SqlBoe {
         Descarga aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -413,7 +413,7 @@ public class SqlBoe {
         Descarga aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -436,7 +436,7 @@ public class SqlBoe {
         ModeloBoletines aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -464,14 +464,14 @@ public class SqlBoe {
     }
 
     public static List listaOrigenDescartado() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".origen_descartado";
+        String query = "SELECT * FROM " + Var.nombreBD + ".origen_descartado";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         String aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -488,14 +488,14 @@ public class SqlBoe {
     }
 
     public static List listaTextoDescartado() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".texto_descartado";
+        String query = "SELECT * FROM " + Var.nombreBD + ".texto_descartado";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         String aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -512,14 +512,14 @@ public class SqlBoe {
     }
 
     public static List<ModeloComboBox> listaModeloComboBoxEntidades() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".entidad order by nombre";
+        String query = "SELECT * FROM " + Var.nombreBD + ".entidad order by nombre";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         ModeloComboBox aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -544,7 +544,7 @@ public class SqlBoe {
         Origen aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -562,14 +562,14 @@ public class SqlBoe {
     }
 
     public static List<ModeloComboBox> listaModeloComboBoxOrigenes(int id) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".origen where idEntidad=" + id + " order by nombre";
+        String query = "SELECT * FROM " + Var.nombreBD + ".origen where idEntidad=" + id + " order by nombre";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         ModeloComboBox aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -588,14 +588,14 @@ public class SqlBoe {
     }
 
     public static List<ModeloComboBox> listaModeloComboBoxTipo() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".tipo where tipo=0";
+        String query = "SELECT * FROM " + Var.nombreBD + ".tipo where tipo=0";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         ModeloComboBox aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -614,14 +614,14 @@ public class SqlBoe {
     }
 
     public static List<ModeloCabeceras> listaModeloCabeceras(int id) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".cabeceras where idOrigen=" + id;
+        String query = "SELECT * FROM " + Var.nombreBD + ".cabeceras where idOrigen=" + id;
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         ModeloCabeceras aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -642,14 +642,14 @@ public class SqlBoe {
     }
 
     public static List<ModeloFases> listaModeloFases(int id) {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".fase where idOrigen=" + id;
+        String query = "SELECT * FROM " + Var.nombreBD + ".fase where idOrigen=" + id;
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         ModeloFases aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -680,7 +680,7 @@ public class SqlBoe {
         Fase aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -711,7 +711,7 @@ public class SqlBoe {
         Fase aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -743,7 +743,7 @@ public class SqlBoe {
         Cabecera aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -766,7 +766,7 @@ public class SqlBoe {
         Estructura aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -789,7 +789,7 @@ public class SqlBoe {
         ModeloUnion aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -821,7 +821,7 @@ public class SqlBoe {
         String aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -848,7 +848,7 @@ public class SqlBoe {
         Procesar aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -877,7 +877,7 @@ public class SqlBoe {
         Procesar aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -900,14 +900,14 @@ public class SqlBoe {
     }
 
     public static List listaEstructurasFechas() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".strucfecha";
+        String query = "SELECT * FROM " + Var.nombreBD + ".strucfecha";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         String aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -924,14 +924,14 @@ public class SqlBoe {
     }
     
     public static List listaEstructurasHeader() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".strucheader";
+        String query = "SELECT * FROM " + Var.nombreBD + ".strucheader";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
         String aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -954,7 +954,7 @@ public class SqlBoe {
         Multa aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -991,14 +991,14 @@ public class SqlBoe {
     }
 
     public static List<Integer> listaEstructurasCreadas() {
-        String query = "SELECT * FROM " + Variables.nombreBD + ".strucdata";
+        String query = "SELECT * FROM " + Var.nombreBD + ".strucdata";
         List<Integer> list = new ArrayList();
         Sql bd;
         ResultSet rs;
         int aux;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Variables;
+import main.Var;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -115,7 +115,7 @@ public class Procesar {
 
     private Estado checkEstado() {
         Estado a = Estado.LISTO_PROCESAR;
-        File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+        File fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
         File fileXLSX = new File(fichero, codigo + ".xlsx");
         File filePDF = new File(fichero, codigo + ".pdf");
 
@@ -131,7 +131,7 @@ public class Procesar {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".procesar (id,fecha,codigo,link,estructura,estado) values("
+        return "INSERT into " + Var.nombreBD + ".procesar (id,fecha,codigo,link,estructura,estado) values("
                 + this.id + ","
                 + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ","
                 + Varios.entrecomillar(this.codigo) + ","
@@ -142,12 +142,12 @@ public class Procesar {
     }
 
     public void SQLSetEstado(int estado) {
-        String query = "UPDATE " + Variables.nombreBD + ".procesar SET "
+        String query = "UPDATE " + Var.nombreBD + ".procesar SET "
                 + "estado=" + estado + " "
                 + "WHERE id=" + this.id;
 
         try {
-            Sql bd = new Sql(Variables.con);
+            Sql bd = new Sql(Var.con);
             bd.ejecutar(query);
             bd.close();
         } catch (SQLException ex) {

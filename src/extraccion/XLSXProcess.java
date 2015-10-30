@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import util.CalculaNif;
@@ -96,7 +96,7 @@ public class XLSXProcess {
         Iterator<Multa> it = multas.iterator();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 multa = it.next();

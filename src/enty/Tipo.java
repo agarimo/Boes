@@ -1,6 +1,6 @@
 package enty;
 
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -43,23 +43,23 @@ public class Tipo {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".tipo (id, nombre) values("
+        return "INSERT into " + Var.nombreBD + ".tipo (id, nombre) values("
                 + Varios.entrecomillar(this.id) + ","
                 + Varios.entrecomillar(this.nombre)
                 + ")";
     }
 
     public String SQLEditar() {
-        return "UPDATE " + Variables.nombreBD + ".tipo SET "
+        return "UPDATE " + Var.nombreBD + ".tipo SET "
                 + "nombre=" + Varios.entrecomillar(this.nombre)
                 + "WHERE id=" + Varios.entrecomillar(this.id);
     }
 
     public String SQLBorrar() {
-        return "DELETE FROM " + Variables.nombreBD + ".tipo WHERE id=" + Varios.entrecomillar(this.id);
+        return "DELETE FROM " + Var.nombreBD + ".tipo WHERE id=" + Varios.entrecomillar(this.id);
     }
 
     public String SQLBuscar() {
-        return "SELECT * FROM " + Variables.nombreBD + ".tipo WHERE id=" + Varios.entrecomillar(this.id);
+        return "SELECT * FROM " + Var.nombreBD + ".tipo WHERE id=" + Varios.entrecomillar(this.id);
     }
 }

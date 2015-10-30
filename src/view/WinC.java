@@ -67,7 +67,7 @@ import main.Boes;
 import main.ControlledScreen;
 import main.ScreensController;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import model.ModeloBoes;
 import model.ModeloBoletines;
 import model.ModeloCabeceras;
@@ -370,7 +370,7 @@ public class WinC implements Initializable, ControlledScreen {
 
         aux = new Boe(Dates.asDate(dpFecha.getValue()), tfLink.getText());
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLCrear());
             bd.close();
         } catch (SQLException ex) {
@@ -644,7 +644,7 @@ public class WinC implements Initializable, ControlledScreen {
             try {
                 Date aux = Dates.asDate(dpFechaC.getValue());
                 cargarBoes(SqlBoe.getBoe(aux));
-                Variables.isClasificando = true;
+                Var.isClasificando = true;
             } catch (Exception ex) {
                 //
             }
@@ -668,7 +668,7 @@ public class WinC implements Initializable, ControlledScreen {
         Iterator it = publicacion.iterator();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
         } catch (SQLException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -743,7 +743,7 @@ public class WinC implements Initializable, ControlledScreen {
         boolean is = false;
 
         try {
-            a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
+            a = bd.buscar("SELECT * FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
             if (a > 0) {
                 is = true;
             }
@@ -849,8 +849,8 @@ public class WinC implements Initializable, ControlledScreen {
 
             if (result.get() == ButtonType.OK) {
                 try {
-                    bdd = new Sql(Variables.con);
-                    bdd.ejecutar("INSERT into " + Variables.nombreBD + ".origen_descartado (nombre) values("
+                    bdd = new Sql(Var.con);
+                    bdd.ejecutar("INSERT into " + Var.nombreBD + ".origen_descartado (nombre) values("
                             + Varios.entrecomillar(aux.getOrigen())
                             + ");");
                     bdd.close();
@@ -895,7 +895,7 @@ public class WinC implements Initializable, ControlledScreen {
     void finalizaClas() {
 
         if (publicacion.isEmpty()) {
-            Variables.isClasificando = false;
+            Var.isClasificando = false;
             insercion();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -906,7 +906,7 @@ public class WinC implements Initializable, ControlledScreen {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == ButtonType.OK) {
-                Variables.isClasificando = false;
+                Var.isClasificando = false;
                 insercion();
             }
         }
@@ -1183,7 +1183,7 @@ public class WinC implements Initializable, ControlledScreen {
     void cargaDatosTablaBoletines(Date fecha) {
         boletinesIdioma.clear();
         ModeloBoletines aux;
-        String query = "SELECT * FROM " + Variables.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        String query = "SELECT * FROM " + Var.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
         Iterator it = SqlBoe.listaModeloBoletines(query).iterator();
 
         while (it.hasNext()) {
@@ -1208,7 +1208,7 @@ public class WinC implements Initializable, ControlledScreen {
         Iterator it;
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar("DELETE FROM boes.procesar where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha)));
 
             it = SqlBoe.listaProcesarPendiente(fecha).iterator();
@@ -1463,7 +1463,7 @@ public class WinC implements Initializable, ControlledScreen {
     void generarArchivosUnion(ActionEvent event) {
         Date fecha = Dates.asDate(dpFechaB.getValue());
 
-        File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
+        File dir = new File(Var.ficheroUnion, Dates.imprimeFecha(fecha));
         Files.borraDirectorio(dir);
         dir.mkdirs();
 
@@ -1560,9 +1560,9 @@ public class WinC implements Initializable, ControlledScreen {
         datos = datos.replace("'", "\\'");
 
         try {
-            bdd = new Sql(Variables.con);
-            bdd.ejecutar("UPDATE " + Variables.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + id);
-            bdd.ejecutar("UPDATE " + Variables.nombreBD + ".boletin SET idioma=" + 0 + " where codigo=" + Varios.entrecomillar(codigo));
+            bdd = new Sql(Var.con);
+            bdd.ejecutar("UPDATE " + Var.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + id);
+            bdd.ejecutar("UPDATE " + Var.nombreBD + ".boletin SET idioma=" + 0 + " where codigo=" + Varios.entrecomillar(codigo));
             bdd.close();
         } catch (SQLException ex) {
             Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
@@ -1627,7 +1627,7 @@ public class WinC implements Initializable, ControlledScreen {
 
         if (aux != null) {
             try {
-                bdd = new Sql(Variables.con);
+                bdd = new Sql(Var.con);
                 datos = bdd.getString("SELECT datos FROM boes.descarga WHERE id=" + aux.getIdDescarga());
                 bdd.close();
             } catch (SQLException ex) {
@@ -1774,7 +1774,7 @@ public class WinC implements Initializable, ControlledScreen {
         Fase aux = getDatosFase();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLEditar());
             bd.close();
         } catch (SQLException ex) {
@@ -1795,7 +1795,7 @@ public class WinC implements Initializable, ControlledScreen {
         Fase aux = getDatosFase();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLBorrar());
             bd.close();
         } catch (SQLException ex) {
@@ -1816,7 +1816,7 @@ public class WinC implements Initializable, ControlledScreen {
         Fase aux = getDatosFase();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLCrear());
             bd.close();
         } catch (SQLException ex) {
@@ -2094,7 +2094,7 @@ public class WinC implements Initializable, ControlledScreen {
         Cabecera aux = getDatosCabecera();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLEditar());
             bd.close();
         } catch (SQLException ex) {
@@ -2115,7 +2115,7 @@ public class WinC implements Initializable, ControlledScreen {
         Cabecera aux = getDatosCabecera();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLBorrar());
             bd.close();
         } catch (SQLException ex) {
@@ -2136,7 +2136,7 @@ public class WinC implements Initializable, ControlledScreen {
         Cabecera aux = getDatosCabecera();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLCrear());
             bd.close();
         } catch (SQLException ex) {

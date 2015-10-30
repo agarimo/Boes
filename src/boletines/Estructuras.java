@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import util.Dates;
 import util.Sql;
 import util.Varios;
@@ -38,8 +38,8 @@ public class Estructuras {
     }
 
     private List getBol() {
-        return SqlBoe.listaBoletin("SELECT * FROM " + Variables.nombreBD + ".boletin where idBoe in "
-                + "(SELECT id FROM " + Variables.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
+        return SqlBoe.listaBoletin("SELECT * FROM " + Var.nombreBD + ".boletin where idBoe in "
+                + "(SELECT id FROM " + Var.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
     }
 
     private List getEstructuras() {
@@ -63,7 +63,7 @@ public class Estructuras {
         }
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             bd.ejecutar(aux.SQLEditar());
             bd.close();
         } catch (SQLException ex) {
@@ -92,8 +92,8 @@ public class Estructuras {
         String str = null;
 
         try {
-            bd = new Sql(Variables.con);
-            str = bd.getString("SELECT datos FROM " + Variables.nombreBD + ".descarga where id=" + id);
+            bd = new Sql(Var.con);
+            str = bd.getString("SELECT datos FROM " + Var.nombreBD + ".descarga where id=" + id);
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Fases.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,7 +119,7 @@ public class Estructuras {
         }
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             it = des.iterator();
 
             while (it.hasNext()) {

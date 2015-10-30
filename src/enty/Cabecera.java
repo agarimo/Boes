@@ -1,6 +1,6 @@
 package enty;
 
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -62,7 +62,7 @@ public class Cabecera {
     }
     
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".cabeceras (idOrigen, cabecera, tipo) values("
+        return "INSERT into " + Var.nombreBD + ".cabeceras (idOrigen, cabecera, tipo) values("
                 + this.idOrigen + ","
                 + Varios.entrecomillar(this.cabecera) + ","
                 + this.tipo
@@ -70,13 +70,13 @@ public class Cabecera {
     }
 
     public String SQLEditar() {
-        return "UPDATE " + Variables.nombreBD + ".cabeceras SET "
+        return "UPDATE " + Var.nombreBD + ".cabeceras SET "
                 + "cabecera=" + Varios.entrecomillar(this.cabecera) + ","
                 + "tipo=" + this.tipo +" "
                 + "WHERE id=" + this.id;
     }
 
     public String SQLBorrar() {
-        return "DELETE FROM " + Variables.nombreBD + ".cabeceras WHERE id=" + this.id + ";";
+        return "DELETE FROM " + Var.nombreBD + ".cabeceras WHERE id=" + this.id + ";";
     }
 }

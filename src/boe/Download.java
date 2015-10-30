@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import util.Files;
 import util.Sql;
 
@@ -45,8 +45,8 @@ public class Download extends Thread {
     @Override
     public void run() {
         cargaList();
-        if (!Variables.isDownloading) {
-            Variables.isDownloading = true;
+        if (!Var.isDownloading) {
+            Var.isDownloading = true;
 
             if (!list.isEmpty()) {
                 try {
@@ -56,7 +56,7 @@ public class Download extends Thread {
                 }
             }
 
-            Variables.isDownloading = false;
+            Var.isDownloading = false;
         }
     }
 
@@ -69,7 +69,7 @@ public class Download extends Thread {
             Sql bd;
             String datos;
 
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             descargaPDF(aux.getLink());
             convertirPDF();
             datos = Files.leeArchivo(new File("temp.txt"));
@@ -92,7 +92,7 @@ public class Download extends Thread {
         String datos;
         Iterator it = list.iterator();
 
-        bd = new Sql(Variables.con);
+        bd = new Sql(Var.con);
 
         while (it.hasNext()) {
             aux = (Descarga) it.next();

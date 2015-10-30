@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,7 +33,7 @@ public class Extraccion {
     public Extraccion(Date fecha) {
         this.fecha = fecha;
         this.lista = cargaBoletines();
-        this.fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+        this.fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
     }
 
     public boolean fileExist(String codigo) {
@@ -47,7 +47,7 @@ public class Extraccion {
     }
 
     private List<Procesar> cargaBoletines() {
-        return SqlBoe.listaProcesar("SELECT * FROM " + Variables.nombreBD + ".procesar "
+        return SqlBoe.listaProcesar("SELECT * FROM " + Var.nombreBD + ".procesar "
                 + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
                 + "and estado=1");
     }

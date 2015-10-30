@@ -44,7 +44,7 @@ import main.Boes;
 import main.ControlledScreen;
 import main.ScreensController;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import model.ModeloPreview;
 import model.ModeloProcesar;
 import util.Dates;
@@ -136,7 +136,7 @@ public class ExtC implements Initializable, ControlledScreen {
         Date fecha = Dates.asDate(dpFecha.getValue());
 
         if (fecha != null) {
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            File fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
             try {
                 Desktop.getDesktop().browse(fichero.toURI());
             } catch (IOException ex) {
@@ -228,8 +228,8 @@ public class ExtC implements Initializable, ControlledScreen {
         Date fecha = Dates.asDate(dpFecha.getValue());
 
         if (fecha != null) {
-            String query = "SELECT * FROM " + Variables.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            String query = "SELECT * FROM " + Var.nombreBD + ".procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+            File fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
             fichero.mkdirs();
 
             Thread a = new Thread(() -> {
@@ -291,7 +291,7 @@ public class ExtC implements Initializable, ControlledScreen {
         Date fecha = Dates.asDate(dpFecha.getValue());
 
         if (fecha != null && pr != null) {
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            File fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
             fichero.mkdirs();
 
             Thread a = new Thread(() -> {
@@ -786,7 +786,7 @@ public class ExtC implements Initializable, ControlledScreen {
         ModeloProcesar pr = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
 
         if (pr != null && fecha != null) {
-            File fichero = new File(Variables.ficheroEx, Dates.imprimeFecha(fecha));
+            File fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
             File archivo = new File(fichero, pr.getCodigo() + ".xlsx");
 
             try {

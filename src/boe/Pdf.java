@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Variables;
+import main.Var;
 import util.Dates;
 import util.Files;
 
@@ -60,9 +60,9 @@ public class Pdf {
     }
 
     private void checkFicheros() {
-        ficheroPDF = new File(Variables.ficheroPdf, Dates.imprimeFecha(fecha));
+        ficheroPDF = new File(Var.ficheroPdf, Dates.imprimeFecha(fecha));
         ficheroPDF.mkdirs();
-        ficheroTXT = new File(Variables.ficheroTxt, Dates.imprimeFecha(fecha));
+        ficheroTXT = new File(Var.ficheroTxt, Dates.imprimeFecha(fecha));
         ficheroTXT.mkdirs();
     }
 

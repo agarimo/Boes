@@ -1,6 +1,6 @@
 package enty;
 
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -52,7 +52,7 @@ public class Entidad {
     }
     
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".entidad (nombre,codigo) values("
+        return "INSERT into " + Var.nombreBD + ".entidad (nombre,codigo) values("
                 + Varios.entrecomillar(this.nombre) + ","
                 + Varios.entrecomillar(this.codigo)
                 + ");";
@@ -64,7 +64,7 @@ public class Entidad {
     }
     
     public String SQLBuscar(){
-        return "SELECT * from "+Variables.nombreBD+".entidad where nombre="+Varios.entrecomillar(this.nombre);
+        return "SELECT * from "+Var.nombreBD+".entidad where nombre="+Varios.entrecomillar(this.nombre);
     }
     
     

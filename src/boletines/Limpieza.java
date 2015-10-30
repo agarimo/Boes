@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import view.WinC;
 import util.Files;
 import util.Sql;
@@ -29,7 +29,7 @@ public class Limpieza {
     String datos;
 
     public Limpieza(String codigo) {
-        boletin = SqlBoe.getBoletin("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(codigo));
+        boletin = SqlBoe.getBoletin("SELECT * FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(codigo));
         if (boletin != null) {
             cargarDatos();
         }
@@ -43,8 +43,8 @@ public class Limpieza {
     private void cargarDatos() {
         Sql bd;
         try {
-            bd = new Sql(Variables.con);
-            datos = bd.getString("SELECT datos FROM " + Variables.nombreBD + ".descarga where id=" + boletin.getIdDescarga());
+            bd = new Sql(Var.con);
+            datos = bd.getString("SELECT datos FROM " + Var.nombreBD + ".descarga where id=" + boletin.getIdDescarga());
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Limpieza.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,8 +72,8 @@ public class Limpieza {
         datos = datos.replace("'", "\\'");
 
         try {
-            bd = new Sql(Variables.con);
-            bd.ejecutar("UPDATE " + Variables.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + boletin.getIdDescarga());
+            bd = new Sql(Var.con);
+            bd.ejecutar("UPDATE " + Var.nombreBD + ".descarga SET datos=" + Varios.entrecomillar(datos) + " where id=" + boletin.getIdDescarga());
             bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Limpieza.class.getName()).log(Level.SEVERE, null, ex);

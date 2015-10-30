@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.SqlBoe;
-import main.Variables;
+import main.Var;
 import model.ModeloBoletines;
 import util.Dates;
 import util.Files;
@@ -34,7 +34,7 @@ public class Archivos {
 
     public Archivos(Date fecha) {
         this.fecha = fecha;
-        this.archivoFecha = new File(Variables.ficheroBoe, Dates.imprimeFecha(this.fecha));
+        this.archivoFecha = new File(Var.ficheroBoe, Dates.imprimeFecha(this.fecha));
         Files.borraDirectorio(archivoFecha);
         archivoFecha.mkdir();
         this.boletines = new ArrayList();
@@ -114,7 +114,7 @@ public class Archivos {
      * Crea archivos unidos
      */
     private void caUn(List bol, Date fecha, String struc, String codigoUn) {
-        File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
+        File dir = new File(Var.ficheroUnion, Dates.imprimeFecha(fecha));
 
         File file;
         StringBuilder buffer = new StringBuilder();
@@ -174,7 +174,7 @@ public class Archivos {
      * Crea archivos individuales
      */
     private void caIn(List bol, Date fecha) {
-        File dir = new File(Variables.ficheroUnion, Dates.imprimeFecha(fecha));
+        File dir = new File(Var.ficheroUnion, Dates.imprimeFecha(fecha));
         File file;
         StringBuilder buffer;
         ModeloBoletines aux;
@@ -222,7 +222,7 @@ public class Archivos {
         String aux = "";
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             aux = bd.getString("SELECT fase FROM boes.boletin where codigo=" + Varios.entrecomillar(codigo));
             bd.close();
         } catch (SQLException ex) {
@@ -237,7 +237,7 @@ public class Archivos {
         String aux = "";
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             aux = bd.getString("SELECT codigoAy FROM boes.origen where nombre=" + Varios.entrecomillar(nombre));
             bd.close();
         } catch (SQLException ex) {
@@ -252,8 +252,8 @@ public class Archivos {
         String aux;
 
         try {
-            bd = new Sql(Variables.con);
-            aux = bd.getString("SELECT datos from " + Variables.nombreBD + ".descarga where id=" + id);
+            bd = new Sql(Var.con);
+            aux = bd.getString("SELECT datos from " + Var.nombreBD + ".descarga where id=" + id);
             bd.close();
         } catch (SQLException ex) {
             aux = "ERROR AL GENERAR EL ARCHIVO ----- " + ex.getMessage();
@@ -426,7 +426,7 @@ public class Archivos {
         String aux = "";
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
             aux = bd.getString("SELECT codigo FROM boes.entidad where nombre=" + Varios.entrecomillar(entidad));
             bd.close();
         } catch (SQLException ex) {

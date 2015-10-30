@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Variables;
+import main.Var;
 import model.ModeloBoes;
 import util.Sql;
 import util.Varios;
@@ -36,7 +36,7 @@ public class Insercion {
         Iterator it = list.iterator();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
@@ -58,7 +58,7 @@ public class Insercion {
         Iterator it = list.iterator();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
@@ -77,7 +77,7 @@ public class Insercion {
     private boolean checkSelected(ModeloBoes aux) throws SQLException {
         boolean is = false;
 
-        int a = bd.buscar("SELECT * FROM " + Variables.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux.getCodigo()));
+        int a = bd.buscar("SELECT * FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux.getCodigo()));
 
         if (a > 0) {
             is = true;
@@ -103,7 +103,7 @@ public class Insercion {
         Boletin bl = new Boletin();
 
         try {
-            bd = new Sql(Variables.con);
+            bd = new Sql(Var.con);
 
             bl.setIdOrigen(getIdOrigen(aux.getEntidad(), aux.getOrigen()));
             bl.setIdBoe(getIdBoe(aux.getFecha()));
@@ -160,7 +160,7 @@ public class Insercion {
     }
 
     private int getIdioma(int idOrigen) throws SQLException {
-        return bd.getInt("SELECT idioma FROM " + Variables.nombreBD + ".origen where id=" + idOrigen);
+        return bd.getInt("SELECT idioma FROM " + Var.nombreBD + ".origen where id=" + idOrigen);
     }
 
     private int getIdDescarga(String codigo,String link) throws SQLException {
@@ -191,7 +191,7 @@ public class Insercion {
         Iterator it = lista.iterator();
 
         try {
-            Sql bdd = new Sql(Variables.con);
+            Sql bdd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
@@ -218,7 +218,7 @@ public class Insercion {
         Iterator it = lista.iterator();
 
         try {
-            Sql bdd = new Sql(Variables.con);
+            Sql bdd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();

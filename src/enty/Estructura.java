@@ -1,7 +1,7 @@
 package enty;
 
 import java.util.Objects;
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -78,29 +78,29 @@ public class Estructura {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".estructura (nombre,estructura) values("
+        return "INSERT into " + Var.nombreBD + ".estructura (nombre,estructura) values("
                 + Varios.entrecomillar(this.nombre) + ","
                 + Varios.entrecomillar(this.estructura)
                 + ");";
     }
 
     public String SQLEditar() {
-        return "UPDATE " + Variables.nombreBD + ".estructura SET "
+        return "UPDATE " + Var.nombreBD + ".estructura SET "
                 + "nombre=" + Varios.entrecomillar(this.nombre) + ","
                 + "estructura=" + Varios.entrecomillar(this.estructura) + " "
                 + "WHERE id=" + this.id;
     }
 
     public String SQLBorrar() {
-        return "DELETE FROM " + Variables.nombreBD + ".estructura where id=" + this.id;
+        return "DELETE FROM " + Var.nombreBD + ".estructura where id=" + this.id;
     }
 
     public String SQLBuscarEstructura() {
-        return "SELECT * from " + Variables.nombreBD + ".estructura where estructura=" + Varios.entrecomillar(this.estructura);
+        return "SELECT * from " + Var.nombreBD + ".estructura where estructura=" + Varios.entrecomillar(this.estructura);
     }
 
     public String SQLBuscarNombre() {
-        return "SELECT * from " + Variables.nombreBD + ".estructura where nombre=" + Varios.entrecomillar(this.nombre);
+        return "SELECT * from " + Var.nombreBD + ".estructura where nombre=" + Varios.entrecomillar(this.nombre);
     }
 
 }

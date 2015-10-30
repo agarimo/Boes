@@ -1,7 +1,7 @@
 package enty;
 
 import java.util.Objects;
-import main.Variables;
+import main.Var;
 import util.Varios;
 
 /**
@@ -150,7 +150,7 @@ public class Fase {
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Variables.nombreBD + ".fase (idOrigen, codigo, tipo, texto1, texto2,texto3, dias) values("
+        return "INSERT into " + Var.nombreBD + ".fase (idOrigen, codigo, tipo, texto1, texto2,texto3, dias) values("
                 + this.idOrigen + ","
                 + Varios.entrecomillar(this.codigo) + ","
                 + this.tipo + ","
@@ -162,7 +162,7 @@ public class Fase {
     }
 
     public String SQLEditar() {
-        return "UPDATE " + Variables.nombreBD + ".fase SET "
+        return "UPDATE " + Var.nombreBD + ".fase SET "
                 + "codigo=" + Varios.entrecomillar(this.codigo) + ","
                 + "tipo=" + this.tipo + ","
                 + "dias=" + this.dias + ","
@@ -173,11 +173,11 @@ public class Fase {
     }
 
     public String SQLBorrar() {
-        return "DELETE FROM " + Variables.nombreBD + ".fase WHERE id=" + this.id + ";";
+        return "DELETE FROM " + Var.nombreBD + ".fase WHERE id=" + this.id + ";";
     }
 
     public String SQLBuscar() {
-        return "SELECT * FROM " + Variables.nombreBD + ".fase "
+        return "SELECT * FROM " + Var.nombreBD + ".fase "
                 + "WHERE texto1=" + Varios.entrecomillar(this.texto1) + " "
                 + "and texto2=" + Varios.entrecomillar(this.texto2) + " "
                 + "and texto3=" + Varios.entrecomillar(this.texto3) + " "

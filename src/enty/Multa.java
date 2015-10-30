@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import main.Variables;
+import main.Var;
 import util.CalculaNif;
 import util.Dates;
 import util.Varios;
@@ -304,7 +304,7 @@ public class Multa {
 
     public String SQLCrear() {
         if (this.fechaMulta != null) {
-            return "INSERT into " + Variables.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
+            return "INSERT into " + Var.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
                     + this.idBoletin + ","
                     + Varios.entrecomillar(this.codigoSancion) + ","
                     + Varios.entrecomillar(Dates.imprimeFecha(fechaPublicacion)) + ","
@@ -326,7 +326,7 @@ public class Multa {
                     + Varios.entrecomillar(this.linea)
                     + ");";
         } else {
-            return "INSERT into " + Variables.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
+            return "INSERT into " + Var.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
                     + this.idBoletin + ","
                     + Varios.entrecomillar(this.codigoSancion) + ","
                     + Varios.entrecomillar(Dates.imprimeFecha(fechaPublicacion)) + ","
