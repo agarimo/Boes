@@ -19,6 +19,7 @@ public class Multa {
     int idBoletin;
     String codigoSancion;
     Date fechaPublicacion;
+    int idOrganismo;
     String organismo;
     String boe;
     String fase;
@@ -40,10 +41,11 @@ public class Multa {
 
     }
 
-    public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
+    public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion,int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.idBoletin = idBoletin;
         this.codigoSancion = codigoSancion;
         this.fechaPublicacion = fechaPublicacion;
+        this.idOrganismo=idOrganismo;
         this.organismo = organismo;
         this.boe = boe;
         this.fase = fase;
@@ -62,11 +64,12 @@ public class Multa {
         this.linea = linea;
     }
 
-    public Multa(int id, int idBoletin, String codigoSancion, Date fechaPublicacion, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
+    public Multa(int id, int idBoletin, String codigoSancion, Date fechaPublicacion,int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.id = id;
         this.idBoletin = idBoletin;
         this.codigoSancion = codigoSancion;
         this.fechaPublicacion = fechaPublicacion;
+        this.idOrganismo=idOrganismo;
         this.organismo = organismo;
         this.boe = boe;
         this.fase = fase;
@@ -115,6 +118,14 @@ public class Multa {
 
     public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public int getIdOrganismo() {
+        return idOrganismo;
+    }
+
+    public void setIdOrganismo(int idOrganismo) {
+        this.idOrganismo = idOrganismo;
     }
 
     public String getOrganismo() {
@@ -304,10 +315,11 @@ public class Multa {
 
     public String SQLCrear() {
         if (this.fechaMulta != null) {
-            return "INSERT into " + Var.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
+            return "INSERT into " + Var.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,idOrganismo,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
                     + this.idBoletin + ","
                     + Varios.entrecomillar(this.codigoSancion) + ","
                     + Varios.entrecomillar(Dates.imprimeFecha(fechaPublicacion)) + ","
+                    + this.idOrganismo + ","
                     + Varios.entrecomillar(this.organismo) + ","
                     + Varios.entrecomillar(this.boe) + ","
                     + Varios.entrecomillar(this.fase) + ","
@@ -326,10 +338,11 @@ public class Multa {
                     + Varios.entrecomillar(this.linea)
                     + ");";
         } else {
-            return "INSERT into " + Var.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
+            return "INSERT into " + Var.nombreBD + ".multa (idBoletin,codigoSancion,fechaPublicacion,idOrganismo,organismo,boe,fase,tipoJuridico,plazo,expediente,fechaMulta,articulo,nif,sancionado,localidad,matricula,cuantia,puntos,reqObs,linea) values("
                     + this.idBoletin + ","
                     + Varios.entrecomillar(this.codigoSancion) + ","
                     + Varios.entrecomillar(Dates.imprimeFecha(fechaPublicacion)) + ","
+                    + this.idOrganismo + ","
                     + Varios.entrecomillar(this.organismo) + ","
                     + Varios.entrecomillar(this.boe) + ","
                     + Varios.entrecomillar(this.fase) + ","

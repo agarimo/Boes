@@ -43,19 +43,6 @@ public class SqlBoe {
 
         alert.showAndWait();
     }
-    
-//    public static boolean ejecutar(String query){
-//        Sql bd;
-//        try {
-//            bd = new Sql(Variables.con);
-//            bd.ejecutar(query);
-//            bd.close();
-//            return true;
-//        } catch (SQLException ex) {
-//            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
-//            return false;
-//        }
-//    }
 
     public static void eliminaBoletin(String codigo) {
         Sql bd;
@@ -157,7 +144,7 @@ public class SqlBoe {
         }
         return aux;
     }
-    
+
     public static String getEstructura(int id) {
         Sql bd;
         ResultSet rs;
@@ -165,7 +152,7 @@ public class SqlBoe {
 
         try {
             bd = new Sql(Var.con);
-            rs = bd.ejecutarQueryRs("SELECT estructura FROM boes.estructura where id="+id);
+            rs = bd.ejecutarQueryRs("SELECT estructura FROM boes.estructura where id=" + id);
 
             while (rs.next()) {
                 aux = rs.getString("estructura");
@@ -251,8 +238,8 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new VistaExtraccion(rs.getString("codigo"), rs.getString("entidad"), rs.getString("origen"),
-                        rs.getDate("fecha"), rs.getString("tipo"), rs.getString("fase"));
+                aux = new VistaExtraccion(rs.getString("codigo"), rs.getString("entidad"), rs.getInt("idOrigen"),
+                        rs.getString("origen"), rs.getDate("fecha"), rs.getString("tipo"), rs.getString("fase"));
             }
             rs.close();
             bd.close();
@@ -922,7 +909,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaEstructurasHeader() {
         String query = "SELECT * FROM " + Var.nombreBD + ".strucheader";
         List list = new ArrayList();
@@ -963,6 +950,7 @@ public class SqlBoe {
                 aux.setIdBoletin(rs.getInt("idBoletin"));
                 aux.setCodigoSancion(rs.getString("codigoSancion"));
                 aux.setFechaPublicacion(rs.getDate("fechaPublicacion"));
+                aux.setIdOrganismo(rs.getInt("idOrganismo"));
                 aux.setOrganismo(rs.getString("organismo"));
                 aux.setBoe(rs.getString("boe"));
                 aux.setFase(rs.getString("fase"));

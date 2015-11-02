@@ -1,5 +1,6 @@
 package extraccion;
 
+import boletines.Archivos;
 import enty.Multa;
 import enty.Procesar;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import main.SqlBoe;
 import main.Var;
+import model.ModeloBoletines;
 import util.Dates;
 import util.Files;
 import util.Varios;
@@ -21,7 +23,7 @@ public final class BB0 {
 
     private final Date fecha;
     private final List<Procesar> boletines;
-    private final List<Procesar> boletinesD;
+    private final List<ModeloBoletines> boletinesD;
     private final List<String[]> data;
     private final int BB0 = 1;
     private final int BB1 = 2;
@@ -31,14 +33,14 @@ public final class BB0 {
         data = new ArrayList();
         this.boletines = SqlBoe
                 .listaProcesar("SELECT * FROM " + Var.nombreBD + ".procesar "
-                        + "WHERE fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))
+                        + "WHERE fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha))
                         + " AND estado!=1");
         this.boletinesD = SqlBoe
-                .listaProcesar("SELECT * FROM " + Var.nombreBD + ".procesar "
-                        + "WHERE fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha))
-                        + " AND estado=1 AND estructura=-1");
+                .listaModeloBoletines("SELECT * FROM boes.vista_boletines "
+                        + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + " "
+                        + "and codigo in (select codigo from boes.procesar where estructura=-1 and estado=1)");
     }
-    
+
     public void run() {
         data.clear();
         Procesar aux;
@@ -136,7 +138,7 @@ public final class BB0 {
                     String[] arr = data.get(i);
                     sb.append(getLinea(arr, BB0));
 
-                    if (i != data.size()-1) {
+                    if (i != data.size() - 1) {
                         sb.append(System.lineSeparator());
                     }
                 }
@@ -149,12 +151,12 @@ public final class BB0 {
                     String[] arr = data.get(i);
                     sb.append(getLinea(arr, BB1));
 
-                    if (i != data.size()-1) {
+                    if (i != data.size() - 1) {
                         sb.append(System.lineSeparator());
                     }
                 }
                 break;
-                
+
             default:
                 throw new IllegalArgumentException();
         }
@@ -169,11 +171,12 @@ public final class BB0 {
 
         Files.escribeArchivo(archivoBB1, getDataArchivos(BB1));
         Files.escribeArchivo(archivoBB0, getDataArchivos(BB0));
-        
-        crearArchivosD();
+
+        crearArchivosD(fichero);
     }
-    
-    private void crearArchivosD(){
-        
+
+    private void crearArchivosD(File fichero) {
+        Archivos ar = new Archivos(this.fecha,fichero,this.boletinesD);
+        ar.creaArchivos();
     }
 }

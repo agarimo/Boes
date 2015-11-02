@@ -4,6 +4,7 @@ import boe.Download;
 import enty.Estado;
 import enty.Multa;
 import enty.Procesar;
+import extraccion.BB0;
 import extraccion.Extraccion;
 import extraccion.XLSXProcess;
 import java.awt.Desktop;
@@ -86,6 +87,8 @@ public class ExtC implements Initializable, ControlledScreen {
     @FXML
     private Button btAbrirCarpeta;
     @FXML
+    private Button btAbrirCarpetaAr;
+    @FXML
     private Button btProcesar;
     @FXML
     private TableView tvProcesar;
@@ -137,6 +140,20 @@ public class ExtC implements Initializable, ControlledScreen {
 
         if (fecha != null) {
             File fichero = new File(Var.ficheroEx, Dates.imprimeFecha(fecha));
+            try {
+                Desktop.getDesktop().browse(fichero.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @FXML
+    void abrirCarpetaAr(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null) {
+            File fichero = new File(Var.ficheroTxt, Dates.imprimeFecha(fecha));
             try {
                 Desktop.getDesktop().browse(fichero.toURI());
             } catch (IOException ex) {
@@ -217,10 +234,15 @@ public class ExtC implements Initializable, ControlledScreen {
         procesarList.clear();
         previewList.clear();
     }
-    
+
     @FXML
-    void generarArchivos(ActionEvent event){
-        
+    void generarArchivos(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null) {
+            BB0 bb = new BB0(fecha);
+            bb.run();
+        }
     }
 
     @FXML
@@ -235,6 +257,7 @@ public class ExtC implements Initializable, ControlledScreen {
             Thread a = new Thread(() -> {
 
                 Platform.runLater(() -> {
+                    mostrarPanel(this.procesar_to_wait);
                     btGenerarPdf.setDisable(true);
                     piProgreso.setVisible(true);
                     piProgreso.setProgress(0);
@@ -272,6 +295,7 @@ public class ExtC implements Initializable, ControlledScreen {
                     lbProceso.setText("");
                     lbProceso.setVisible(false);
                     btGenerarPdf.setDisable(false);
+                    mostrarPanel(this.wait_to_procesar);
 
                     cambioEnDatePicker(new ActionEvent());
                 });

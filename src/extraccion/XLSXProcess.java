@@ -127,6 +127,7 @@ public class XLSXProcess {
         multa.setIdBoletin(pr.getId());
         multa.setCodigoSancion(getCodigoMulta());
         multa.setFechaPublicacion(ve.getFecha());
+        multa.setIdOrganismo(ve.getIdOrigen());
         multa.setOrganismo(ve.getOrigen());
         multa.setBoe(ve.getBoe());
         multa.setFase(ve.getFase());

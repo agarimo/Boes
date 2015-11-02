@@ -200,9 +200,6 @@ public class WinC implements Initializable, ControlledScreen {
     private Button btDescargaBoletines;
 
     @FXML
-    private Button btGenerarArchivos;
-
-    @FXML
     private Button btComprobarFases;
 
     @FXML
@@ -430,7 +427,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void descargaTodosBoe(ActionEvent event) {
-        //TODO ejecutar este método en hilo secundario y buscar forma de mostrar un progreso en el hilo principal.
         tfLinkV.setText("DESCARGANDO TODOS LOS BOES");
 
         Boe boe = lvBoe.getSelectionModel().getSelectedItem();
@@ -1311,7 +1307,6 @@ public class WinC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     btDescargaBoletines.setDisable(true);
                     btComprobarFases.setDisable(true);
-                    btGenerarArchivos.setDisable(true);
                     pbEstado.setVisible(true);
                     pbEstado.setProgress(0);
                     lbEstado.setText("INICIANDO ESTRUCTURAS");
@@ -1342,67 +1337,11 @@ public class WinC implements Initializable, ControlledScreen {
                     lbEstado.setText("COMPROBACIÓN FINALIZADA");
                     btDescargaBoletines.setDisable(false);
                     btComprobarFases.setDisable(false);
-                    btGenerarArchivos.setDisable(false);
                     pbEstado.setProgress(1);
                     pbEstado.setVisible(false);
                     lbEstado.setText("");
 
                     recargarBoletines();
-                });
-            });
-            a.start();
-        }
-    }
-
-    @FXML
-    void generarArchivos(ActionEvent event) {
-        Date fecha = Dates.asDate(dpFechaB.getValue());
-
-        if (fecha != null) {
-            Thread a = new Thread(() -> {
-
-                Platform.runLater(() -> {
-                    btDescargaBoletines.setDisable(true);
-                    btComprobarFases.setDisable(true);
-                    btGenerarArchivos.setDisable(true);
-                    pbEstado.setVisible(true);
-                    pbEstado.setProgress(0);
-                    lbEstado.setText("DESCARGANDO BOLETINES");
-                });
-
-                ModeloBoletines aux;
-                Archivos ar = new Archivos(fecha);
-                List list = ar.getBoletines();
-
-                for (int i = 0; i < list.size(); i++) {
-                    final int contador = i;
-                    final int total = list.size();
-                    Platform.runLater(() -> {
-                        int contadour = contador + 1;
-                        double counter = contador + 1;
-                        double toutal = total;
-                        lbEstado.setText("GENERANDO ARCHIVO " + contadour + " de " + total);
-                        pbEstado.setProgress(counter / toutal);
-                    });
-                    aux = (ModeloBoletines) list.get(i);
-                    ar.creaArchivo(aux);
-                }
-
-                Platform.runLater(() -> {
-                    lbEstado.setText("ARCHIVOS GENERADOS");
-                    btDescargaBoletines.setDisable(false);
-                    btComprobarFases.setDisable(false);
-                    btGenerarArchivos.setDisable(false);
-                    pbEstado.setProgress(1);
-                    pbEstado.setVisible(false);
-                    lbEstado.setText("");
-
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("COMPLETADO");
-                    alert.setHeaderText("ARCHIVOS GENERADOS");
-                    alert.setContentText("SE HAN GENERADO TODOS LOS ARCHIVOS");
-                    alert.showAndWait();
-
                 });
             });
             a.start();
@@ -1419,7 +1358,6 @@ public class WinC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     btDescargaBoletines.setDisable(true);
                     btComprobarFases.setDisable(true);
-                    btGenerarArchivos.setDisable(true);
                     pbEstado.setVisible(true);
                     pbEstado.setProgress(0);
                     lbEstado.setText("DESCARGANDO BOLETINES");
@@ -1447,7 +1385,6 @@ public class WinC implements Initializable, ControlledScreen {
                     lbEstado.setText("COMPROBACIÓN FINALIZADA");
                     btDescargaBoletines.setDisable(false);
                     btComprobarFases.setDisable(false);
-                    btGenerarArchivos.setDisable(false);
                     pbEstado.setProgress(1);
                     pbEstado.setVisible(false);
                     lbEstado.setText("");
@@ -1472,7 +1409,6 @@ public class WinC implements Initializable, ControlledScreen {
             Platform.runLater(() -> {
                 btDescargaBoletines.setDisable(true);
                 btComprobarFases.setDisable(true);
-                btGenerarArchivos.setDisable(true);
                 pbEstado.setVisible(true);
                 pbEstado.setProgress(0);
                 lbEstado.setText("GENERANDO ARCHIVOS .un");
@@ -1508,7 +1444,6 @@ public class WinC implements Initializable, ControlledScreen {
                 lbEstado.setText("PROCESO FINALIZADO");
                 btDescargaBoletines.setDisable(false);
                 btComprobarFases.setDisable(false);
-                btGenerarArchivos.setDisable(false);
                 pbEstado.setProgress(1);
                 pbEstado.setVisible(false);
                 lbEstado.setText("");

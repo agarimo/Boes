@@ -38,12 +38,7 @@ public class Extraccion {
 
     public boolean fileExist(String codigo) {
         File file = new File(this.fichero, codigo + ".xlsx");
-
-        if (file.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return file.exists();
     }
 
     private List<Procesar> cargaBoletines() {
@@ -137,7 +132,6 @@ public class Extraccion {
             row = it.next();
             aux.add(row);
         }
-//        aux.remove(0);
 
         return aux;
     }

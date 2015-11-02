@@ -12,6 +12,7 @@ public class VistaExtraccion {
 
     String codigo;
     String entidad;
+    int idOrigen;
     String origen;
     Date fecha;
     String tipo;
@@ -20,15 +21,20 @@ public class VistaExtraccion {
     int plazo;
     String boe;
 
-    public VistaExtraccion(String codigo, String entidad, String origen, Date fecha, String tipo, String faseCompleta) {
+    public VistaExtraccion(String codigo, String entidad, int idOrigen, String origen, Date fecha, String tipo, String faseCompleta) {
         this.codigo = codigo;
         this.entidad = entidad;
+        this.idOrigen = idOrigen;
         this.origen = origen;
         this.fecha = fecha;
         this.tipo = tipo;
         this.faseCompleta = faseCompleta;
         splitFase();
         this.boe = getBoe(this.fecha, this.entidad);
+    }
+
+    public int getIdOrigen() {
+        return idOrigen;
     }
 
     public String getCodigo() {

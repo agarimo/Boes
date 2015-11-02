@@ -51,9 +51,9 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-//        launch(args);
-        test();
-        System.exit(0);
+        launch(args);
+//        test();
+//        System.exit(0);
     }
     
     public static void test(){

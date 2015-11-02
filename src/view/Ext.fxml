@@ -32,8 +32,9 @@
                               <Button fx:id="btProcesar" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" onAction="#procesar" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
                               <Separator layoutX="14.0" layoutY="270.0" prefHeight="30.0" prefWidth="150.0" />
                               <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" onAction="#abrirCarpeta" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
-                              <Separator layoutX="14.0" layoutY="377.0" prefHeight="30.0" prefWidth="150.0" />
-                              <Button fx:id="btGenerarArchivos" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
+                              <Separator layoutX="14.0" layoutY="410.0" prefHeight="30.0" prefWidth="150.0" />
+                              <Button fx:id="btGenerarArchivos" layoutX="14.0" layoutY="341.0" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
+                              <Button fx:id="btAbrirCarpetaAr" layoutX="14.0" layoutY="380.0" mnemonicParsing="false" onAction="#abrirCarpetaAr" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="435.0" prefWidth="443.0">
