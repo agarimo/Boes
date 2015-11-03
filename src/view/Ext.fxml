@@ -26,15 +26,15 @@
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
                            <children>
                               <DatePicker fx:id="dpFecha" layoutX="14.0" layoutY="14.0" onAction="#cambioEnDatePicker" prefHeight="30.0" prefWidth="150.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="14.0" />
-                              <Button fx:id="btGenerarPdf" layoutX="14.0" layoutY="60.0" mnemonicParsing="false" onAction="#generarPdf" prefHeight="30.0" prefWidth="150.0" text="Generar PDF" />
-                              <Button fx:id="btPreview" layoutX="14.0" layoutY="220.0" mnemonicParsing="false" onAction="#previsualizar" prefHeight="30.0" prefWidth="150.0" text="Previsualizar Extracción" />
-                              <Button fx:id="btVerPdf" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#verPdf" prefHeight="30.0" prefWidth="150.0" text="Ver PDF" />
-                              <Button fx:id="btProcesar" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" onAction="#procesar" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
-                              <Separator layoutX="14.0" layoutY="270.0" prefHeight="30.0" prefWidth="150.0" />
-                              <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" onAction="#abrirCarpeta" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
-                              <Separator layoutX="14.0" layoutY="410.0" prefHeight="30.0" prefWidth="150.0" />
-                              <Button fx:id="btGenerarArchivos" layoutX="14.0" layoutY="341.0" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
-                              <Button fx:id="btAbrirCarpetaAr" layoutX="14.0" layoutY="380.0" mnemonicParsing="false" onAction="#abrirCarpetaAr" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta" />
+                              <Button fx:id="btGenerarPdf" layoutX="14.0" layoutY="60.0" mnemonicParsing="false" onAction="#generarPdf" prefHeight="30.0" prefWidth="150.0" text="Generar PDFs" />
+                              <Button fx:id="btPreview" layoutX="14.0" layoutY="264.0" mnemonicParsing="false" onAction="#previsualizar" prefHeight="30.0" prefWidth="150.0" text="Previsualizar Extracción" />
+                              <Button fx:id="btReqObs" layoutX="14.0" layoutY="405.0" mnemonicParsing="false" onAction="#reqObs" prefHeight="30.0" prefWidth="150.0" text="Req/Obs" />
+                              <Button fx:id="btProcesar" layoutX="14.0" layoutY="365.0" mnemonicParsing="false" onAction="#procesar" prefHeight="30.0" prefWidth="150.0" text="Procesar" />
+                              <Separator layoutX="14.0" layoutY="335.0" prefHeight="30.0" prefWidth="150.0" />
+                              <Button fx:id="btAbrirCarpeta" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#abrirCarpeta" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta PDF" />
+                              <Separator layoutX="14.0" layoutY="514.0" prefHeight="30.0" prefWidth="150.0" />
+                              <Button fx:id="btGenerarArchivos" layoutX="14.0" layoutY="445.0" mnemonicParsing="false" onAction="#generarArchivos" prefHeight="30.0" prefWidth="150.0" text="Generar Archivos" />
+                              <Button fx:id="btAbrirCarpetaAr" layoutX="14.0" layoutY="484.0" mnemonicParsing="false" onAction="#abrirCarpetaAr" prefHeight="30.0" prefWidth="150.0" text="Abrir Carpeta Generados" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="435.0" prefWidth="443.0">

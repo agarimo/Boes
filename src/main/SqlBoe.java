@@ -11,6 +11,7 @@ import enty.Origen;
 import enty.Procesar;
 import enty.StrucData;
 import enty.VistaExtraccion;
+import extraccion.ReqObs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -1001,6 +1002,29 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List<ReqObs> listaReqObs(String query) {
+        List<ReqObs> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        ReqObs aux;
 
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new ReqObs(rs.getInt("id"),rs.getInt("idOrigen"), rs.getString("fase"),
+                        rs.getString("reqObs"),rs.getString("nuevaFase"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 //</editor-fold>
 }

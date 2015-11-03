@@ -6,6 +6,7 @@ import enty.Multa;
 import enty.Procesar;
 import extraccion.BB0;
 import extraccion.Extraccion;
+import extraccion.ReqObs;
 import extraccion.XLSXProcess;
 import java.awt.Desktop;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -49,6 +51,7 @@ import main.Var;
 import model.ModeloPreview;
 import model.ModeloProcesar;
 import util.Dates;
+import util.Sql;
 import util.Varios;
 
 /**
@@ -83,7 +86,7 @@ public class ExtC implements Initializable, ControlledScreen {
     @FXML
     private Button btGenerarPdf;
     @FXML
-    private Button btVerPdf;
+    private Button btReqObs;
     @FXML
     private Button btAbrirCarpeta;
     @FXML
@@ -766,6 +769,61 @@ public class ExtC implements Initializable, ControlledScreen {
     }
 
     @FXML
+    void reqObs(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFecha.getValue());
+
+        if (fecha != null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    mostrarPanel(this.procesar_to_wait);
+                    btReqObs.setDisable(true);
+                    piProgreso.setVisible(true);
+                    piProgreso.setProgress(-1);
+                    lbProgreso.setVisible(true);
+                    lbProgreso.setText("");
+                    lbProceso.setVisible(true);
+                    lbProceso.setText("PROCESANDO REQ/OBS");
+                });
+
+                Sql bd;
+                ReqObs aux;
+                List<ReqObs> list = SqlBoe.listaReqObs("SELECT * FROM boes.reqobs WHERE idOrigen "
+                        + "in (select idOrganismo from boes.multa "
+                        + "WHERE fechaPublicacion="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+")");
+                Iterator<ReqObs> it = list.iterator();
+
+                try {
+                    bd = new Sql(Var.con);
+
+                    while (it.hasNext()) {
+                        aux = it.next();
+                        bd.ejecutar(aux.SQLEjecutar());
+                    }
+
+                    bd.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BB0.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(1);
+                    piProgreso.setVisible(false);
+                    lbProgreso.setText("");
+                    lbProgreso.setVisible(false);
+                    lbProceso.setText("");
+                    lbProceso.setVisible(false);
+                    btReqObs.setDisable(false);
+                    mostrarPanel(this.wait_to_procesar);
+
+                    cambioEnDatePicker(new ActionEvent());
+                });
+            });
+            a.start();
+        }
+    }
+
+    @FXML
     void resetearEstado(ActionEvent event) {
         ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
         Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
@@ -781,9 +839,11 @@ public class ExtC implements Initializable, ControlledScreen {
     void switchControles(boolean aux) {
         dpFecha.setDisable(aux);
         btGenerarPdf.setDisable(aux);
-        btVerPdf.setDisable(aux);
+        btReqObs.setDisable(aux);
         btAbrirCarpeta.setDisable(aux);
         btProcesar.setDisable(aux);
+        btAbrirCarpetaAr.setDisable(aux);
+        btGenerarArchivos.setDisable(aux);
     }
 
     @FXML

@@ -57,8 +57,7 @@ public class Boes extends Application {
     }
     
     public static void test(){
-        BB0 bb = new BB0(getFecha());
-        bb.run();
+      
     }
 
     public static Date getFecha() {

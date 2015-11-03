@@ -4,15 +4,19 @@ import boletines.Archivos;
 import enty.Multa;
 import enty.Procesar;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.SqlBoe;
 import main.Var;
 import model.ModeloBoletines;
 import util.Dates;
 import util.Files;
+import util.Sql;
 import util.Varios;
 
 /**
@@ -176,7 +180,7 @@ public final class BB0 {
     }
 
     private void crearArchivosD(File fichero) {
-        Archivos ar = new Archivos(this.fecha,fichero,this.boletinesD);
+        Archivos ar = new Archivos(this.fecha, fichero, this.boletinesD);
         ar.creaArchivos();
     }
 }

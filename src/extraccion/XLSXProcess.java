@@ -151,31 +151,31 @@ public class XLSXProcess {
         }
 
         if (sd.preceptoA != 0) {
-            prec += " " + getCelda(linea, sd.preceptoA).trim();
+            prec += "" + getCelda(linea, sd.preceptoA).trim();
         }
 
         if (sd.preceptoB != 0) {
-            prec += " " + getCelda(linea, sd.preceptoB).trim();
+            prec += "" + getCelda(linea, sd.preceptoB).trim();
         }
 
         if (sd.preceptoC != 0) {
-            prec += " " + getCelda(linea, sd.preceptoC).trim();
+            prec += "" + getCelda(linea, sd.preceptoC).trim();
         }
 
         if (sd.articuloA != 0) {
-            art += " " + getCelda(linea, sd.articuloA).trim();
+            art += "" + getCelda(linea, sd.articuloA).trim();
         }
 
         if (sd.articuloB != 0) {
-            art += " " + getCelda(linea, sd.articuloB).trim();
+            art += "" + getCelda(linea, sd.articuloB).trim();
         }
 
         if (sd.articuloC != 0) {
-            art += " " + getCelda(linea, sd.articuloC).trim();
+            art += "" + getCelda(linea, sd.articuloC).trim();
         }
 
         if (sd.articuloD != 0) {
-            art += " " + getCelda(linea, sd.articuloD).trim();
+            art += "" + getCelda(linea, sd.articuloD).trim();
         }
 
         multa.setArticulo((art.trim() + " " + prec.trim()).toUpperCase());
