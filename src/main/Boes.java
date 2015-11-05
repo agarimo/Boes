@@ -1,11 +1,7 @@
 package main;
 
-import extraccion.BB0;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -57,7 +53,7 @@ public class Boes extends Application {
     }
     
     public static void test(){
-      
+        
     }
 
     public static Date getFecha() {

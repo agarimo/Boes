@@ -25,7 +25,7 @@ public class VistaExtraccion {
         this.codigo = codigo;
         this.entidad = entidad;
         this.idOrigen = idOrigen;
-        this.origen = origen;
+        this.origen = origen.replace("'", "\'");
         this.fecha = fecha;
         this.tipo = tipo;
         this.faseCompleta = faseCompleta;

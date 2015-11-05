@@ -3,7 +3,6 @@ package boletines;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -52,12 +51,13 @@ public class Archivos {
     public List getBoletines() {
         return this.boletines;
     }
-    
-    public void creaArchivos(){
-        caIn(boletines,fecha);
+
+    public void creaArchivos() {
+        caIn(boletines, fecha);
     }
 
     public void creaArchivos(List bol, Date fecha, String struc, String codigoUn) {
+        dir=new File(Var.ficheroUnion, Dates.imprimeFecha(fecha));
         if (struc == null) {
             caIn(bol, fecha);
         } else {
@@ -75,7 +75,7 @@ public class Archivos {
         Iterator<ModeloBoletines> it = bol.iterator();
 
         try {
-
+            
             file = new File(dir, getNombreArchivoUn(struc, fecha, codigoUn) + ".txt");
             file.createNewFile();
 

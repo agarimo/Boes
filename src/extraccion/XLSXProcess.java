@@ -167,11 +167,11 @@ public class XLSXProcess {
         }
 
         if (sd.articuloB != 0) {
-            art += "" + getCelda(linea, sd.articuloB).trim();
+            art += "." + getCelda(linea, sd.articuloB).trim();
         }
 
         if (sd.articuloC != 0) {
-            art += "" + getCelda(linea, sd.articuloC).trim();
+            art += "." + getCelda(linea, sd.articuloC).trim();
         }
 
         if (sd.articuloD != 0) {

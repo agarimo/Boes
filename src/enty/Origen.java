@@ -16,6 +16,7 @@ public class Origen {
     private String codigoAy;
     private String codigoUn;
     private String codigoTes;
+    private String nombreMostrar;
 
     public Origen() {
     }
@@ -24,7 +25,7 @@ public class Origen {
         this.nombre = nombre;
     }
 
-    public Origen(int id, int idEntidad, String nombre, String codigo, String codigoAy, String codigoUn, String codigoTes) {
+    public Origen(int id, int idEntidad, String nombre, String codigo, String codigoAy, String codigoUn, String codigoTes, String nombreMostrar) {
         this.id = id;
         this.idEntidad = idEntidad;
         this.nombre = nombre;
@@ -32,6 +33,7 @@ public class Origen {
         this.codigoAy = codigoAy;
         this.codigoUn = codigoUn;
         this.codigoTes = codigoTes;
+        this.nombreMostrar = nombreMostrar;
     }
 
     public int getId() {
@@ -90,21 +92,30 @@ public class Origen {
         this.codigoTes = codigoTes;
     }
 
+    public String getNombreMostrar() {
+        return nombreMostrar;
+    }
+
+    public void setNombreMostrar(String nombreMostrar) {
+        this.nombreMostrar = nombreMostrar;
+    }
+    
     @Override
     public String toString() {
         return codigo;
     }
 
     public String SQLCrear() {
-        return "INSERT into " + Var.nombreBD + ".origen (idEntidad ,nombre) values("
+        return "INSERT into " + Var.nombreBD + ".origen (idEntidad ,nombre, nombreMostrar) values("
                 + this.idEntidad + ","
-                + Varios.entrecomillar(this.nombre)
+                + Varios.entrecomillar(this.nombre) + ","
+                + Varios.entrecomillar(this.nombreMostrar)
                 + ");";
     }
-    
-    public String SQLBuscar(){
-        return "SELECT * FROM "+ Var.nombreBD + ".origen WHERE nombre="+ Varios.entrecomillar(this.nombre)+" "
-                + "and idEntidad="+this.idEntidad;
+
+    public String SQLBuscar() {
+        return "SELECT * FROM " + Var.nombreBD + ".origen WHERE nombre=" + Varios.entrecomillar(this.nombre) + " "
+                + "and idEntidad=" + this.idEntidad;
     }
 
     public String SQLBuscarNombre() {

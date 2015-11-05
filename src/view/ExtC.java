@@ -129,8 +129,6 @@ public class ExtC implements Initializable, ControlledScreen {
     private Label lbProceso;
     @FXML
     private Label lbProgreso;
-//    @FXML
-//    private Button btRefrescar;
     @FXML
     private Button btGenerarArchivos;
 //</editor-fold>
@@ -243,9 +241,30 @@ public class ExtC implements Initializable, ControlledScreen {
         Date fecha = Dates.asDate(dpFecha.getValue());
 
         if (fecha != null) {
-            BB0 bb = new BB0(fecha);
-            bb.run();
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    mostrarPanel(this.procesar_to_wait);
+                    btGenerarArchivos.setDisable(true);
+                    piProgreso.setProgress(-1);
+                    lbProgreso.setText("");
+                    lbProceso.setText("GENERANDO ARCHIVOS");
+                });
+
+                BB0 bb = new BB0(fecha);
+                bb.run();
+
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(1);
+                    lbProgreso.setText("");
+                    lbProceso.setText("");
+                    btGenerarArchivos.setDisable(false);
+                    mostrarPanel(this.wait_to_procesar);
+                });
+            });
+            a.start();
         }
+
     }
 
     @FXML
@@ -262,11 +281,8 @@ public class ExtC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     mostrarPanel(this.procesar_to_wait);
                     btGenerarPdf.setDisable(true);
-                    piProgreso.setVisible(true);
                     piProgreso.setProgress(0);
-                    lbProgreso.setVisible(true);
                     lbProgreso.setText("");
-                    lbProceso.setVisible(true);
                     lbProceso.setText("GENERANDO PDFs");
                 });
 
@@ -292,11 +308,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
                     lbProgreso.setText("");
-                    lbProgreso.setVisible(false);
                     lbProceso.setText("");
-                    lbProceso.setVisible(false);
                     btGenerarPdf.setDisable(false);
                     mostrarPanel(this.wait_to_procesar);
 
@@ -325,11 +338,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 Platform.runLater(() -> {
                     btGenerarPdf.setDisable(true);
-                    piProgreso.setVisible(true);
                     piProgreso.setProgress(0);
-                    lbProgreso.setVisible(true);
                     lbProgreso.setText("");
-                    lbProceso.setVisible(true);
                     lbProceso.setText("GENERANDO PDFs");
                 });
 
@@ -355,11 +365,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
                     lbProgreso.setText("");
-                    lbProgreso.setVisible(false);
                     lbProceso.setText("");
-                    lbProceso.setVisible(false);
                     btGenerarPdf.setDisable(false);
 
                     cambioEnDatePicker(new ActionEvent());
@@ -567,17 +574,23 @@ public class ExtC implements Initializable, ControlledScreen {
                                     mostrarPanel(this.wait_to_preview);
                                 });
                             } catch (NullPointerException e) {
+//                                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
+//                                e.printStackTrace();
                                 Platform.runLater(() -> {
                                     piProgreso.setProgress(1);
                                     lbProgreso.setText("");
                                     lbProceso.setText("");
-                                    mostrarPanel(this.wait_to_procesar);
 
                                     Alert alert = new Alert(Alert.AlertType.WARNING);
                                     alert.setTitle("ERROR");
                                     alert.setHeaderText("XLSX CON ERRORES");
                                     alert.setContentText("El XLSX seleccionado contiene errores de estructura");
                                     alert.showAndWait();
+
+                                    btPreview.setText("Previsualizar Extracción");
+                                    mostrarPanel(this.wait_to_procesar);
+                                    isPreview = !isPreview;
+                                    switchControles(false);
                                 });
                             }
                         });
@@ -618,11 +631,8 @@ public class ExtC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     mostrarPanel(this.procesar_to_wait);
                     btGenerarPdf.setDisable(true);
-                    piProgreso.setVisible(true);
                     piProgreso.setProgress(0);
-                    lbProgreso.setVisible(true);
                     lbProgreso.setText("");
-                    lbProceso.setVisible(true);
                     lbProceso.setText("PROCESANDO BOLETINES");
                 });
 
@@ -663,11 +673,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
                     lbProgreso.setText("");
-                    lbProgreso.setVisible(false);
                     lbProceso.setText("");
-                    lbProceso.setVisible(false);
                     btGenerarPdf.setDisable(false);
                     mostrarPanel(this.wait_to_procesar);
 
@@ -778,11 +785,8 @@ public class ExtC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     mostrarPanel(this.procesar_to_wait);
                     btReqObs.setDisable(true);
-                    piProgreso.setVisible(true);
                     piProgreso.setProgress(-1);
-                    lbProgreso.setVisible(true);
                     lbProgreso.setText("");
-                    lbProceso.setVisible(true);
                     lbProceso.setText("PROCESANDO REQ/OBS");
                 });
 
@@ -790,7 +794,7 @@ public class ExtC implements Initializable, ControlledScreen {
                 ReqObs aux;
                 List<ReqObs> list = SqlBoe.listaReqObs("SELECT * FROM boes.reqobs WHERE idOrigen "
                         + "in (select idOrganismo from boes.multa "
-                        + "WHERE fechaPublicacion="+Varios.entrecomillar(Dates.imprimeFecha(fecha))+")");
+                        + "WHERE fechaPublicacion=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + ")");
                 Iterator<ReqObs> it = list.iterator();
 
                 try {
@@ -808,11 +812,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
-                    piProgreso.setVisible(false);
                     lbProgreso.setText("");
-                    lbProgreso.setVisible(false);
                     lbProceso.setText("");
-                    lbProceso.setVisible(false);
                     btReqObs.setDisable(false);
                     mostrarPanel(this.wait_to_procesar);
 

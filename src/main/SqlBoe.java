@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import model.ModeloBoletines;
 import model.ModeloCabeceras;
@@ -36,13 +37,44 @@ import util.Varios;
 public class SqlBoe {
 
     private static void error(String aux) {
-        System.out.println(aux);
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("ERROR");
-        alert.setHeaderText("ERROR DE CONEXIÓN");
-        alert.setContentText(aux);
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("ERROR DE CONEXIÓN");
+            alert.setContentText(aux);
 
-        alert.showAndWait();
+            alert.showAndWait();
+        });
+    }
+
+    public static String getString(String query) {
+        Sql bd;
+        String aux = "";
+
+        try {
+            bd = new Sql(Var.con);
+            aux = bd.getString(query);
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+
+    public static int getInt(String query) {
+        Sql bd;
+        int aux = -1;
+
+        try {
+            bd = new Sql(Var.con);
+            aux = bd.getInt(query);
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
     }
 
     public static void eliminaBoletin(String codigo) {
@@ -53,6 +85,7 @@ public class SqlBoe {
             bd.ejecutarQueryRs("UPDATE stats.boletines_publicados SET tipo=0 where codigo=" + Varios.entrecomillar(codigo));
             bd.close();
         } catch (SQLException ex) {
+            error(ex.getMessage());
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -91,7 +124,7 @@ public class SqlBoe {
 
             if (rs.next()) {
                 aux = new Origen(rs.getInt("id"), rs.getInt("idEntidad"), rs.getString("nombre"), rs.getString("codigo"),
-                        rs.getString("codigoAy"), rs.getString("codigoUn"), rs.getString("codigoTes"));
+                        rs.getString("codigoAy"), rs.getString("codigoUn"), rs.getString("codigoTes"), rs.getString("nombreMostrar"));
             }
             rs.close();
             bd.close();
@@ -537,7 +570,7 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = new Origen(rs.getInt("id"), rs.getInt("idEntidad"), rs.getString("nombre"), rs.getString("codigo"),
-                        rs.getString("codigoAy"), rs.getString("codigoUn"), rs.getString("codigoTes"));
+                        rs.getString("codigoAy"), rs.getString("codigoUn"), rs.getString("codigoTes"), rs.getString("nombreMostrar"));
                 list.add(aux);
             }
             rs.close();
@@ -1002,7 +1035,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<ReqObs> listaReqObs(String query) {
         List<ReqObs> list = new ArrayList();
         Sql bd;
@@ -1014,8 +1047,8 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new ReqObs(rs.getInt("id"),rs.getInt("idOrigen"), rs.getString("fase"),
-                        rs.getString("reqObs"),rs.getString("nuevaFase"));
+                aux = new ReqObs(rs.getInt("id"), rs.getInt("idOrigen"), rs.getString("fase"),
+                        rs.getString("reqObs"), rs.getString("nuevaFase"));
                 list.add(aux);
             }
             rs.close();

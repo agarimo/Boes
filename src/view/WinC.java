@@ -249,6 +249,7 @@ public class WinC implements Initializable, ControlledScreen {
         final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
         ls5.addListener(selectorListaOrigenC);
     }
+
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
     @FXML
     void iniciaInicio() {
@@ -639,8 +640,11 @@ public class WinC implements Initializable, ControlledScreen {
 
             try {
                 Date aux = Dates.asDate(dpFechaC.getValue());
-                cargarBoes(SqlBoe.getBoe(aux));
-                Var.isClasificando = true;
+
+                if (aux != null) {
+                    cargarBoes(SqlBoe.getBoe(aux));
+                    Var.isClasificando = true;
+                }
             } catch (Exception ex) {
                 //
             }
@@ -758,6 +762,7 @@ public class WinC implements Initializable, ControlledScreen {
             selectedList.add(0, aux);
             publicacion.remove(aux);
             getFocusTablaBoes();
+            setContadores();
         }
     }
 
@@ -781,6 +786,7 @@ public class WinC implements Initializable, ControlledScreen {
                 selectedList.add(0, aux);
             }
             publicacion.clear();
+            setContadores();
         }
     }
 
@@ -792,6 +798,7 @@ public class WinC implements Initializable, ControlledScreen {
             discartedList.add(0, aux);
             publicacion.remove(aux);
             getFocusTablaBoes();
+            setContadores();
         }
     }
 
@@ -803,6 +810,7 @@ public class WinC implements Initializable, ControlledScreen {
             publicacion.add(0, aux);
             selectedList.remove(aux);
             getFocusTablaBoes();
+            setContadores();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR");
@@ -820,6 +828,7 @@ public class WinC implements Initializable, ControlledScreen {
             publicacion.add(0, aux);
             discartedList.remove(aux);
             getFocusTablaBoes();
+            setContadores();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR");
@@ -827,6 +836,14 @@ public class WinC implements Initializable, ControlledScreen {
             alert.setContentText("Debes seleccionar un elemento.");
             alert.showAndWait();
         }
+    }
+
+    void setContadores() {
+        Platform.runLater(() -> {
+            lbContadorT.setText(Integer.toString(publicacion.size()));
+            lbContadorD.setText(Integer.toString(discartedList.size()));
+            lbContadorS.setText(Integer.toString(selectedList.size()));
+        });
     }
 
     @FXML
@@ -1198,17 +1215,17 @@ public class WinC implements Initializable, ControlledScreen {
         Date aux = Dates.asDate(dpFechaB.getValue());
         cargaDatosTablaBoletines(aux);
     }
-    
+
     void trasvaseEx(Date fecha) {
         Procesar aux;
         Iterator it;
 
         try {
             bd = new Sql(Var.con);
-            bd.ejecutar("DELETE FROM boes.procesar where fecha="+Varios.entrecomillar(Dates.imprimeFecha(fecha)));
+            bd.ejecutar("DELETE FROM boes.procesar where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)));
 
             it = SqlBoe.listaProcesarPendiente(fecha).iterator();
-            
+
             while (it.hasNext()) {
                 aux = (Procesar) it.next();
                 bd.ejecutar(aux.SQLCrear());
@@ -1235,7 +1252,7 @@ public class WinC implements Initializable, ControlledScreen {
                     pbEstado.setProgress(0);
                     lbEstado.setText("INICIANDO ESTRUCTURAS");
                 });
-                
+
                 Boletin aux;
                 Estructuras es = new Estructuras(fecha);
                 es.limpiarEstructuras();
@@ -1271,7 +1288,7 @@ public class WinC implements Initializable, ControlledScreen {
                     aux = (Boletin) list.get(i);
                     fs.runFase(aux);
                 }
-                
+
                 trasvaseEx(fecha);
 
                 Platform.runLater(() -> {
@@ -1330,7 +1347,7 @@ public class WinC implements Initializable, ControlledScreen {
                     aux = (Boletin) list.get(i);
                     es.run(aux);
                 }
-                
+
                 trasvaseEx(fecha);
 
                 Platform.runLater(() -> {
