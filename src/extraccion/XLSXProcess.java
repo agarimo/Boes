@@ -14,11 +14,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.Regex;
 import main.SqlBoe;
 import main.Var;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import util.CalculaNif;
+import util.Dates;
 import util.Sql;
 
 /**
@@ -43,23 +45,23 @@ public class XLSXProcess {
         strucFecha = SqlBoe.listaEstructurasFechas();
     }
 
-    public void run() {
-        List<Multa> multas = new ArrayList();
-        Multa multa;
-        Row linea;
-        Iterator<Row> it = rows.iterator();
-
-        while (it.hasNext()) {
-            linea = it.next();
-            multa = splitLinea(linea);
-            multas.add(multa);
-        }
-
-        multas = clearMultas(multas);
-        insertMultas(multas);
-    }
-
+//    public void run() {
+//        List<Multa> multas = new ArrayList();
+//        Multa multa;
+//        Row linea;
+//        Iterator<Row> it = rows.iterator();
+//
+//        while (it.hasNext()) {
+//            linea = it.next();
+//            multa = splitLinea(linea);
+//            multas.add(multa);
+//        }
+//
+//        multas = clearMultas(multas);
+//        insertMultas(multas);
+//    }
     public List<Multa> splitXLSX() {
+        Regex rx = new Regex();
         List<String> header = SqlBoe.listaEstructurasHeader();
         List<Multa> multas = new ArrayList();
         String estructura = SqlBoe.getEstructura(pr.getEstructura());
@@ -74,10 +76,15 @@ public class XLSXProcess {
                 try {
                     multa = splitLinea(linea);
 
-                    if(!header.contains(multa.getExpediente())){
+                    if (!header.contains(multa.getExpediente())) {
                         multas.add(multa);
                     }
-                    
+
+                    if (!rx.isBuscar("[0-9]{4}/[0-9]{2}/[0-9]{2}", Dates.imprimeFecha(multa.getFechaMulta()))) {
+                        multa = new Multa();
+                        multas.add(multa);
+                    }
+
                 } catch (IndexOutOfBoundsException ex) {
                     multa = new Multa();
                     multas.add(multa);

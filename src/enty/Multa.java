@@ -320,7 +320,7 @@ public class Multa {
                     + Varios.entrecomillar(this.codigoSancion) + ","
                     + Varios.entrecomillar(Dates.imprimeFecha(fechaPublicacion)) + ","
                     + this.idOrganismo + ","
-                    + Varios.entrecomillar(this.organismo) + ","
+                    + Varios.entrecomillar(this.organismo.replace("'", "\\'")) + ","
                     + Varios.entrecomillar(this.boe) + ","
                     + Varios.entrecomillar(this.fase) + ","
                     + Varios.entrecomillar(this.tipoJuridico) + ","

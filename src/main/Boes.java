@@ -1,7 +1,10 @@
 package main;
 
+import enty.Multa;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -47,13 +50,65 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-        launch(args);
-//        test();
-//        System.exit(0);
+//        launch(args);
+        test();
+        System.exit(0);
     }
-    
-    public static void test(){
-        
+
+    public static void test() {
+        checkMatriculas();
+//        checkNif();
+
+    }
+
+    public static void checkMatriculas() {
+        Regex rx = new Regex();
+        Multa aux;
+        String str;
+        List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
+
+        System.out.println("Se han cargado " + listado.size() + " multas");
+        System.out.println(System.lineSeparator());
+        System.out.println(System.lineSeparator());
+
+        Iterator<Multa> it = listado.iterator();
+
+        while (it.hasNext()) {
+            aux = it.next();
+
+            str = rx.buscar(aux.getMatricula(), Regex.matriculas);
+
+            if (str == null) {
+
+                if (!aux.getMatricula().equals("")) {
+                    System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getMatricula());
+                }
+            }
+        }
+    }
+
+    public static void checkNif() {
+        Regex rx = new Regex();
+        Multa aux;
+        String str;
+        List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
+
+        System.out.println("Se han cargado " + listado.size() + " multas");
+
+        Iterator<Multa> it = listado.iterator();
+
+        while (it.hasNext()) {
+            aux = it.next();
+
+            str = rx.buscar(aux.getNif(), Regex.nif);
+
+            if (str == null) {
+
+                if (!aux.getNif().equals("")) {
+                    System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getMatricula());
+                }
+            }
+        }
     }
 
     public static Date getFecha() {
