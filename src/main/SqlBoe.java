@@ -199,6 +199,49 @@ public class SqlBoe {
         }
         return aux;
     }
+    
+    public static Multa getMulta(String query) {
+        Sql bd;
+        ResultSet rs;
+        Multa aux = null;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            if (rs.next()) {
+                aux = new Multa();
+                aux.setId(rs.getInt("id"));
+                aux.setIdBoletin(rs.getInt("idBoletin"));
+                aux.setCodigoSancion(rs.getString("codigoSancion"));
+                aux.setFechaPublicacion(rs.getDate("fechaPublicacion"));
+                aux.setIdOrganismo(rs.getInt("idOrganismo"));
+                aux.setOrganismo(rs.getString("organismo"));
+                aux.setBoe(rs.getString("boe"));
+                aux.setFase(rs.getString("fase"));
+                aux.setTipoJuridico(rs.getString("tipoJuridico"));
+                aux.setPlazo(rs.getInt("plazo"));
+                aux.setExpediente(rs.getString("expediente"));
+                aux.setFechaMulta(rs.getDate("fechaMulta"));
+                aux.setArticulo(rs.getString("articulo"));
+                aux.setNif(rs.getString("nif"));
+                aux.setSancionado(rs.getString("sancionado"));
+                aux.setLocalidad(rs.getString("localidad"));
+                aux.setMatricula(rs.getString("matricula"));
+                aux.setCuantia(rs.getString("cuantia"));
+                aux.setPuntos(rs.getString("puntos"));
+                aux.setReqObs(rs.getString("reqObs"));
+                aux.setLinea(rs.getString("linea"));
+            }
+            
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
 
     public static ModeloBoletines getModeloBoletines(String codigo) {
         Sql bd;

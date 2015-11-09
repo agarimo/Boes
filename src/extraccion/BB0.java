@@ -1,6 +1,7 @@
 package extraccion;
 
 import boletines.Archivos;
+import boletines.Union;
 import enty.Multa;
 import enty.Procesar;
 import java.io.File;
@@ -21,12 +22,68 @@ import util.Varios;
  */
 public final class BB0 {
 
+    private final File fichero;
     private final Date fecha;
     private final List<Procesar> boletines;
     private final List<ModeloBoletines> boletinesD;
     private final List<String[]> data;
+
     private final int BB0 = 1;
     private final int BB1 = 2;
+
+    public BB0(int id) {
+        fecha = null;
+        fichero = null;
+        boletines = null;
+        boletinesD = null;
+        data = new ArrayList();
+        printLinea(id);
+    }
+
+    public void printLinea(int id) {
+        String[] linea;
+        Multa multa = SqlBoe.getMulta("SELECT * FROM " + Var.nombreBD + ".multa WHERE id=" + id);
+        linea = new String[26];
+
+        linea[0] = "00000";
+            linea[1] = "ESPACIO PARA LA FECHA";
+            linea[2] = multa.getBoe();
+            linea[3] = multa.getFase();
+            linea[4] = multa.getTipoJuridico();
+            linea[5] = Integer.toString(multa.getPlazo());
+            linea[6] = Integer.toString(multa.getId());
+            linea[7] = "ND";
+            linea[8] = splitCodigoSancion(multa.getCodigoSancion());
+            linea[9] = multa.getExpediente();
+            linea[10] = multa.getExpediente();
+            linea[11] = Dates.imprimeFecha(multa.getFechaMulta(), "ddMMyy");
+            linea[12] = multa.getArticulo();
+            linea[13] = multa.getSancionado();
+            linea[14] = multa.getMatricula();
+            linea[15] = multa.getNif();
+            linea[16] = multa.getOrganismo();
+            linea[17] = multa.getCuantia();
+            linea[18] = multa.getPuntos();
+            linea[19] = "  ";
+            linea[20] = "  ";
+            linea[21] = "  ";
+            linea[22] = "  ";
+            linea[23] = multa.getLinea();
+            linea[24] = "ESPACIO PARA EL LINK";
+            linea[25] = multa.getLocalidad();
+
+        for (int i = 0; i < linea.length; i++) {
+            String linea1 = linea[i];
+
+            if (linea1 != null) {
+                String aux = linea1.replaceAll("\n", " ");
+                aux = aux.replaceAll(System.lineSeparator(), " ");
+                linea[i] = aux;
+            }
+        }
+
+        System.out.println(getLinea(linea, this.BB0));
+    }
 
     public BB0(Date fecha) {
         this.fecha = fecha;
@@ -39,6 +96,8 @@ public final class BB0 {
                 .listaModeloBoletines("SELECT * FROM boes.vista_boletines "
                         + "where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + " "
                         + "and codigo in (select codigo from boes.procesar where estructura=-1 and estado=1)");
+        fichero = new File(Var.ficheroTxt, Dates.imprimeFecha(fecha));
+        fichero.mkdirs();
     }
 
     public void run() {
@@ -51,6 +110,7 @@ public final class BB0 {
             getDatos(aux);
         }
         crearArchivos();
+        runUnion();
     }
 
     private String getLinea(String[] linea, int tipo) {
@@ -97,8 +157,8 @@ public final class BB0 {
             linea[3] = multa.getFase();
             linea[4] = multa.getTipoJuridico();
             linea[5] = Integer.toString(multa.getPlazo());
-            linea[6] = "  ";
-            linea[7] = "  ";
+            linea[6] = Integer.toString(multa.getId());
+            linea[7] = "ND";
             linea[8] = splitCodigoSancion(multa.getCodigoSancion());
             linea[9] = multa.getExpediente();
             linea[10] = multa.getExpediente();
@@ -108,8 +168,8 @@ public final class BB0 {
             linea[14] = multa.getMatricula();
             linea[15] = multa.getNif();
             linea[16] = multa.getOrganismo();
-            linea[17] = multa.getPuntos();
-            linea[18] = "  ";
+            linea[17] = multa.getCuantia();
+            linea[18] = multa.getPuntos();
             linea[19] = "  ";
             linea[20] = "  ";
             linea[21] = "  ";
@@ -117,6 +177,16 @@ public final class BB0 {
             linea[23] = multa.getLinea();
             linea[24] = pr.getLink();
             linea[25] = multa.getLocalidad();
+
+            for (int i = 0; i < linea.length; i++) {
+                String linea1 = linea[i];
+
+                if (linea1 != null) {
+                    String aux = linea1.replaceAll("\n", " ");
+                    aux = aux.replaceAll(System.lineSeparator(), " ");
+                    linea[i] = aux;
+                }
+            }
 
             data.add(linea);
         }
@@ -164,8 +234,6 @@ public final class BB0 {
     }
 
     private void crearArchivos() {
-        File fichero = new File(Var.ficheroTxt, Dates.imprimeFecha(fecha));
-        fichero.mkdirs();
         File archivoBB0 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb0");
         File archivoBB1 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb1");
 
@@ -178,5 +246,38 @@ public final class BB0 {
     private void crearArchivosD(File fichero) {
         Archivos ar = new Archivos(this.fecha, fichero, this.boletinesD);
         ar.creaArchivos();
+    }
+
+    private void runUnion() {
+        String codigoUn, struc;
+        Iterator it;
+        Union un = new Union(fecha);
+        Archivos ar = new Archivos();
+        List list = un.getEstructuras();
+
+        for (Object list1 : list) {
+            struc = (String) list1;
+            un.setMap(un.cargaMap(struc));
+            it = un.getKeySet().iterator();
+
+            while (it.hasNext()) {
+                codigoUn = (String) it.next();
+                crearArchivoUnion(codigoUn, un.getProcesar(codigoUn));
+            }
+        }
+    }
+
+    private void crearArchivoUnion(String codigoUn, List<Procesar> list) {
+        data.clear();
+        Procesar aux;
+        Iterator<Procesar> it = list.iterator();
+
+        while (it.hasNext()) {
+            aux = it.next();
+            getDatos(aux);
+        }
+
+        File archivo = new File(fichero, codigoUn + ".bb0");
+        Files.escribeArchivo(archivo, getDataArchivos(BB0));
     }
 }

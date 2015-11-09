@@ -1,5 +1,6 @@
 package boletines;
 
+import enty.Procesar;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -71,6 +72,21 @@ public class Union {
         while (it.hasNext()) {
             un = (ModeloUnion) it.next();
             bol = SqlBoe.getModeloBoletines(un.getCodigo());
+            list.add(bol);
+        }
+
+        return list;
+    }
+    
+    public List getProcesar(String aux){
+        List list = new ArrayList();
+        Procesar bol;
+        ModeloUnion un;
+        Iterator it = map.iterator(aux);
+
+        while (it.hasNext()) {
+            un = (ModeloUnion) it.next();
+            bol = SqlBoe.getProcesar(un.getCodigo());
             list.add(bol);
         }
 

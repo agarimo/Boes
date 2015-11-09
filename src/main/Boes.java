@@ -1,6 +1,7 @@
 package main;
 
 import enty.Multa;
+import extraccion.BB0;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -50,15 +51,19 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-//        launch(args);
-        test();
-        System.exit(0);
+        launch(args);
+//        test();
+//        System.exit(0);
     }
 
     public static void test() {
-        checkMatriculas();
+//        checkMatriculas();
 //        checkNif();
-
+//        printMultaBB0();
+    }
+    
+    public static void printMultaBB0(){
+        BB0 aux = new BB0(285730);
     }
 
     public static void checkMatriculas() {
