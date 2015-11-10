@@ -34,6 +34,7 @@ public class XLSXProcess {
     VistaExtraccion ve;
     StrucData sd;
     List<String> strucFecha;
+    List<String> header;
     private int contador;
 
     public XLSXProcess(List<Row> rows, Procesar pr, VistaExtraccion ve, StrucData sd) {
@@ -43,27 +44,11 @@ public class XLSXProcess {
         this.sd = sd;
         contador = 1;
         strucFecha = SqlBoe.listaEstructurasFechas();
+        header = SqlBoe.listaEstructurasHeader();
     }
 
-//    public void run() {
-//        List<Multa> multas = new ArrayList();
-//        Multa multa;
-//        Row linea;
-//        Iterator<Row> it = rows.iterator();
-//
-//        while (it.hasNext()) {
-//            linea = it.next();
-//            multa = splitLinea(linea);
-//            multas.add(multa);
-//        }
-//
-//        multas = clearMultas(multas);
-//        insertMultas(multas);
-//    }
-    
     public List<Multa> splitXLSX() {
         Regex rx = new Regex();
-        List<String> header = SqlBoe.listaEstructurasHeader();
         List<Multa> multas = new ArrayList();
         String estructura = SqlBoe.getEstructura(pr.getEstructura());
         Multa multa;
@@ -79,16 +64,21 @@ public class XLSXProcess {
 
                     if (!header.contains(multa.getExpediente())) {
                         multas.add(multa);
-                    }
 
-                    if (!rx.isBuscar("[0-9]{4}/[0-9]{2}/[0-9]{2}", Dates.imprimeFecha(multa.getFechaMulta()))) {
-                        multa = new Multa();
-                        multas.add(multa);
+                        if (sd.fechaMulta != 0) {
+                            if (multa.getFechaMulta() == null) {
+                                if (!isFecha(getCelda(linea, sd.fechaMulta))) {
+                                    multa=new Multa();
+                                    multas.add(multa);
+                                }
+                            }
+                        }
                     }
 
                 } catch (IndexOutOfBoundsException ex) {
                     multa = new Multa();
                     multas.add(multa);
+                    ex.printStackTrace();
                 }
             }
         }
@@ -264,6 +254,28 @@ public class XLSXProcess {
             sb.append(" ");
         }
         return sb.toString().trim().replace("'", "\\'");
+    }
+
+    private boolean isFecha(String fecha) {
+        Iterator<String> it = strucFecha.iterator();
+        SimpleDateFormat formato;
+        String aux;
+        Date dat;
+        boolean found = false;
+
+        while (it.hasNext()) {
+            aux = it.next();
+            formato = new SimpleDateFormat(aux);
+            formato.setLenient(false);
+
+            try {
+                dat = formato.parse(fecha);
+                found = true;
+            } catch (ParseException ex) {
+                //
+            }
+        }
+        return found;
     }
 
     private Date setFecha(String fecha) {

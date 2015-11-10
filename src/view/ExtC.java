@@ -574,8 +574,7 @@ public class ExtC implements Initializable, ControlledScreen {
                                     mostrarPanel(this.wait_to_preview);
                                 });
                             } catch (NullPointerException e) {
-//                                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
-//                                e.printStackTrace();
+                                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
                                 Platform.runLater(() -> {
                                     piProgreso.setProgress(1);
                                     lbProgreso.setText("");

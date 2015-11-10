@@ -40,6 +40,10 @@ public class Multa {
     public Multa() {
 
     }
+    
+    public Multa(String expediente){
+        this.expediente=expediente;
+    }
 
     public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion,int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.idBoletin = idBoletin;

@@ -2,6 +2,9 @@ package main;
 
 import enty.Multa;
 import extraccion.BB0;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -61,8 +64,8 @@ public class Boes extends Application {
 //        checkNif();
 //        printMultaBB0();
     }
-    
-    public static void printMultaBB0(){
+
+    public static void printMultaBB0() {
         BB0 aux = new BB0(285730);
     }
 
@@ -81,7 +84,7 @@ public class Boes extends Application {
         while (it.hasNext()) {
             aux = it.next();
 
-            str = rx.buscar(aux.getMatricula(), Regex.matriculas);
+            str = rx.buscar(aux.getMatricula(), Arrays.asList(Regex.matriculas));
 
             if (str == null) {
 
@@ -105,7 +108,7 @@ public class Boes extends Application {
         while (it.hasNext()) {
             aux = it.next();
 
-            str = rx.buscar(aux.getNif(), Regex.nif);
+            str = rx.buscar(aux.getNif(), Arrays.asList(Regex.nif));
 
             if (str == null) {
 

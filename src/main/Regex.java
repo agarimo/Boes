@@ -1,5 +1,6 @@
 package main;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,15 +35,10 @@ public class Regex {
         "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}[JABCDEFGHI]{1}"
     };
     
+    
+    
 
     public Regex() {
-    }
-
-    public boolean isBuscar(String patron, String str) {
-        pt = Pattern.compile(patron);
-        mt = pt.matcher(str);
-
-        return mt.find();
     }
 
     public String buscar(String patron, String str) {
@@ -56,9 +52,15 @@ public class Regex {
 
         return aux;
     }
+    
+    public boolean isBuscar(String patron, String str) {
+        pt = Pattern.compile(patron);
+        mt = pt.matcher(str);
 
-    public String buscar(String str, String[] patrones) {
-        this.patrones = patrones;
+        return mt.find();
+    }
+
+    public String buscar(String str, List<String> patrones) {
         String found = null;
 
         for (String aux : patrones) {
@@ -69,6 +71,22 @@ public class Regex {
                 found = mt.group().trim();
             }
         }
+        return found;
+    }
+    
+    public boolean isBuscar(String str, List<String> patrones) {
+        boolean found = false;
+
+        for (String aux : patrones) {
+            pt = Pattern.compile(aux);
+            mt = pt.matcher(str);
+
+            if (mt.find()) {
+                System.out.println("encuentra: "+mt.group());
+                found = true;
+            }
+        }
+        
         return found;
     }
 }

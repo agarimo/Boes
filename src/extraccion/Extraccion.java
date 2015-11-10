@@ -51,20 +51,6 @@ public class Extraccion {
         return this.lista;
     }
 
-//    public boolean procesaXLSX(Procesar aux) {
-//        File file = new File(this.fichero, aux.getCodigo() + ".xlsx");
-//        VistaExtraccion ve = SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
-//        StrucData sd = SqlBoe.getStrucData(StrucData.SQLBuscar(aux.getEstructura()));
-//        XLSXProcess process = new XLSXProcess(getRows(file), aux, ve, sd);
-//
-//        if (file.exists()) {
-//            process.run();
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
     public List<Multa> previewXLSX(Procesar aux) {
         File file = new File(this.fichero, aux.getCodigo() + ".xlsx");
         VistaExtraccion ve = SqlBoe.getVistaExtraccion(VistaExtraccion.SQLBuscar(aux.getCodigo()));
