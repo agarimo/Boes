@@ -2,8 +2,6 @@ package main;
 
 import enty.Multa;
 import extraccion.BB0;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,7 +58,7 @@ public class Boes extends Application {
     }
 
     public static void test() {
-//        checkMatriculas();
+        checkMatriculas();
 //        checkNif();
 //        printMultaBB0();
     }

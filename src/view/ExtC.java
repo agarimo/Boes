@@ -31,6 +31,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -70,6 +71,7 @@ public class ExtC implements Initializable, ControlledScreen {
     private final int procesar_to_wait = 3;
     private final int wait_to_preview = 4;
     private final int wait_to_procesar = 5;
+    private final int preview_to_wait = 6;
     //<editor-fold defaultstate="collapsed" desc="FXML VAR">
     @FXML
     private AnchorPane rootPane;
@@ -93,6 +95,8 @@ public class ExtC implements Initializable, ControlledScreen {
     private Button btAbrirCarpetaAr;
     @FXML
     private Button btProcesar;
+    @FXML
+    private Button btForzarProcesar;
     @FXML
     private TableView tvProcesar;
     @FXML
@@ -192,19 +196,22 @@ public class ExtC implements Initializable, ControlledScreen {
         while (it.hasNext()) {
             multa = it.next();
 
-            modelo = new ModeloPreview();
-            modelo.expediente.set(multa.getExpediente());
-            modelo.sancionado.set(multa.getSancionado());
-            modelo.nif.set(multa.getNif());
-            modelo.localidad.set(multa.getLocalidad());
-            modelo.fecha.set(Dates.imprimeFecha(multa.getFechaMulta()));
-            modelo.matricula.set(multa.getMatricula());
-            modelo.cuantia.set(multa.getCuantia());
-            modelo.articulo.set(multa.getArticulo());
-            modelo.puntos.set(multa.getPuntos());
-            modelo.reqObs.set(multa.getReqObs());
+            if (!multa.equals(new Multa())) {
+                modelo = new ModeloPreview();
+                modelo.setMulta(multa);
+                modelo.expediente.set(multa.getExpediente());
+                modelo.sancionado.set(multa.getSancionado());
+                modelo.nif.set(multa.getNif());
+                modelo.localidad.set(multa.getLocalidad());
+                modelo.fecha.set(Dates.imprimeFecha(multa.getFechaMulta()));
+                modelo.matricula.set(multa.getMatricula());
+                modelo.cuantia.set(multa.getCuantia());
+                modelo.articulo.set(multa.getArticulo());
+                modelo.puntos.set(multa.getPuntos());
+                modelo.reqObs.set(multa.getReqObs());
 
-            previewList.add(modelo);
+                previewList.add(modelo);
+            }
         }
     }
 
@@ -234,6 +241,55 @@ public class ExtC implements Initializable, ControlledScreen {
         dpFecha.setValue(null);
         procesarList.clear();
         previewList.clear();
+    }
+
+    @FXML
+    void forzarProcesado(ActionEvent event) {
+        List<Multa> list = new ArrayList();
+        ModeloPreview mp;
+        Iterator<ModeloPreview> it = previewList.iterator();
+
+        while (it.hasNext()) {
+            mp = it.next();
+
+            if (!mp.getMulta().equals(new Multa())) {
+                list.add(mp.getMulta());
+            }
+        }
+
+        Thread a = new Thread(() -> {
+
+            Platform.runLater(() -> {
+                rootPane.getScene().setCursor(Cursor.WAIT);
+                btForzarProcesar.setDisable(true);
+                btForzarProcesar.setText("PROCESANDO");
+                btPreview.setDisable(true);
+            });
+
+            Procesar pr;
+            ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+            pr = SqlBoe.getProcesar(aux.getCodigo());
+
+            try {
+                XLSXProcess.insertMultas(list);
+                pr.SQLSetEstado(Estado.PROCESADO_XLSX.getValue());
+            } catch (Exception e) {
+                pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
+            }
+
+            Platform.runLater(() -> {
+                rootPane.getScene().setCursor(Cursor.DEFAULT);
+                btForzarProcesar.setDisable(false);
+                btForzarProcesar.setText("Procesar");
+                btPreview.setDisable(false);
+                btPreview.setText("Previsualizar Extracción");
+                mostrarPanel(this.preview_to_procesar);
+                isPreview = !isPreview;
+                switchControles(false);
+                cambioEnDatePicker(new ActionEvent());
+            });
+        });
+        a.start();
     }
 
     @FXML
@@ -771,6 +827,23 @@ public class ExtC implements Initializable, ControlledScreen {
                 fade.play();
 
                 break;
+
+            case preview_to_wait:
+                fade = new FadeTransition(Duration.millis(1000), panelPreview);
+                fade.setFromValue(1.0);
+                fade.setToValue(0.0);
+                fade.setAutoReverse(false);
+                fade.play();
+                panelEspera.setVisible(false);
+
+                panelPreview.setVisible(true);
+                fade = new FadeTransition(Duration.millis(1000), panelEspera);
+                fade.setFromValue(0.0);
+                fade.setToValue(1.0);
+                fade.setAutoReverse(false);
+                fade.play();
+
+                break;
         }
     }
 
@@ -827,6 +900,7 @@ public class ExtC implements Initializable, ControlledScreen {
     void resetearEstado(ActionEvent event) {
         ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
         Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
+        SqlBoe.eliminarMultasBoletin(pr.getCodigo());
         pr.SQLSetEstado(Estado.LISTO_PROCESAR.getValue());
         cambioEnDatePicker(new ActionEvent());
     }

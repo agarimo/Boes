@@ -20,7 +20,6 @@ import main.Var;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import util.CalculaNif;
-import util.Dates;
 import util.Sql;
 
 /**
@@ -68,7 +67,7 @@ public class XLSXProcess {
                         if (sd.fechaMulta != 0) {
                             if (multa.getFechaMulta() == null) {
                                 if (!isFecha(getCelda(linea, sd.fechaMulta))) {
-                                    multa=new Multa();
+                                    multa = new Multa();
                                     multas.add(multa);
                                 }
                             }
@@ -118,9 +117,16 @@ public class XLSXProcess {
     }
 
     private Multa splitLinea(Row linea) {
+        boolean casoMadrid = false;
         String prec = "";
         String art = "";
         Multa multa = new Multa();
+
+        if (sd.puntos != 0) {
+            if (getCelda(linea, sd.puntos).equals("MADRID")) {
+                casoMadrid = true;
+            }
+        }
 
         multa.setIdBoletin(pr.getId());
         multa.setCodigoSancion(getCodigoMulta());
@@ -143,7 +149,11 @@ public class XLSXProcess {
         }
 
         if (sd.fechaMulta != 0) {
-            multa.setFechaMulta(setFecha(getCelda(linea, sd.fechaMulta)));
+            if (casoMadrid) {
+                multa.setFechaMulta(setFecha(getCelda(linea, sd.nif)));
+            } else {
+                multa.setFechaMulta(setFecha(getCelda(linea, sd.fechaMulta)));
+            }
         } else {
             multa.setFechaMulta(null);
         }
@@ -179,37 +189,61 @@ public class XLSXProcess {
         multa.setArticulo((art.trim() + " " + prec.trim()).toUpperCase());
 
         if (sd.nif != 0) {
-            multa.setNif(getCelda(linea, sd.nif).trim().toUpperCase());
+            if (casoMadrid) {
+                multa.setNif(getCelda(linea, sd.sancionado).trim().toUpperCase());
+            } else {
+                multa.setNif(getCelda(linea, sd.nif).trim().toUpperCase());
+            }
         } else {
             multa.setNif("");
         }
 
         if (sd.sancionado != 0) {
-            multa.setSancionado(getCelda(linea, sd.sancionado).trim().toUpperCase());
+            if (casoMadrid) {
+                multa.setSancionado(getCelda(linea, sd.matricula).trim().toUpperCase());
+            } else {
+                multa.setSancionado(getCelda(linea, sd.sancionado).trim().toUpperCase());
+            }
         } else {
             multa.setSancionado("");
         }
 
         if (sd.localidad != 0) {
-            multa.setLocalidad(getCelda(linea, sd.localidad).trim().toUpperCase());
+            if (casoMadrid) {
+                multa.setLocalidad(getCelda(linea, sd.puntos).trim().toUpperCase());
+            } else {
+                multa.setLocalidad(getCelda(linea, sd.localidad).trim().toUpperCase());
+            }
         } else {
             multa.setLocalidad("");
         }
 
         if (sd.matricula != 0) {
-            multa.setMatricula(getCelda(linea, sd.matricula).trim().toUpperCase());
+            if (casoMadrid) {
+                multa.setMatricula("");
+            } else {
+                multa.setMatricula(getCelda(linea, sd.matricula).trim().toUpperCase());
+            }
         } else {
             multa.setMatricula("");
         }
 
         if (sd.cuantia != 0) {
-            multa.setCuantia(getCelda(linea, sd.cuantia).trim().toUpperCase());
+            if (casoMadrid) {
+                multa.setCuantia("");
+            } else {
+                multa.setCuantia(getCelda(linea, sd.cuantia).trim().toUpperCase());
+            }
         } else {
             multa.setCuantia("");
         }
 
         if (sd.puntos != 0) {
-            multa.setPuntos(getCelda(linea, sd.puntos).trim().toUpperCase());
+            if (casoMadrid) {
+                multa.setPuntos(getCelda(linea, sd.cuantia).trim().toUpperCase());
+            } else {
+                multa.setPuntos(getCelda(linea, sd.puntos).trim().toUpperCase());
+            }
         } else {
             multa.setPuntos("");
         }

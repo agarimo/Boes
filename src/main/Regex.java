@@ -25,7 +25,8 @@ public class Regex {
         "CARECE",
         "EX",
         "PEATON",
-        "EMPRESA"
+        "EMPRESA",
+        "QUAD"
     };
 
     public static String[] nif = {

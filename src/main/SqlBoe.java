@@ -199,7 +199,7 @@ public class SqlBoe {
         }
         return aux;
     }
-    
+
     public static Multa getMulta(String query) {
         Sql bd;
         ResultSet rs;
@@ -233,7 +233,7 @@ public class SqlBoe {
                 aux.setReqObs(rs.getString("reqObs"));
                 aux.setLinea(rs.getString("linea"));
             }
-            
+
             rs.close();
             bd.close();
         } catch (SQLException ex) {
@@ -394,6 +394,19 @@ public class SqlBoe {
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
         }
         return aux;
+    }
+
+    public static void eliminarMultasBoletin(String codigo) {
+        String query = "DELETE FROM boes.multa WHERE idBoletin=(SELECT id FROM boes.procesar WHERE codigo="+Varios.entrecomillar(codigo)+");";
+        Sql bd;
+        
+        try {
+            bd = new Sql(Var.con);
+            bd.ejecutar(query);
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     //<editor-fold defaultstate="collapsed" desc="LISTADOS">

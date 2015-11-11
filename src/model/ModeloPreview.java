@@ -1,5 +1,6 @@
 package model;
 
+import enty.Multa;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -8,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class ModeloPreview {
 
+    public Multa multa;
     public SimpleStringProperty expediente = new SimpleStringProperty();
     public SimpleStringProperty sancionado = new SimpleStringProperty();
     public SimpleStringProperty nif = new SimpleStringProperty();
@@ -18,6 +20,14 @@ public class ModeloPreview {
     public SimpleStringProperty articulo = new SimpleStringProperty();
     public SimpleStringProperty puntos = new SimpleStringProperty();
     public SimpleStringProperty reqObs = new SimpleStringProperty();
+    
+    public Multa getMulta(){
+        return this.multa;
+    }
+    
+    public void setMulta(Multa multa){
+        this.multa=multa;
+    }
 
     public String getExpediente() {
         return expediente.get();

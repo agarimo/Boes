@@ -73,7 +73,7 @@
                                     </AnchorPane>
                                     <AnchorPane fx:id="panelPreview" opacity="0.0" prefHeight="200.0" prefWidth="200.0" visible="false">
                                        <children>
-                                          <TableView fx:id="tvPreview" layoutX="14.0" layoutY="14.0" prefHeight="460.0" prefWidth="782.0" tableMenuButtonVisible="true">
+                                          <TableView fx:id="tvPreview" layoutX="14.0" layoutY="14.0" prefHeight="460.0" prefWidth="782.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="86.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                                              <columns>
                                                 <TableColumn fx:id="clExpediente" maxWidth="120.0" minWidth="-Infinity" prefWidth="120.0" text="Expediente" />
                                                 <TableColumn fx:id="clSancionado" maxWidth="200.0" minWidth="-Infinity" prefWidth="200.0" text="Sancionado" />
@@ -94,6 +94,7 @@
                                                 </ContextMenu>
                                              </contextMenu>
                                           </TableView>
+                                          <Button fx:id="btForzarProcesar" layoutX="646.0" layoutY="483.0" mnemonicParsing="false" onAction="#forzarProcesado" prefHeight="30.0" prefWidth="150.0" text="Procesar" AnchorPane.bottomAnchor="47.0" AnchorPane.rightAnchor="14.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane fx:id="panelEspera" prefHeight="200.0" prefWidth="200.0" visible="false">
