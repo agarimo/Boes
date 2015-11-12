@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import main.Regex;
 import main.Var;
 import util.CalculaNif;
 import util.Dates;
@@ -40,16 +41,16 @@ public class Multa {
     public Multa() {
 
     }
-    
-    public Multa(String expediente){
-        this.expediente=expediente;
+
+    public Multa(String expediente) {
+        this.expediente = expediente;
     }
 
-    public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion,int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
+    public Multa(int idBoletin, String codigoSancion, Date fechaPublicacion, int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.idBoletin = idBoletin;
         this.codigoSancion = codigoSancion;
         this.fechaPublicacion = fechaPublicacion;
-        this.idOrganismo=idOrganismo;
+        this.idOrganismo = idOrganismo;
         this.organismo = organismo;
         this.boe = boe;
         this.fase = fase;
@@ -68,12 +69,12 @@ public class Multa {
         this.linea = linea;
     }
 
-    public Multa(int id, int idBoletin, String codigoSancion, Date fechaPublicacion,int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
+    public Multa(int id, int idBoletin, String codigoSancion, Date fechaPublicacion, int idOrganismo, String organismo, String boe, String fase, String tipoJuridico, int plazo, String expediente, Date fechaMulta, String articulo, String nif, String sancionado, String localidad, String matricula, String cuantia, String puntos, String reqObs, String linea) {
         this.id = id;
         this.idBoletin = idBoletin;
         this.codigoSancion = codigoSancion;
         this.fechaPublicacion = fechaPublicacion;
-        this.idOrganismo=idOrganismo;
+        this.idOrganismo = idOrganismo;
         this.organismo = organismo;
         this.boe = boe;
         this.fase = fase;
@@ -290,7 +291,7 @@ public class Multa {
         }
         return true;
     }
-    
+
     private String limpia(String str) {
         Pattern p = Pattern.compile("[^0-9A-Z]");
         Matcher m = p.matcher(str);
@@ -300,7 +301,27 @@ public class Multa {
         }
         return str.trim();
     }
-    
+
+    private String checkMatricula(String matricula) {
+        Regex rx = new Regex();
+        String str = "";
+
+        if (rx.isBuscar("[C]{1}[0]{2}[0-9]{4}[A-Z]{3}", matricula)) {
+            str = matricula.substring(0, 1);
+            str = str + matricula.substring(3, matricula.length());
+        } else if (rx.isBuscar("[0]{2}[0-9]{4}[A-Z]{3}", matricula)) {
+            str = matricula.substring(2, matricula.length());
+        } else if (rx.isBuscar("[A-Z]{1}[0]{2}[0-9]{4}[A-Z]{1,2}", matricula)) {
+            str = matricula.substring(0, 1);
+            str = str + matricula.substring(3, matricula.length());
+        } else if (rx.isBuscar("[A-Z]{2}[0]{2}[0-9]{4}[A-Z]{1,2}", matricula)) {
+            str = matricula.substring(0, 2);
+            str = str + matricula.substring(4, matricula.length());
+        }
+
+        return str;
+    }
+
     private String checkNif(String nif) {
         CalculaNif cn = new CalculaNif();
         String aux;

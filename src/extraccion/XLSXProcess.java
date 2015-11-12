@@ -163,7 +163,7 @@ public class XLSXProcess {
         }
 
         if (sd.preceptoB != 0) {
-            prec += "" + getCelda(linea, sd.preceptoB).trim();
+            prec += "." + getCelda(linea, sd.preceptoB).trim();
         }
 
         if (sd.preceptoC != 0) {

@@ -2,6 +2,10 @@ package main;
 
 import enty.Multa;
 import extraccion.BB0;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +15,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import util.Dates;
 
 /**
  *
@@ -52,15 +57,28 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-        launch(args);
-//        test();
-//        System.exit(0);
+//        launch(args);
+        test();
+        System.exit(0);
     }
 
     public static void test() {
-        checkMatriculas();
-//        checkNif();
+//        fixMatriculas();
+//        checkMatriculas();
+        checkNif();
 //        printMultaBB0();
+//        pruebas();
+    }
+
+    public static void pruebas() {
+        String matricula = "BC001234AB";
+        String str;
+
+        str = matricula.substring(0, 2);
+        str = str + matricula.substring(4, matricula.length());
+
+        System.out.println(str);
+
     }
 
     public static void printMultaBB0() {
@@ -72,31 +90,37 @@ public class Boes extends Application {
         Multa aux;
         String str;
         List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
-
-        System.out.println("Se han cargado " + listado.size() + " multas");
-        System.out.println(System.lineSeparator());
-        System.out.println(System.lineSeparator());
+        int contador = 0;
 
         Iterator<Multa> it = listado.iterator();
 
         while (it.hasNext()) {
             aux = it.next();
 
-            str = rx.buscar(aux.getMatricula(), Arrays.asList(Regex.matriculas));
+            str = rx.buscar(Arrays.asList(Regex.matriculas), aux.getMatricula());
 
             if (str == null) {
 
                 if (!aux.getMatricula().equals("")) {
+                    contador++;
                     System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getMatricula());
                 }
             }
         }
+
+        double porcentaje = ((double) contador * 100) / (double) listado.size();
+        DecimalFormat f = new DecimalFormat("#.##");
+        System.out.println(System.lineSeparator());
+        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " fuera del patrón");
+        System.out.println("Hay un " + f.format(porcentaje) + "% que no cumple el patrón");
     }
 
     public static void checkNif() {
         Regex rx = new Regex();
         Multa aux;
+        int contador=0;
         String str;
+        List<String> excluidas = new ArrayList();
         List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
 
         System.out.println("Se han cargado " + listado.size() + " multas");
@@ -106,15 +130,24 @@ public class Boes extends Application {
         while (it.hasNext()) {
             aux = it.next();
 
-            str = rx.buscar(aux.getNif(), Arrays.asList(Regex.nif));
+            str = rx.buscar(Arrays.asList(Regex.nif), aux.getNif());
 
             if (str == null) {
 
                 if (!aux.getNif().equals("")) {
-                    System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getMatricula());
+                    contador++;
+                    excluidas.add(aux.getNif());
+                    System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getNif());
                 }
             }
         }
+
+        double porcentaje = ((double) contador * 100) / (double) listado.size();
+        DecimalFormat f = new DecimalFormat("#.##");
+        System.out.println(System.lineSeparator());
+        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " fuera del patrón");
+        System.out.println("Hay un " + f.format(porcentaje) + "% que no cumple el patrón");
+        
     }
 
     public static Date getFecha() {
