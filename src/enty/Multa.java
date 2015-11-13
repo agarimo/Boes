@@ -226,7 +226,8 @@ public class Multa {
     }
 
     public void setMatricula(String matricula) {
-        this.matricula = limpia(matricula);
+        matricula = limpia(matricula);
+        this.matricula=checkMatricula(matricula);
     }
 
     public String getCuantia() {
@@ -317,6 +318,10 @@ public class Multa {
         } else if (rx.isBuscar("[A-Z]{2}[0]{2}[0-9]{4}[A-Z]{1,2}", matricula)) {
             str = matricula.substring(0, 2);
             str = str + matricula.substring(4, matricula.length());
+        }else if (rx.isBuscar("[0-9]{3}[A-Z]{3}", matricula)){
+            str= "0"+matricula;
+        }else if (rx.isBuscar("[0-9]{2}[A-Z]{3}", matricula)){
+            str= "00"+matricula;
         }
 
         return str;

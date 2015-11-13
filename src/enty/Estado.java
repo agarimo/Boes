@@ -11,7 +11,8 @@ public enum Estado {
     PROCESADO_XLSX(2),
     ERROR_PROCESAR(3),
     PDF_NO_GENERADO(4),
-    XLSX_NO_GENERADO(5);
+    XLSX_NO_GENERADO(5),
+    PROCESAR_MANUAL(6);
 
     private final int value;
 
@@ -38,6 +39,8 @@ public enum Estado {
                 return "Pdf no generado";
             case XLSX_NO_GENERADO:
                 return "XLSX no generado";
+            case PROCESAR_MANUAL:
+                return "Procesar manualmente";
             default:
                 throw new IllegalArgumentException();
         }

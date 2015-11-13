@@ -3,8 +3,6 @@ package main;
 import enty.Multa;
 import extraccion.BB0;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -15,7 +13,6 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import util.Dates;
 
 /**
  *
@@ -63,9 +60,8 @@ public class Boes extends Application {
     }
 
     public static void test() {
-//        fixMatriculas();
-//        checkMatriculas();
-        checkNif();
+        checkMatriculas();
+//        checkNif();
 //        printMultaBB0();
 //        pruebas();
     }
@@ -87,24 +83,18 @@ public class Boes extends Application {
 
     public static void checkMatriculas() {
         Regex rx = new Regex();
-        Multa aux;
-        String str;
-        List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
+        String aux;
+        List<String> listado = SqlBoe.listaString("SELECT matricula FROM boes.multa limit 5000000");
         int contador = 0;
 
-        Iterator<Multa> it = listado.iterator();
+        Iterator<String> it = listado.iterator();
 
         while (it.hasNext()) {
             aux = it.next();
 
-            str = rx.buscar(Arrays.asList(Regex.matriculas), aux.getMatricula());
-
-            if (str == null) {
-
-                if (!aux.getMatricula().equals("")) {
-                    contador++;
-                    System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getMatricula());
-                }
+            if (rx.isBuscar("[A-Z]{1,2}[0-9]{2,3}[A-Z]{1,2}", aux)) {
+                contador++;
+                System.out.println(aux);
             }
         }
 
@@ -118,9 +108,8 @@ public class Boes extends Application {
     public static void checkNif() {
         Regex rx = new Regex();
         Multa aux;
-        int contador=0;
+        int contador = 0;
         String str;
-        List<String> excluidas = new ArrayList();
         List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
 
         System.out.println("Se han cargado " + listado.size() + " multas");
@@ -136,7 +125,6 @@ public class Boes extends Application {
 
                 if (!aux.getNif().equals("")) {
                     contador++;
-                    excluidas.add(aux.getNif());
                     System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getNif());
                 }
             }
@@ -147,7 +135,7 @@ public class Boes extends Application {
         System.out.println(System.lineSeparator());
         System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " fuera del patrón");
         System.out.println("Hay un " + f.format(porcentaje) + "% que no cumple el patrón");
-        
+
     }
 
     public static Date getFecha() {

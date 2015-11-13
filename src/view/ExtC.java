@@ -699,6 +699,7 @@ public class ExtC implements Initializable, ControlledScreen {
                 for (int i = 0; i < list.size(); i++) {
                     final int contador = i;
                     final int total = list.size();
+                    
                     Platform.runLater(() -> {
                         int contadour = contador + 1;
                         double counter = contador;
@@ -706,6 +707,7 @@ public class ExtC implements Initializable, ControlledScreen {
                         lbProgreso.setText("PROCESANDO " + contadour + " de " + total);
                         piProgreso.setProgress(counter / toutal);
                     });
+                    
                     aux = (ModeloProcesar) list.get(i);
                     pr = SqlBoe.getProcesar(aux.getCodigo());
 

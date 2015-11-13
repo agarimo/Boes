@@ -1115,5 +1115,28 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List listaString(String query) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString(1);
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 //</editor-fold>
 }
