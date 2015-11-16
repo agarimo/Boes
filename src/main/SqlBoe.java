@@ -1067,6 +1067,50 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List listaMultasReducidas(String query) {
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Multa aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Multa();
+                aux.setId(rs.getInt("id"));
+//                aux.setIdBoletin(rs.getInt("idBoletin"));
+                aux.setCodigoSancion(rs.getString("codigoSancion"));
+//                aux.setFechaPublicacion(rs.getDate("fechaPublicacion"));
+//                aux.setIdOrganismo(rs.getInt("idOrganismo"));
+//                aux.setOrganismo(rs.getString("organismo"));
+//                aux.setBoe(rs.getString("boe"));
+//                aux.setFase(rs.getString("fase"));
+//                aux.setTipoJuridico(rs.getString("tipoJuridico"));
+//                aux.setPlazo(rs.getInt("plazo"));
+//                aux.setExpediente(rs.getString("expediente"));
+//                aux.setFechaMulta(rs.getDate("fechaMulta"));
+//                aux.setArticulo(rs.getString("articulo"));
+                aux.setNif(rs.getString("nif"));
+//                aux.setSancionado(rs.getString("sancionado"));
+//                aux.setLocalidad(rs.getString("localidad"));
+                aux.setMatricula(rs.getString("matricula"));
+//                aux.setCuantia(rs.getString("cuantia"));
+//                aux.setPuntos(rs.getString("puntos"));
+//                aux.setReqObs(rs.getString("reqObs"));
+//                aux.setLinea(rs.getString("linea"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public static List<Integer> listaEstructurasCreadas() {
         String query = "SELECT * FROM " + Var.nombreBD + ".strucdata";

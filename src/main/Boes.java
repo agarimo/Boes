@@ -1,10 +1,7 @@
 package main;
 
-import enty.Multa;
 import extraccion.BB0;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -60,20 +57,16 @@ public class Boes extends Application {
     }
 
     public static void test() {
-        checkMatriculas();
-//        checkNif();
+//        checkMatriculas();
+        checkNif();
 //        printMultaBB0();
 //        pruebas();
     }
 
     public static void pruebas() {
-        String matricula = "BC001234AB";
-        String str;
-
-        str = matricula.substring(0, 2);
-        str = str + matricula.substring(4, matricula.length());
-
-        System.out.println(str);
+        String matricula = "53483776J";
+        
+        System.out.println(add0(matricula,9));
 
     }
 
@@ -81,61 +74,63 @@ public class Boes extends Application {
         BB0 aux = new BB0(285730);
     }
 
-    public static void checkMatriculas() {
+//    public static void checkMatriculas() {
+//        Regex rx = new Regex();
+//        String aux;
+//        List<String> listado = SqlBoe.listaString("SELECT matricula FROM boes.multa limit 5000000");
+//        int contador = 0;
+//
+//        Iterator<String> it = listado.iterator();
+//
+//        while (it.hasNext()) {
+//            aux = it.next();
+//
+//            if (rx.isBuscar("[A-Z]{1,2}[0-9]{2,3}[A-Z]{1,2}", aux)) {
+//                contador++;
+//                System.out.println(aux);
+//            }
+//        }
+//
+//        double porcentaje = ((double) contador * 100) / (double) listado.size();
+//        DecimalFormat f = new DecimalFormat("#.##");
+//        System.out.println(System.lineSeparator());
+//        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " en el patrón");
+//        System.out.println("Cumple el patrón un " + f.format(porcentaje) + "%");
+//    }
+
+    public static void checkNif() {
         Regex rx = new Regex();
         String aux;
-        List<String> listado = SqlBoe.listaString("SELECT matricula FROM boes.multa limit 5000000");
         int contador = 0;
+        List<String> listado = SqlBoe.listaString("SELECT nif FROM boes.multa limit 5000000");
+
+        System.out.println("Se han cargado " + listado.size() + " multas");
 
         Iterator<String> it = listado.iterator();
 
         while (it.hasNext()) {
             aux = it.next();
 
-            if (rx.isBuscar("[A-Z]{1,2}[0-9]{2,3}[A-Z]{1,2}", aux)) {
+            if (rx.isBuscar("[0-9]{5,7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}", aux)) {
                 contador++;
-                System.out.println(aux);
+                System.out.println(aux+" -- "+add0(aux,9));
             }
         }
 
         double porcentaje = ((double) contador * 100) / (double) listado.size();
         DecimalFormat f = new DecimalFormat("#.##");
         System.out.println(System.lineSeparator());
-        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " fuera del patrón");
-        System.out.println("Hay un " + f.format(porcentaje) + "% que no cumple el patrón");
+        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " en el patrón");
+        System.out.println("Cumple el patrón un " + f.format(porcentaje) + "%");
     }
-
-    public static void checkNif() {
-        Regex rx = new Regex();
-        Multa aux;
-        int contador = 0;
-        String str;
-        List<Multa> listado = SqlBoe.listaMultas("SELECT * FROM boes.multa limit 5000000");
-
-        System.out.println("Se han cargado " + listado.size() + " multas");
-
-        Iterator<Multa> it = listado.iterator();
-
-        while (it.hasNext()) {
-            aux = it.next();
-
-            str = rx.buscar(Arrays.asList(Regex.nif), aux.getNif());
-
-            if (str == null) {
-
-                if (!aux.getNif().equals("")) {
-                    contador++;
-                    System.out.println(aux.getId() + " " + aux.getCodigoSancion() + " " + aux.getNif());
-                }
-            }
+    
+    private static String add0(String aux, int size){
+        
+        while(aux.length()<size){
+            aux="0"+aux;
         }
-
-        double porcentaje = ((double) contador * 100) / (double) listado.size();
-        DecimalFormat f = new DecimalFormat("#.##");
-        System.out.println(System.lineSeparator());
-        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " fuera del patrón");
-        System.out.println("Hay un " + f.format(porcentaje) + "% que no cumple el patrón");
-
+        
+        return aux;
     }
 
     public static Date getFecha() {

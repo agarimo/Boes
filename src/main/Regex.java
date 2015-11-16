@@ -42,6 +42,11 @@ public class Regex {
         "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{8}",
         "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}[JABCDEFGHI]{1}"
     };
+    
+    public static String[] nifMal = {
+        //"[0]{1}[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]{1}",
+        "[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}"
+    };
 
     public Regex() {
     }
