@@ -231,6 +231,11 @@ public class WinC implements Initializable, ControlledScreen {
     public void cargaExtraccion(ActionEvent event) {
         myController.setScreen(Boes.screen2ID);
     }
+    
+    @FXML
+    public void cargaPatterns(ActionEvent event){
+        myController.setScreen(Boes.screen3ID);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

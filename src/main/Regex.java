@@ -30,22 +30,11 @@ public class Regex {
         "BICICLETA"
     };
 
-    public static String[] matriculasMal = {
-        "[C][0]{2}[0-9]{4}[A-Z]{3}",
-        "[0]{2}[0-9]{4}[A-Z]{3}",
-        "[A-Z]{1,2}[0]{2}[0-9]{4}[A-Z]{1,2}"
-    };
-
     public static String[] nif = {
         "[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]{1}",
         "[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}",
         "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{8}",
         "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}[JABCDEFGHI]{1}"
-    };
-    
-    public static String[] nifMal = {
-        //"[0]{1}[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]{1}",
-        "[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}"
     };
 
     public Regex() {

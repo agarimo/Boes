@@ -40,6 +40,7 @@
             <Menu mnemonicParsing="false" text="Extracción">
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#cargaExtraccion" text="Extracción" />
+                  <MenuItem mnemonicParsing="false" onAction="#cargaPatterns" text="Patrones" />
               </items>
             </Menu>
         </menus>

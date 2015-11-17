@@ -148,7 +148,7 @@ public class ExtC implements Initializable, ControlledScreen {
             try {
                 Desktop.getDesktop().browse(fichero.toURI());
             } catch (IOException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

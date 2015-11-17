@@ -2,6 +2,7 @@ package main;
 
 import extraccion.BB0;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -21,8 +22,8 @@ public class Boes extends Application {
     public static String screen1File = "/view/Win.fxml";
     public static String screen2ID = "extraccion";
     public static String screen2File = "/view/Ext.fxml";
-    public static String screen3ID = "screen3";
-    public static String screen3File = "Screen3.fxml";
+    public static String screen3ID = "Pattern";
+    public static String screen3File = "/view/Pattern.fxml";
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -30,7 +31,7 @@ public class Boes extends Application {
         ScreensController mainContainer = new ScreensController();
         mainContainer.loadScreen(Boes.screen1ID, Boes.screen1File);
         mainContainer.loadScreen(Boes.screen2ID, Boes.screen2File);
-//        mainContainer.loadScreen(Boes.screen3ID, Boes.screen3File);
+        mainContainer.loadScreen(Boes.screen3ID, Boes.screen3File);
 
         mainContainer.setScreen(Boes.screen1ID);
 
@@ -51,9 +52,9 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-//        launch(args);
-        test();
-        System.exit(0);
+        launch(args);
+//        test();
+//        System.exit(0);
     }
 
     public static void test() {
@@ -64,10 +65,7 @@ public class Boes extends Application {
     }
 
     public static void pruebas() {
-        String matricula = "53483776J";
         
-        System.out.println(add0(matricula,9));
-
     }
 
     public static void printMultaBB0() {
@@ -102,7 +100,7 @@ public class Boes extends Application {
         Regex rx = new Regex();
         String aux;
         int contador = 0;
-        List<String> listado = SqlBoe.listaString("SELECT nif FROM boes.multa limit 5000000");
+        List<String> listado = SqlBoe.listaString("SELECT matricula FROM boes.multa where fechaPublicacion='2015-11-13' limit 5000000");
 
         System.out.println("Se han cargado " + listado.size() + " multas");
 
@@ -111,17 +109,28 @@ public class Boes extends Application {
         while (it.hasNext()) {
             aux = it.next();
 
-            if (rx.isBuscar("[0-9]{5,7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}", aux)) {
+            if (rx.isBuscar(Arrays.asList(Regex.matriculas), aux)) {
                 contador++;
-                System.out.println(aux+" -- "+add0(aux,9));
+            }else{
+                if(!"".equals(aux)){
+                System.out.println("|"+aux+"|");
+                }
             }
         }
 
         double porcentaje = ((double) contador * 100) / (double) listado.size();
         DecimalFormat f = new DecimalFormat("#.##");
-        System.out.println(System.lineSeparator());
-        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " en el patrón");
+        System.out.println("---------------------------------------------------------------------------");
+        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " en el patrón, "+(listado.size()-contador)+" fuera del patrón.");
         System.out.println("Cumple el patrón un " + f.format(porcentaje) + "%");
+        System.out.println("---------------------------------------------------------------------------");
+    }
+    
+    private static String asdf(String nie){
+        String str=nie.substring(0, 1);
+        str=str+nie.substring(2,nie.length());
+        
+        return str;
     }
     
     private static String add0(String aux, int size){

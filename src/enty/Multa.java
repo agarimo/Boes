@@ -202,7 +202,7 @@ public class Multa {
     }
 
     public void setNif(String nif) {
-        this.nif = checkNif(limpia(nif));
+        this.nif = checkNifPattern(checkNif(limpia(nif)));
     }
 
     public String getSancionado() {
@@ -226,8 +226,7 @@ public class Multa {
     }
 
     public void setMatricula(String matricula) {
-        matricula = limpia(matricula);
-        this.matricula=checkMatricula(matricula);
+        this.matricula = checkMatricula(limpia(matricula));
     }
 
     public String getCuantia() {
@@ -305,7 +304,7 @@ public class Multa {
 
     private String checkMatricula(String matricula) {
         Regex rx = new Regex();
-        String str = "";
+        String str;
 
         if (rx.isBuscar("[C]{1}[0]{2}[0-9]{4}[A-Z]{3}", matricula)) {
             str = matricula.substring(0, 1);
@@ -318,10 +317,12 @@ public class Multa {
         } else if (rx.isBuscar("[A-Z]{2}[0]{2}[0-9]{4}[A-Z]{1,2}", matricula)) {
             str = matricula.substring(0, 2);
             str = str + matricula.substring(4, matricula.length());
-        }else if (rx.isBuscar("[0-9]{3}[A-Z]{3}", matricula)){
-            str= "0"+matricula;
-        }else if (rx.isBuscar("[0-9]{2}[A-Z]{3}", matricula)){
-            str= "00"+matricula;
+        } else if (rx.isBuscar("[0-9]{3}[A-Z]{3}", matricula)) {
+            str = "0" + matricula;
+        } else if (rx.isBuscar("[0-9]{2}[A-Z]{3}", matricula)) {
+            str = "00" + matricula;
+        }else{
+            str=matricula;
         }
 
         return str;
@@ -341,6 +342,39 @@ public class Multa {
         } catch (Exception ex) {
             return nif;
         }
+    }
+
+    private String checkNifPattern(String nif) {
+        Regex rx = new Regex();
+        String str;
+
+        if (rx.isBuscar("[0-9]{4,7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}", nif)) {
+            str = add0(nif, 9);
+        } else if (rx.isBuscar("[0]{1}[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]{1}", nif)) {
+            str = nif.substring(1, nif.length());
+        } else if (rx.isBuscar("[XYZ]{1}[0-9]{4,6}[TRWAGMYFPDXBNJZSQVHLCKE]{1}", nif)) {
+            str = nif.substring(0, 1);
+            str = str + add0(nif.substring(1, nif.length()), 8);
+        } else if (rx.isBuscar("[XYZ]{1}[0]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}", nif)) {
+            str = nif.substring(0, 1);
+            str = str + nif.substring(2, nif.length());
+        } else if (rx.isBuscar("[ABCDEFGHJKLMNPQRSUVW]{1}[0]{1}[0-9]{8}", nif)) {
+            str = nif.substring(0, 1);
+            str = str + nif.substring(2, nif.length());
+        }else{
+            str=nif;
+        } 
+
+        return str;
+    }
+
+    private String add0(String aux, int size) {
+
+        while (aux.length() < size) {
+            aux = "0" + aux;
+        }
+
+        return aux;
     }
 
     public String SQLCrear() {
