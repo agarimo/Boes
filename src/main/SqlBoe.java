@@ -8,6 +8,7 @@ import enty.Estructura;
 import enty.Fase;
 import enty.Multa;
 import enty.Origen;
+import enty.Pattern;
 import enty.Procesar;
 import enty.StrucData;
 import enty.VistaExtraccion;
@@ -25,6 +26,7 @@ import model.ModeloBoletines;
 import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
+import model.ModeloPattern;
 import model.ModeloUnion;
 import util.Dates;
 import util.Sql;
@@ -397,9 +399,9 @@ public class SqlBoe {
     }
 
     public static void eliminarMultasBoletin(String codigo) {
-        String query = "DELETE FROM boes.multa WHERE idBoletin=(SELECT id FROM boes.procesar WHERE codigo="+Varios.entrecomillar(codigo)+");";
+        String query = "DELETE FROM boes.multa WHERE idBoletin=(SELECT id FROM boes.procesar WHERE codigo=" + Varios.entrecomillar(codigo) + ");";
         Sql bd;
-        
+
         try {
             bd = new Sql(Var.con);
             bd.ejecutar(query);
@@ -1067,7 +1069,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaMultasReducidas(String query) {
         List list = new ArrayList();
         Sql bd;
@@ -1159,7 +1161,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaString(String query) {
         List list = new ArrayList();
         Sql bd;
@@ -1182,5 +1184,33 @@ public class SqlBoe {
         }
         return list;
     }
+
+    public static List<Pattern> listaPattern(Date fecha) {
+        String query = "SELECT * FROM " + Var.nombreBD + ".vista_pattern where fechaPublicacion=" + Varios.entrecomillar(Dates.imprimeFecha(fecha));
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        Pattern aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new Pattern();
+                aux.setCodigo(rs.getString("codigo"));
+                aux.setNif(rs.getString("nif"));
+                aux.setMatricula(rs.getString("matricula"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
 //</editor-fold>
 }

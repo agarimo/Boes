@@ -34,7 +34,8 @@ public class Regex {
         "[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]{1}",
         "[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]{1}",
         "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{8}",
-        "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}[JABCDEFGHI]{1}"
+        "[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}[JABCDEFGHI]{1}",
+        "NOCONSTA"
     };
 
     public Regex() {
