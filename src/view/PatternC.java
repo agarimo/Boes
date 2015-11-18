@@ -176,6 +176,9 @@ public class PatternC implements Initializable, ControlledScreen {
     @FXML
     public void cargaMain(ActionEvent event) {
         clearWindow();
+        nifList.clear();
+        matList.clear();
+        dpFecha.setValue(null);
         myController.setScreen(Boes.screen1ID);
     }
 
