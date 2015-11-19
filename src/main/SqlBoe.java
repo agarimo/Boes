@@ -410,6 +410,29 @@ public class SqlBoe {
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static String getLink (String codigo){
+        Sql bd;
+        ResultSet rs;
+        String query = "SELECT link FROM boes.descarga where codigo=" + Varios.entrecomillar(codigo);
+        String aux = null;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux=rs.getString("link");
+            }
+
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
 
     //<editor-fold defaultstate="collapsed" desc="LISTADOS">
     public static List<Boe> listaBoe(String query) {
@@ -1083,26 +1106,9 @@ public class SqlBoe {
             while (rs.next()) {
                 aux = new Multa();
                 aux.setId(rs.getInt("id"));
-//                aux.setIdBoletin(rs.getInt("idBoletin"));
                 aux.setCodigoSancion(rs.getString("codigoSancion"));
-//                aux.setFechaPublicacion(rs.getDate("fechaPublicacion"));
-//                aux.setIdOrganismo(rs.getInt("idOrganismo"));
-//                aux.setOrganismo(rs.getString("organismo"));
-//                aux.setBoe(rs.getString("boe"));
-//                aux.setFase(rs.getString("fase"));
-//                aux.setTipoJuridico(rs.getString("tipoJuridico"));
-//                aux.setPlazo(rs.getInt("plazo"));
-//                aux.setExpediente(rs.getString("expediente"));
-//                aux.setFechaMulta(rs.getDate("fechaMulta"));
-//                aux.setArticulo(rs.getString("articulo"));
                 aux.setNif(rs.getString("nif"));
-//                aux.setSancionado(rs.getString("sancionado"));
-//                aux.setLocalidad(rs.getString("localidad"));
                 aux.setMatricula(rs.getString("matricula"));
-//                aux.setCuantia(rs.getString("cuantia"));
-//                aux.setPuntos(rs.getString("puntos"));
-//                aux.setReqObs(rs.getString("reqObs"));
-//                aux.setLinea(rs.getString("linea"));
                 list.add(aux);
             }
             rs.close();
@@ -1127,6 +1133,30 @@ public class SqlBoe {
 
             while (rs.next()) {
                 aux = rs.getInt("idEstructura");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<Integer> listaEstructurasManual() {
+        String query = "SELECT id FROM " + Var.nombreBD + ".estructura where procesarManual=1";
+        List<Integer> list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        int aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getInt("id");
                 list.add(aux);
             }
             rs.close();

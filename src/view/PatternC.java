@@ -9,6 +9,10 @@ import enty.Estado;
 import enty.Pattern;
 import enty.Procesar;
 import extraccion.XLSXProcess;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -16,6 +20,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -205,6 +211,9 @@ public class PatternC implements Initializable, ControlledScreen {
             if (fecha != null) {
                 Thread a = new Thread(() -> {
                     Platform.runLater(() -> {
+                        clearWindow();
+                        nifList.clear();
+                        matList.clear();
                         rootPane.getScene().setCursor(Cursor.WAIT);
                         dpFecha.setDisable(true);
                     });
@@ -221,6 +230,36 @@ public class PatternC implements Initializable, ControlledScreen {
             }
         } catch (NullPointerException ex) {
             //
+        }
+    }
+
+    @FXML
+    void verBoletinNif(ActionEvent event) {
+        ModeloPattern mp = (ModeloPattern) this.tvNif.getSelectionModel().getSelectedItem();
+
+        if (mp != null) {
+            try {
+                Desktop.getDesktop().browse(new URI(SqlBoe.getLink(mp.getId())));
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @FXML
+    void verBoletinMat(ActionEvent event) {
+        ModeloPattern mp = (ModeloPattern) this.tvMat.getSelectionModel().getSelectedItem();
+
+        if (mp != null) {
+            try {
+                Desktop.getDesktop().browse(new URI(SqlBoe.getLink(mp.getId())));
+            } catch (IOException ex) {
+                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

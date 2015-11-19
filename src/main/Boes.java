@@ -52,94 +52,20 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-        launch(args);
-//        test();
-//        System.exit(0);
+//        launch(args);
+        test();
+        System.exit(0);
     }
 
     public static void test() {
-//        checkMatriculas();
-        checkNif();
-//        printMultaBB0();
-//        pruebas();
+        pruebas();
     }
 
     public static void pruebas() {
-        
-    }
+        String a = "0334-15-000043";
 
-    public static void printMultaBB0() {
-        BB0 aux = new BB0(285730);
-    }
+        System.out.println(a.startsWith("034"));
 
-//    public static void checkMatriculas() {
-//        Regex rx = new Regex();
-//        String aux;
-//        List<String> listado = SqlBoe.listaString("SELECT matricula FROM boes.multa limit 5000000");
-//        int contador = 0;
-//
-//        Iterator<String> it = listado.iterator();
-//
-//        while (it.hasNext()) {
-//            aux = it.next();
-//
-//            if (rx.isBuscar("[A-Z]{1,2}[0-9]{2,3}[A-Z]{1,2}", aux)) {
-//                contador++;
-//                System.out.println(aux);
-//            }
-//        }
-//
-//        double porcentaje = ((double) contador * 100) / (double) listado.size();
-//        DecimalFormat f = new DecimalFormat("#.##");
-//        System.out.println(System.lineSeparator());
-//        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " en el patrón");
-//        System.out.println("Cumple el patrón un " + f.format(porcentaje) + "%");
-//    }
-
-    public static void checkNif() {
-        Regex rx = new Regex();
-        String aux;
-        int contador = 0;
-        List<String> listado = SqlBoe.listaString("SELECT matricula FROM boes.multa where fechaPublicacion='2015-11-13' limit 5000000");
-
-        System.out.println("Se han cargado " + listado.size() + " multas");
-
-        Iterator<String> it = listado.iterator();
-
-        while (it.hasNext()) {
-            aux = it.next();
-
-            if (rx.isBuscar(Arrays.asList(Regex.matriculas), aux)) {
-                contador++;
-            }else{
-                if(!"".equals(aux)){
-                System.out.println("|"+aux+"|");
-                }
-            }
-        }
-
-        double porcentaje = ((double) contador * 100) / (double) listado.size();
-        DecimalFormat f = new DecimalFormat("#.##");
-        System.out.println("---------------------------------------------------------------------------");
-        System.out.println("Se han cargado " + listado.size() + " multas. " + contador + " en el patrón, "+(listado.size()-contador)+" fuera del patrón.");
-        System.out.println("Cumple el patrón un " + f.format(porcentaje) + "%");
-        System.out.println("---------------------------------------------------------------------------");
-    }
-    
-    private static String asdf(String nie){
-        String str=nie.substring(0, 1);
-        str=str+nie.substring(2,nie.length());
-        
-        return str;
-    }
-    
-    private static String add0(String aux, int size){
-        
-        while(aux.length()<size){
-            aux="0"+aux;
-        }
-        
-        return aux;
     }
 
     public static Date getFecha() {

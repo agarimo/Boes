@@ -38,6 +38,13 @@
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#verBoletinNif" text="Ver Boletin" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TableView>
                   <TableView fx:id="tvMat" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columns>
@@ -47,6 +54,13 @@
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#verBoletinMat" text="Ver Boletin" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TableView>
                   <Label alignment="CENTER" prefHeight="17.0" prefWidth="491.0" text="NIF">
                      <font>

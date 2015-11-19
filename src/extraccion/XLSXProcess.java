@@ -122,8 +122,8 @@ public class XLSXProcess {
         String art = "";
         Multa multa = new Multa();
 
-        if (sd.puntos != 0) {
-            if (getCelda(linea, sd.puntos).equals("MADRID")) {
+        if (sd.nif != 0) {
+            if(isFecha(getCelda(linea,sd.nif))){
                 casoMadrid = true;
             }
         }

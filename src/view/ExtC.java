@@ -7,6 +7,7 @@ import enty.Procesar;
 import extraccion.BB0;
 import extraccion.Extraccion;
 import extraccion.ReqObs;
+import extraccion.ScriptExp;
 import extraccion.XLSXProcess;
 import java.awt.Desktop;
 import java.io.File;
@@ -66,6 +67,7 @@ public class ExtC implements Initializable, ControlledScreen {
     int PanelProcesar = 2;
     boolean isPreview;
     List<Integer> listaEstructurasCreadas;
+    List<Integer> listaEstructurasManual;
     private final int procesar_to_preview = 1;
     private final int preview_to_procesar = 2;
     private final int procesar_to_wait = 3;
@@ -217,6 +219,7 @@ public class ExtC implements Initializable, ControlledScreen {
 
     void cargarDatosProcesar(List<Procesar> list) {
         listaEstructurasCreadas = SqlBoe.listaEstructurasCreadas();
+        listaEstructurasManual = SqlBoe.listaEstructurasManual();
         procesarList.clear();
         ModeloProcesar modelo;
         Procesar procesar;
@@ -229,7 +232,11 @@ public class ExtC implements Initializable, ControlledScreen {
             modelo.id.set(procesar.getId());
             modelo.codigo.set(procesar.getCodigo());
             modelo.estructura.set(procesar.getEstructura());
-            modelo.estado.set(procesar.getEstado().getValue());
+            if (listaEstructurasManual.contains(procesar.getEstructura()) && procesar.getEstado()!=Estado.PROCESADO_XLSX) {
+                modelo.estado.set(Estado.PROCESAR_MANUAL.getValue());
+            } else {
+                modelo.estado.set(procesar.getEstado().getValue());
+            }
             modelo.link.set(procesar.getLink());
             modelo.fecha.set(Dates.imprimeFecha(procesar.getFecha()));
 
@@ -578,6 +585,9 @@ public class ExtC implements Initializable, ControlledScreen {
                                 setText(Estado.XLSX_NO_GENERADO.toString());
                                 setTextFill(Color.ORANGE);
                                 break;
+                            case 6:
+                                setText(Estado.PROCESAR_MANUAL.toString());
+                                setTextFill(Color.RED);
                         }
                     }
                 }
@@ -699,7 +709,7 @@ public class ExtC implements Initializable, ControlledScreen {
                 for (int i = 0; i < list.size(); i++) {
                     final int contador = i;
                     final int total = list.size();
-                    
+
                     Platform.runLater(() -> {
                         int contadour = contador + 1;
                         double counter = contador;
@@ -707,7 +717,7 @@ public class ExtC implements Initializable, ControlledScreen {
                         lbProgreso.setText("PROCESANDO " + contadour + " de " + total);
                         piProgreso.setProgress(counter / toutal);
                     });
-                    
+
                     aux = (ModeloProcesar) list.get(i);
                     pr = SqlBoe.getProcesar(aux.getCodigo());
 
@@ -727,6 +737,15 @@ public class ExtC implements Initializable, ControlledScreen {
                         pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
                     }
                 }
+                
+                Platform.runLater(() -> {
+                    piProgreso.setProgress(-1);
+                    lbProgreso.setText("...");
+                    lbProceso.setText("EJECUTANDO SCRIPT BBDD");
+                });
+                
+                ScriptExp se= new ScriptExp();
+                se.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
@@ -741,7 +760,7 @@ public class ExtC implements Initializable, ControlledScreen {
             a.start();
         }
     }
-
+    
     private void mostrarPanel(int panel) {
         FadeTransition fade;
 
