@@ -8,6 +8,10 @@ public class OrigenExpediente {
     int idOrigen;
     String cabecera;
     String origen;
+    
+    public OrigenExpediente(){
+        
+    }
 
     public OrigenExpediente(int idOrigen, String cabecera, String origen) {
         this.idOrigen = idOrigen;

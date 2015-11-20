@@ -8,6 +8,7 @@ import enty.Estructura;
 import enty.Fase;
 import enty.Multa;
 import enty.Origen;
+import enty.OrigenExpediente;
 import enty.Pattern;
 import enty.Procesar;
 import enty.StrucData;
@@ -1231,6 +1232,33 @@ public class SqlBoe {
                 aux.setCodigo(rs.getString("codigo"));
                 aux.setNif(rs.getString("nif"));
                 aux.setMatricula(rs.getString("matricula"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<OrigenExpediente> listaOrigenExp() {
+        String query = "SELECT * FROM " + Var.nombreBD + ".origen_expediente";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        OrigenExpediente aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new OrigenExpediente();
+                aux.setIdOrigen(rs.getInt("idOrigen"));
+                aux.setCabecera(rs.getString("cabecera"));
+                aux.setOrigen(rs.getString("origen"));
                 list.add(aux);
             }
             rs.close();
