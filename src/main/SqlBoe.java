@@ -27,7 +27,6 @@ import model.ModeloBoletines;
 import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
-import model.ModeloPattern;
 import model.ModeloUnion;
 import util.Dates;
 import util.Sql;

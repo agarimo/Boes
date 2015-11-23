@@ -252,7 +252,6 @@ public final class BB0 {
         String codigoUn, struc;
         Iterator it;
         Union un = new Union(fecha);
-        Archivos ar = new Archivos();
         List list = un.getEstructuras();
 
         for (Object list1 : list) {
@@ -262,12 +261,12 @@ public final class BB0 {
 
             while (it.hasNext()) {
                 codigoUn = (String) it.next();
-                crearArchivoUnion(codigoUn, un.getProcesar(codigoUn));
+                crearArchivoUnion(struc,codigoUn, un.getProcesar(codigoUn));
             }
         }
     }
 
-    private void crearArchivoUnion(String codigoUn, List<Procesar> list) {
+    private void crearArchivoUnion(String struc,String codigoUn, List<Procesar> list) {
         data.clear();
         Procesar aux;
         Iterator<Procesar> it = list.iterator();
@@ -277,7 +276,7 @@ public final class BB0 {
             getDatos(aux);
         }
 
-        File archivo = new File(fichero, codigoUn + ".bb0");
+        File archivo = new File(fichero, struc+codigoUn + ".bb0");
         Files.escribeArchivo(archivo, getDataArchivos(BB0));
     }
 }

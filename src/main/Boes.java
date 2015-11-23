@@ -1,6 +1,9 @@
 package main;
 
+import boletines.Union;
+import enty.OrigenExpediente;
 import extraccion.BB0;
+import extraccion.ScriptExp;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -52,9 +55,9 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         Var.inicializar();
-//        launch(args);
-        test();
-        System.exit(0);
+        launch(args);
+//        test();
+//        System.exit(0);
     }
 
     public static void test() {
@@ -62,17 +65,16 @@ public class Boes extends Application {
     }
 
     public static void pruebas() {
-        String a = "0334-15-000043";
-
-        System.out.println(a.startsWith("034"));
-
+        ScriptExp a = new ScriptExp(getFecha());
+        a.run();
+        
     }
 
     public static Date getFecha() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
-        cal.set(Calendar.MONTH, Calendar.OCTOBER);
-        cal.set(Calendar.DAY_OF_MONTH, 3);
+        cal.set(Calendar.MONTH, Calendar.NOVEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 18);
         return cal.getTime();
     }
 }

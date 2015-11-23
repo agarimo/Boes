@@ -263,7 +263,7 @@ public class Multa {
 
     @Override
     public String toString() {
-        return "Multa{" + "id=" + id + ", idBoletin=" + idBoletin + ", codigoSancion=" + codigoSancion + ", fechaPublicacion=" + fechaPublicacion + ", organismo=" + organismo + ", boe=" + boe + ", fase=" + fase + ", tipoJuridico=" + tipoJuridico + ", plazo=" + plazo + ", expediente=" + expediente + ", fechaMulta=" + fechaMulta + ", articulo=" + articulo + ", nif=" + nif + ", sancionado=" + sancionado + ", localidad=" + localidad + ", matricula=" + matricula + ", cuantia=" + cuantia + ", puntos=" + puntos + ", reqObs=" + reqObs + ", linea=" + linea + '}';
+        return "Multa: "+Dates.imprimeFecha(fechaPublicacion)+" - "+this.idOrganismo+" - "+this.expediente;
     }
 
     @Override
@@ -425,5 +425,9 @@ public class Multa {
                     + Varios.entrecomillar(this.linea)
                     + ");";
         }
+    }
+    
+    public String SQLEditarOrganismo(String organismo){
+        return "UPDATE boes.multa SET organismo="+Varios.entrecomillar(organismo)+" WHERE id="+this.id;
     }
 }

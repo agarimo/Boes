@@ -71,7 +71,7 @@
                                           <Button layoutX="14.0" layoutY="474.0" mnemonicParsing="false" onAction="#cambioEnDatePicker" prefHeight="25.0" prefWidth="787.0" text="Refrescar" />
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane fx:id="panelPreview" opacity="0.0" prefHeight="200.0" prefWidth="200.0" visible="false">
+                                    <AnchorPane fx:id="panelPreview" prefHeight="200.0" prefWidth="200.0">
                                        <children>
                                           <TableView fx:id="tvPreview" layoutX="14.0" layoutY="14.0" prefHeight="460.0" prefWidth="782.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="86.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                                              <columns>
@@ -95,6 +95,8 @@
                                              </contextMenu>
                                           </TableView>
                                           <Button fx:id="btForzarProcesar" layoutX="646.0" layoutY="483.0" mnemonicParsing="false" onAction="#forzarProcesado" prefHeight="30.0" prefWidth="150.0" text="Procesar" AnchorPane.bottomAnchor="47.0" AnchorPane.rightAnchor="14.0" />
+                                          <Label layoutX="14.0" layoutY="483.0" prefHeight="17.0" prefWidth="109.0" text="Número de multas: " />
+                                          <Label fx:id="lbMultasPreview" layoutX="123.0" layoutY="483.0" prefHeight="17.0" prefWidth="109.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane fx:id="panelEspera" prefHeight="200.0" prefWidth="200.0" visible="false">

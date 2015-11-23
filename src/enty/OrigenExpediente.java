@@ -42,6 +42,15 @@ public class OrigenExpediente {
     public void setOrigen(String origen) {
         this.origen = origen;
     }
+
+    @Override
+    public String toString() {
+        return "OrigenExpediente{" + "idOrigen=" + idOrigen + ", cabecera=" + cabecera + ", origen=" + origen + '}';
+    }
+    
+    public String SQLScript(){
+        return "";
+    }
     
     
 }

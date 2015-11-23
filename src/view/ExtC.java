@@ -137,6 +137,8 @@ public class ExtC implements Initializable, ControlledScreen {
     private Label lbProgreso;
     @FXML
     private Button btGenerarArchivos;
+    @FXML
+    private Label lbMultasPreview;
 //</editor-fold>
     ObservableList<ModeloProcesar> procesarList;
     ObservableList<ModeloPreview> previewList;
@@ -215,6 +217,7 @@ public class ExtC implements Initializable, ControlledScreen {
                 previewList.add(modelo);
             }
         }
+        lbMultasPreview.setText(Integer.toString(previewList.size()));
     }
 
     void cargarDatosProcesar(List<Procesar> list) {
@@ -232,7 +235,7 @@ public class ExtC implements Initializable, ControlledScreen {
             modelo.id.set(procesar.getId());
             modelo.codigo.set(procesar.getCodigo());
             modelo.estructura.set(procesar.getEstructura());
-            if (listaEstructurasManual.contains(procesar.getEstructura()) && procesar.getEstado()!=Estado.PROCESADO_XLSX) {
+            if (listaEstructurasManual.contains(procesar.getEstructura()) && procesar.getEstado() != Estado.PROCESADO_XLSX) {
                 modelo.estado.set(Estado.PROCESAR_MANUAL.getValue());
             } else {
                 modelo.estado.set(procesar.getEstado().getValue());
@@ -283,6 +286,9 @@ public class ExtC implements Initializable, ControlledScreen {
             } catch (Exception e) {
                 pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
             }
+            
+            ScriptExp sc=new ScriptExp(aux.getCodigo());
+            sc.run();
 
             Platform.runLater(() -> {
                 rootPane.getScene().setCursor(Cursor.DEFAULT);
@@ -737,14 +743,14 @@ public class ExtC implements Initializable, ControlledScreen {
                         pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
                     }
                 }
-                
+
                 Platform.runLater(() -> {
                     piProgreso.setProgress(-1);
                     lbProgreso.setText("...");
                     lbProceso.setText("EJECUTANDO SCRIPT BBDD");
                 });
-                
-                ScriptExp se= new ScriptExp();
+
+                ScriptExp se = new ScriptExp(fecha);
                 se.run();
 
                 Platform.runLater(() -> {
@@ -760,7 +766,7 @@ public class ExtC implements Initializable, ControlledScreen {
             a.start();
         }
     }
-    
+
     private void mostrarPanel(int panel) {
         FadeTransition fade;
 
