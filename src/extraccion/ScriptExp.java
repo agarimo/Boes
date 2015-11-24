@@ -36,7 +36,7 @@ public final class ScriptExp {
 
     public ScriptExp(Date fecha) {
         this.fecha = fecha;
-        this.codigoBoletin=null;
+        this.codigoBoletin = null;
         map = cargaMap();
     }
 
@@ -55,6 +55,7 @@ public final class ScriptExp {
 
             if (!listado.isEmpty()) {
                 runMultas(listado, idOrigen);
+
             }
         }
     }
@@ -82,6 +83,8 @@ public final class ScriptExp {
                     bd.ejecutar(multa.SQLEditarOrganismo(aux.getOrigen()));
                 }
             }
+            
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(ScriptExp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -126,8 +129,12 @@ public final class ScriptExp {
     }
 
     private List cargaMultas(String codigoBoletin) {
-        List aux = SqlBoe.listaMultas("SELECT * FROM boes.multa where idBoletin IN"
-                + "(SELECT id FROM boes.procesar WHERE codigo=" + Varios.entrecomillar(codigoBoletin) + ")");
+        List aux = SqlBoe.listaMultas("SELECT * FROM boes.multa where "
+                + "idBoletin IN"
+                + "(SELECT id FROM boes.procesar WHERE codigo=" + Varios.entrecomillar(codigoBoletin) + ") "
+                + "AND "
+                + "idOrganismo IN "
+                + "(select idOrigen from boes.origen_expediente group by idOrigen)");
         return aux;
     }
 

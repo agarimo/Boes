@@ -430,4 +430,8 @@ public class Multa {
     public String SQLEditarOrganismo(String organismo){
         return "UPDATE boes.multa SET organismo="+Varios.entrecomillar(organismo)+" WHERE id="+this.id;
     }
+    
+    public String SQLEditarFase(String fase){
+        return "UPDATE boes.multa SET fase="+Varios.entrecomillar(fase)+" WHERE id="+this.id;
+    }
 }

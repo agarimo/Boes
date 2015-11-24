@@ -4,6 +4,7 @@ import boletines.Union;
 import enty.OrigenExpediente;
 import extraccion.BB0;
 import extraccion.ScriptExp;
+import extraccion.ScriptFase;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -65,7 +66,7 @@ public class Boes extends Application {
     }
 
     public static void pruebas() {
-        ScriptExp a = new ScriptExp(getFecha());
+        ScriptFase a = new ScriptFase();
         a.run();
         
     }
@@ -74,7 +75,7 @@ public class Boes extends Application {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
         cal.set(Calendar.MONTH, Calendar.NOVEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 18);
+        cal.set(Calendar.DAY_OF_MONTH, 23);
         return cal.getTime();
     }
 }

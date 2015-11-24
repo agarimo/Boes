@@ -64,6 +64,7 @@
                                                         </items>
                                                       </Menu>
                                                       <MenuItem mnemonicParsing="false" onAction="#resetearEstado" text="Resetear Estado" />
+                                                      <MenuItem mnemonicParsing="false" onAction="#eliminarEstructura" text="Eliminar estructura" />
                                                   </items>
                                                 </ContextMenu>
                                              </contextMenu>

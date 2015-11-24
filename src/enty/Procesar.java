@@ -154,4 +154,18 @@ public class Procesar {
             Logger.getLogger(Procesar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void SQLEliminarEstructura() {
+        String query = "UPDATE " + Var.nombreBD + ".procesar SET "
+                + "estructura=-1 "
+                + "WHERE id=" + this.id;
+
+        try {
+            Sql bd = new Sql(Var.con);
+            bd.ejecutar(query);
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Procesar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

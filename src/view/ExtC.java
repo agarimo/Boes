@@ -8,6 +8,7 @@ import extraccion.BB0;
 import extraccion.Extraccion;
 import extraccion.ReqObs;
 import extraccion.ScriptExp;
+import extraccion.ScriptFase;
 import extraccion.XLSXProcess;
 import java.awt.Desktop;
 import java.io.File;
@@ -286,9 +287,11 @@ public class ExtC implements Initializable, ControlledScreen {
             } catch (Exception e) {
                 pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
             }
-            
-            ScriptExp sc=new ScriptExp(aux.getCodigo());
+
+            ScriptExp sc = new ScriptExp(aux.getCodigo());
             sc.run();
+            ScriptFase sf = new ScriptFase();
+            sf.run();
 
             Platform.runLater(() -> {
                 rootPane.getScene().setCursor(Cursor.DEFAULT);
@@ -752,6 +755,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 ScriptExp se = new ScriptExp(fecha);
                 se.run();
+                ScriptFase sf = new ScriptFase();
+                sf.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
@@ -929,6 +934,15 @@ public class ExtC implements Initializable, ControlledScreen {
         Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
         SqlBoe.eliminarMultasBoletin(pr.getCodigo());
         pr.SQLSetEstado(Estado.LISTO_PROCESAR.getValue());
+        cambioEnDatePicker(new ActionEvent());
+    }
+
+    @FXML
+    void eliminarEstructura(ActionEvent event) {
+        ModeloProcesar aux = (ModeloProcesar) tvProcesar.getSelectionModel().getSelectedItem();
+        Procesar pr = SqlBoe.getProcesar(aux.getCodigo());
+        SqlBoe.eliminarMultasBoletin(pr.getCodigo());
+        pr.SQLEliminarEstructura();
         cambioEnDatePicker(new ActionEvent());
     }
 
