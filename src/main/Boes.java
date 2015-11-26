@@ -5,6 +5,7 @@ import enty.OrigenExpediente;
 import extraccion.BB0;
 import extraccion.ScriptExp;
 import extraccion.ScriptFase;
+import extraccion.ScriptOrigen;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -15,6 +16,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.ModeloBoletines;
 
 /**
  *
@@ -66,16 +68,15 @@ public class Boes extends Application {
     }
 
     public static void pruebas() {
-        ScriptFase a = new ScriptFase();
-        a.run();
-        
+//        ScriptOrigen so= new ScriptOrigen();
+//        so.run();
     }
-
+    
     public static Date getFecha() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
         cal.set(Calendar.MONTH, Calendar.NOVEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 23);
+        cal.set(Calendar.DAY_OF_MONTH, 16);
         return cal.getTime();
     }
 }

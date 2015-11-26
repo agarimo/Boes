@@ -259,6 +259,7 @@ public class SqlBoe {
             while (rs.next()) {
                 aux = new ModeloBoletines();
                 aux.codigo.set(rs.getString("codigo"));
+                aux.idBoletin.set(rs.getInt("idBoletin"));
                 aux.entidad.set(rs.getString("entidad"));
                 aux.origen.set(rs.getString("origen"));
                 aux.fecha.set(Dates.imprimeFecha(rs.getDate("fecha")));
@@ -411,8 +412,8 @@ public class SqlBoe {
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static String getLink (String codigo){
+
+    public static String getLink(String codigo) {
         Sql bd;
         ResultSet rs;
         String query = "SELECT link FROM boes.descarga where codigo=" + Varios.entrecomillar(codigo);
@@ -423,10 +424,26 @@ public class SqlBoe {
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux=rs.getString("link");
+                aux = rs.getString("link");
             }
 
             rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aux;
+    }
+
+    public static String getDesData(String codigo) {
+        Sql bd;
+        String query = "SELECT datos FROM boes.descarga where codigo=" + Varios.entrecomillar(codigo);
+        String aux = "";
+
+        try {
+            bd = new Sql(Var.con);
+            aux = bd.getString(query);
             bd.close();
         } catch (SQLException ex) {
             error(ex.getMessage());
@@ -545,6 +562,7 @@ public class SqlBoe {
             while (rs.next()) {
                 aux = new ModeloBoletines();
                 aux.codigo.set(rs.getString("codigo"));
+                aux.idBoletin.set(rs.getInt("idBoletin"));
                 aux.entidad.set(rs.getString("entidad"));
                 aux.origen.set(rs.getString("origen"));
                 aux.fecha.set(Dates.imprimeFecha(rs.getDate("fecha")));
@@ -1144,7 +1162,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<Integer> listaEstructurasManual() {
         String query = "SELECT id FROM " + Var.nombreBD + ".estructura where procesarManual=1";
         List<Integer> list = new ArrayList();
@@ -1242,7 +1260,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<OrigenExpediente> listaOrigenExp() {
         String query = "SELECT * FROM " + Var.nombreBD + ".origen_expediente";
         List list = new ArrayList();
@@ -1269,7 +1287,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<OrigenFase> listaOrigenFase() {
         String query = "SELECT * FROM " + Var.nombreBD + ".origen_fase";
         List list = new ArrayList();
@@ -1297,6 +1315,5 @@ public class SqlBoe {
         }
         return list;
     }
-    
 //</editor-fold>
 }

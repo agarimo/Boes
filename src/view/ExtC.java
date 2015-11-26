@@ -9,6 +9,7 @@ import extraccion.Extraccion;
 import extraccion.ReqObs;
 import extraccion.ScriptExp;
 import extraccion.ScriptFase;
+import extraccion.ScriptOrigen;
 import extraccion.XLSXProcess;
 import java.awt.Desktop;
 import java.io.File;
@@ -292,6 +293,8 @@ public class ExtC implements Initializable, ControlledScreen {
             sc.run();
             ScriptFase sf = new ScriptFase();
             sf.run();
+            ScriptOrigen so = new ScriptOrigen(aux.getCodigo());
+            so.run();
 
             Platform.runLater(() -> {
                 rootPane.getScene().setCursor(Cursor.DEFAULT);
@@ -757,6 +760,8 @@ public class ExtC implements Initializable, ControlledScreen {
                 se.run();
                 ScriptFase sf = new ScriptFase();
                 sf.run();
+                ScriptOrigen so = new ScriptOrigen(fecha);
+                so.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);

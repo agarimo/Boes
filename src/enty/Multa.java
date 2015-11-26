@@ -269,8 +269,9 @@ public class Multa {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 67 * hash + this.idBoletin;
-        hash = 67 * hash + Objects.hashCode(this.expediente);
+        hash = 29 * hash + this.idBoletin;
+        hash = 29 * hash + Objects.hashCode(this.expediente);
+        hash = 29 * hash + Objects.hashCode(this.nif);
         return hash;
     }
 
@@ -287,6 +288,9 @@ public class Multa {
             return false;
         }
         if (!Objects.equals(this.expediente, other.expediente)) {
+            return false;
+        }
+        if (!Objects.equals(this.nif, other.nif)) {
             return false;
         }
         return true;

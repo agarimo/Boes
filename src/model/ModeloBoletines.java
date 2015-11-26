@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class ModeloBoletines {
 
     public SimpleStringProperty codigo = new SimpleStringProperty();
+    public SimpleIntegerProperty idBoletin = new SimpleIntegerProperty();
     public SimpleStringProperty entidad = new SimpleStringProperty();
     public SimpleStringProperty origen = new SimpleStringProperty();
     public SimpleStringProperty fecha = new SimpleStringProperty();
@@ -23,6 +24,10 @@ public class ModeloBoletines {
 
     public String getCodigo(){
         return codigo.get();
+    }
+    
+    public int getIdBoletin(){
+        return idBoletin.get();
     }
     
     public String getEntidad(){
