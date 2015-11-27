@@ -1,22 +1,11 @@
 package main;
 
-import boletines.Union;
-import enty.OrigenExpediente;
-import extraccion.BB0;
-import extraccion.ScriptExp;
-import extraccion.ScriptFase;
-import extraccion.ScriptOrigen;
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.ModeloBoletines;
 
 /**
  *

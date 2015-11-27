@@ -46,31 +46,31 @@ public final class BB0 {
         linea = new String[26];
 
         linea[0] = "00000";
-            linea[1] = "ESPACIO PARA LA FECHA";
-            linea[2] = multa.getBoe();
-            linea[3] = multa.getFase();
-            linea[4] = multa.getTipoJuridico();
-            linea[5] = Integer.toString(multa.getPlazo());
-            linea[6] = Integer.toString(multa.getId());
-            linea[7] = "ND";
-            linea[8] = splitCodigoSancion(multa.getCodigoSancion());
-            linea[9] = multa.getExpediente();
-            linea[10] = multa.getExpediente();
-            linea[11] = Dates.imprimeFecha(multa.getFechaMulta(), "ddMMyy");
-            linea[12] = multa.getArticulo();
-            linea[13] = multa.getSancionado();
-            linea[14] = multa.getMatricula();
-            linea[15] = multa.getNif();
-            linea[16] = multa.getOrganismo();
-            linea[17] = multa.getCuantia();
-            linea[18] = multa.getPuntos();
-            linea[19] = "  ";
-            linea[20] = "  ";
-            linea[21] = "  ";
-            linea[22] = "  ";
-            linea[23] = multa.getLinea();
-            linea[24] = "ESPACIO PARA EL LINK";
-            linea[25] = multa.getLocalidad();
+        linea[1] = "ESPACIO PARA LA FECHA";
+        linea[2] = multa.getBoe();
+        linea[3] = multa.getFase();
+        linea[4] = multa.getTipoJuridico();
+        linea[5] = Integer.toString(multa.getPlazo());
+        linea[6] = Integer.toString(multa.getId());
+        linea[7] = "ND";
+        linea[8] = splitCodigoSancion(multa.getCodigoSancion());
+        linea[9] = multa.getExpediente();
+        linea[10] = multa.getExpediente();
+        linea[11] = Dates.imprimeFecha(multa.getFechaMulta(), "ddMMyy");
+        linea[12] = multa.getArticulo();
+        linea[13] = multa.getSancionado();
+        linea[14] = multa.getMatricula();
+        linea[15] = multa.getNif();
+        linea[16] = multa.getOrganismo();
+        linea[17] = multa.getCuantia();
+        linea[18] = multa.getPuntos();
+        linea[19] = Integer.toString(multa.getIdOrganismo());
+        linea[20] = multa.getReqObs();
+        linea[21] = "  ";
+        linea[22] = "  ";
+        linea[23] = multa.getLinea();
+        linea[24] = "ESPACIO PARA EL LINK";
+        linea[25] = multa.getLocalidad();
 
         for (int i = 0; i < linea.length; i++) {
             String linea1 = linea[i];
@@ -170,8 +170,8 @@ public final class BB0 {
             linea[16] = multa.getOrganismo();
             linea[17] = multa.getCuantia();
             linea[18] = multa.getPuntos();
-            linea[19] = "  ";
-            linea[20] = "  ";
+            linea[19] = Integer.toString(multa.getIdOrganismo());
+            linea[20] = multa.getReqObs();
             linea[21] = "  ";
             linea[22] = "  ";
             linea[23] = multa.getLinea();
@@ -261,12 +261,12 @@ public final class BB0 {
 
             while (it.hasNext()) {
                 codigoUn = (String) it.next();
-                crearArchivoUnion(struc,codigoUn, un.getProcesar(codigoUn));
+                crearArchivoUnion(struc, codigoUn, un.getProcesar(codigoUn));
             }
         }
     }
 
-    private void crearArchivoUnion(String struc,String codigoUn, List<Procesar> list) {
+    private void crearArchivoUnion(String struc, String codigoUn, List<Procesar> list) {
         data.clear();
         Procesar aux;
         Iterator<Procesar> it = list.iterator();
@@ -276,7 +276,7 @@ public final class BB0 {
             getDatos(aux);
         }
 
-        File archivo = new File(fichero, struc+codigoUn + ".bb0");
+        File archivo = new File(fichero, struc + codigoUn + ".bb0");
         Files.escribeArchivo(archivo, getDataArchivos(BB0));
     }
 }
