@@ -28,12 +28,6 @@ public final class ScriptExp {
     private final MultiValueMap map;
     private final String codigoBoletin;
 
-    public ScriptExp(String codigoBoletin) {
-        this.fecha = null;
-        this.codigoBoletin = codigoBoletin;
-        map = cargaMap();
-    }
-
     public ScriptExp(Date fecha) {
         this.fecha = fecha;
         this.codigoBoletin = null;
