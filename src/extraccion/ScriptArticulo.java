@@ -1,6 +1,6 @@
 package extraccion;
 
-import enty.OrigenFase;
+import enty.OrigenArticulo;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -14,18 +14,18 @@ import util.Sql;
  *
  * @author Agarimo
  */
-public final class ScriptFase {
+public class ScriptArticulo {
 
-    List<OrigenFase> list;
+    List<OrigenArticulo> list;
 
-    public ScriptFase() {
-        list = SqlBoe.listaOrigenFase();
+    public ScriptArticulo() {
+        list = SqlBoe.listaOrigenArticulo();
     }
 
     public void run() {
+        OrigenArticulo aux;
+        Iterator<OrigenArticulo> it = list.iterator();
         Sql bd;
-        OrigenFase aux;
-        Iterator<OrigenFase> it = list.iterator();
 
         try {
             bd = new Sql(Var.con);
@@ -37,7 +37,7 @@ public final class ScriptFase {
             
             bd.close();
         } catch (SQLException ex) {
-            Logger.getLogger(ScriptFase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ScriptArticulo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -8,6 +8,7 @@ import enty.Estructura;
 import enty.Fase;
 import enty.Multa;
 import enty.Origen;
+import enty.OrigenArticulo;
 import enty.OrigenExpediente;
 import enty.OrigenFase;
 import enty.Pattern;
@@ -1303,6 +1304,34 @@ public class SqlBoe {
                 aux = new OrigenFase();
                 aux.setIdOrigen(rs.getInt("idOrigen"));
                 aux.setCabecera(rs.getString("cabecera"));
+                aux.setFase(rs.getString("fase"));
+                aux.setNuevaFase(rs.getString("nuevaFase"));
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List<OrigenArticulo> listaOrigenArticulo() {
+        String query = "SELECT * FROM " + Var.nombreBD + ".origen_articulo";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        OrigenArticulo aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = new OrigenArticulo();
+                aux.setIdOrigen(rs.getInt("idOrigen"));
+                aux.setArticulo(rs.getString("articulo"));
                 aux.setFase(rs.getString("fase"));
                 aux.setNuevaFase(rs.getString("nuevaFase"));
                 list.add(aux);

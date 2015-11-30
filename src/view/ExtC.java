@@ -7,6 +7,7 @@ import enty.Procesar;
 import extraccion.BB0;
 import extraccion.Extraccion;
 import extraccion.ReqObs;
+import extraccion.ScriptArticulo;
 import extraccion.ScriptExp;
 import extraccion.ScriptFase;
 import extraccion.ScriptOrigen;
@@ -288,13 +289,6 @@ public class ExtC implements Initializable, ControlledScreen {
             } catch (Exception e) {
                 pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
             }
-
-            ScriptExp sc = new ScriptExp(aux.getCodigo());
-            sc.run();
-            ScriptFase sf = new ScriptFase();
-            sf.run();
-            ScriptOrigen so = new ScriptOrigen(aux.getCodigo());
-            so.run();
 
             Platform.runLater(() -> {
                 rootPane.getScene().setCursor(Cursor.DEFAULT);
@@ -762,6 +756,8 @@ public class ExtC implements Initializable, ControlledScreen {
                 sf.run();
                 ScriptOrigen so = new ScriptOrigen(fecha);
                 so.run();
+                ScriptArticulo sa = new ScriptArticulo();
+                sa.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
@@ -918,6 +914,34 @@ public class ExtC implements Initializable, ControlledScreen {
                 } catch (SQLException ex) {
                     Logger.getLogger(BB0.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                Platform.runLater(() -> {
+                    lbProgreso.setText("");
+                    lbProceso.setText("EJECUTANDO SCRIPT EXPEDIENTE");
+                });
+                ScriptExp se = new ScriptExp(fecha);
+                se.run();
+                
+                Platform.runLater(() -> {
+                    lbProgreso.setText("");
+                    lbProceso.setText("EJECUTANDO SCRIPT FASE");
+                });
+                ScriptFase sf = new ScriptFase();
+                sf.run();
+                
+                Platform.runLater(() -> {
+                    lbProgreso.setText("");
+                    lbProceso.setText("EJECUTANDO SCRIPT ORIGEN");
+                });
+                ScriptOrigen so = new ScriptOrigen(fecha);
+                so.run();
+                
+                Platform.runLater(() -> {
+                    lbProgreso.setText("");
+                    lbProceso.setText("EJECUTANDO SCRIPT ARTICULO");
+                });
+                ScriptArticulo sa = new ScriptArticulo();
+                sa.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);

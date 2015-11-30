@@ -32,10 +32,6 @@ public class ScriptOrigen {
         list = SqlBoe.listaModeloBoletines(query);
     }
 
-    public ScriptOrigen(String codigo) {
-        query = "SELECT * FROM boes.vista_boletines where codigo=" + Varios.entrecomillar(codigo);
-        list = SqlBoe.listaModeloBoletines(query);
-    }
 
     public void run() {
         Sql bd;

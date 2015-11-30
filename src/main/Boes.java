@@ -57,7 +57,7 @@ public class Boes extends Application {
     }
 
     public static void pruebas() {
-//        ScriptOrigen so= new ScriptOrigen();
+//        ScriptArticulo so= new ScriptArticulo();
 //        so.run();
     }
     
