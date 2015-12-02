@@ -30,7 +30,7 @@ public class VistaExtraccion {
         this.tipo = tipo;
         this.faseCompleta = faseCompleta;
         splitFase();
-        this.boe = getBoe(this.fecha, this.entidad);
+        this.boe = getBoe(this.fecha,this.entidad);
     }
 
     public int getIdOrigen() {
@@ -78,7 +78,7 @@ public class VistaExtraccion {
         plazo = Integer.parseInt(aux.substring(5, 7));
     }
 
-    private String getBoe(Date fecha, String entidad) {
+    private String getBoe(Date fecha,String entidad) {
         String str = "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);

@@ -152,7 +152,7 @@ public final class BB0 {
             multa = it.next();
 
             linea[0] = "00000";
-            linea[1] = Dates.imprimeFecha(pr.getFecha());
+            linea[1] = Dates.imprimeFecha(pr.getFecha(), "dd/MM/yyyy");
             linea[2] = multa.getBoe();
             linea[3] = multa.getFase();
             linea[4] = multa.getTipoJuridico();
@@ -172,8 +172,8 @@ public final class BB0 {
             linea[18] = multa.getPuntos();
             linea[19] = Integer.toString(multa.getIdOrganismo());
             linea[20] = multa.getReqObs();
-            linea[21] = "  ";
-            linea[22] = "  ";
+            linea[21] = " ";
+            linea[22] = Integer.toString(1);
             linea[23] = multa.getLinea();
             linea[24] = pr.getLink();
             linea[25] = multa.getLocalidad();
