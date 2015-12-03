@@ -303,6 +303,7 @@ public class Archivos {
 
     private String getCodigoAyutamiento(String nombre) {
         Sql bd;
+        nombre=nombre.replace("'", "\\'");
         String aux = "";
 
         try {
@@ -310,6 +311,7 @@ public class Archivos {
             aux = bd.getString("SELECT codigoAy FROM boes.origen where nombre=" + Varios.entrecomillar(nombre));
             bd.close();
         } catch (SQLException ex) {
+            System.out.println("SELECT codigoAy FROM boes.origen where nombre=" + Varios.entrecomillar(nombre));
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
 

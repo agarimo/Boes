@@ -237,8 +237,8 @@ public final class BB0 {
         File archivoBB0 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb0");
         File archivoBB1 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb1");
 
-        Files.escribeArchivo(archivoBB1, getDataArchivos(BB1));
         Files.escribeArchivo(archivoBB0, getDataArchivos(BB0));
+//        Files.escribeArchivo(archivoBB1, getDataArchivos(BB1));
 
         crearArchivosD(fichero);
     }

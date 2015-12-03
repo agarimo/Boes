@@ -5,6 +5,7 @@ import enty.Estado;
 import enty.Multa;
 import enty.Procesar;
 import extraccion.BB0;
+import extraccion.BB1;
 import extraccion.Extraccion;
 import extraccion.ReqObs;
 import extraccion.ScriptArticulo;
@@ -169,7 +170,7 @@ public class ExtC implements Initializable, ControlledScreen {
             try {
                 Desktop.getDesktop().browse(fichero.toURI());
             } catch (IOException ex) {
-                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -322,6 +323,8 @@ public class ExtC implements Initializable, ControlledScreen {
 
                 BB0 bb = new BB0(fecha);
                 bb.run();
+                BB1 bb1 = new BB1(fecha);
+                bb1.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
