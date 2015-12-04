@@ -31,60 +31,6 @@ public final class BB0 {
     private final int BB0 = 1;
     private final int BB1 = 2;
 
-    public BB0(int id) {
-        fecha = null;
-        fichero = null;
-        boletines = null;
-        boletinesD = null;
-        data = new ArrayList();
-        printLinea(id);
-    }
-
-    public void printLinea(int id) {
-        String[] linea;
-        Multa multa = SqlBoe.getMulta("SELECT * FROM " + Var.nombreBD + ".multa WHERE id=" + id);
-        linea = new String[26];
-
-        linea[0] = "00000";
-        linea[1] = "ESPACIO PARA LA FECHA";
-        linea[2] = multa.getBoe();
-        linea[3] = multa.getFase();
-        linea[4] = multa.getTipoJuridico();
-        linea[5] = Integer.toString(multa.getPlazo());
-        linea[6] = Integer.toString(multa.getId());
-        linea[7] = "ND";
-        linea[8] = splitCodigoSancion(multa.getCodigoSancion());
-        linea[9] = multa.getExpediente();
-        linea[10] = multa.getExpediente();
-        linea[11] = Dates.imprimeFecha(multa.getFechaMulta(), "ddMMyy");
-        linea[12] = multa.getArticulo();
-        linea[13] = multa.getSancionado();
-        linea[14] = multa.getMatricula();
-        linea[15] = multa.getNif();
-        linea[16] = multa.getOrganismo();
-        linea[17] = multa.getCuantia();
-        linea[18] = multa.getPuntos();
-        linea[19] = Integer.toString(multa.getIdOrganismo());
-        linea[20] = multa.getReqObs();
-        linea[21] = "  ";
-        linea[22] = "  ";
-        linea[23] = multa.getLinea();
-        linea[24] = "ESPACIO PARA EL LINK";
-        linea[25] = multa.getLocalidad();
-
-        for (int i = 0; i < linea.length; i++) {
-            String linea1 = linea[i];
-
-            if (linea1 != null) {
-                String aux = linea1.replaceAll("\n", " ");
-                aux = aux.replaceAll(System.lineSeparator(), " ");
-                linea[i] = aux;
-            }
-        }
-
-        System.out.println(getLinea(linea, this.BB0));
-    }
-
     public BB0(Date fecha) {
         this.fecha = fecha;
         data = new ArrayList();
@@ -160,7 +106,7 @@ public final class BB0 {
             linea[6] = Integer.toString(multa.getId());
             linea[7] = "ND";
             linea[8] = splitCodigoSancion(multa.getCodigoSancion());
-            linea[9] = multa.getExpediente();
+            linea[9] = Integer.toString(1);
             linea[10] = multa.getExpediente();
             linea[11] = Dates.imprimeFecha(multa.getFechaMulta(), "ddMMyy");
             linea[12] = multa.getArticulo();
@@ -170,10 +116,10 @@ public final class BB0 {
             linea[16] = multa.getOrganismo();
             linea[17] = multa.getCuantia();
             linea[18] = multa.getPuntos();
-            linea[19] = Integer.toString(multa.getIdOrganismo());
+            linea[19] = " ";
             linea[20] = multa.getReqObs();
-            linea[21] = " ";
-            linea[22] = Integer.toString(1);
+            linea[21] = multa.getLocalidad();
+            linea[22] = Integer.toString(multa.getIdOrganismo());
             linea[23] = multa.getLinea();
             linea[24] = pr.getLink();
             linea[25] = multa.getLocalidad();
@@ -235,7 +181,7 @@ public final class BB0 {
 
     private void crearArchivos() {
         File archivoBB0 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb0");
-        File archivoBB1 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb1");
+//        File archivoBB1 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb1");
 
         Files.escribeArchivo(archivoBB0, getDataArchivos(BB0));
 //        Files.escribeArchivo(archivoBB1, getDataArchivos(BB1));

@@ -22,6 +22,7 @@ public class BB1 {
     private final File fichero;
     private final Date fecha;
     private final List<Procesar> boletines;
+    private final List<Procesar> doc;
     private final List<String[]> docData;
     private final List<String[]> data;
 
@@ -33,6 +34,9 @@ public class BB1 {
                 .listaProcesar("SELECT * FROM " + Var.nombreBD + ".procesar "
                         + "WHERE fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha))
                         + " AND estado!=1");
+        this.doc = SqlBoe
+                .listaProcesar("SELECT * FROM " + Var.nombreBD + ".procesar "
+                        + "WHERE fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)));
         fichero = new File(Var.ficheroTxt, Dates.imprimeFecha(fecha));
         fichero.mkdirs();
     }
@@ -40,28 +44,21 @@ public class BB1 {
     public void run() {
         data.clear();
         Procesar aux;
-        Iterator<Procesar> it = boletines.iterator();
+        Iterator<Procesar> it = doc.iterator();
+
+        while (it.hasNext()) {
+            aux = it.next();
+            getDatosDoc(aux);
+        }
+
+        it = boletines.iterator();
 
         while (it.hasNext()) {
             aux = it.next();
             getDatos(aux);
-            //TODO, llenar el docData.
-            
         }
+
         crearArchivos();
-    }
-
-    private String getLinea(String[] linea) {
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < linea.length; i++) {
-            sb.append(linea[i]);
-
-            if (i != 25) {
-                sb.append("|");
-            }
-        }
-        return sb.toString();
     }
 
     private void getDatos(Procesar pr) {
@@ -72,7 +69,7 @@ public class BB1 {
         Iterator<Multa> it = multas.iterator();
 
         while (it.hasNext()) {
-            linea = new String[18];
+            linea = new String[17];
             multa = it.next();
 
             linea[0] = Dates.imprimeFecha(pr.getFecha());
@@ -92,7 +89,6 @@ public class BB1 {
             linea[14] = multa.getPuntos();
             linea[15] = multa.getLocalidad();
             linea[16] = multa.getLinea();
-//            linea[17] = pr.getLink();
 
             for (int i = 0; i < linea.length; i++) {
                 String linea1 = linea[i];
@@ -108,13 +104,29 @@ public class BB1 {
         }
     }
 
+    private void getDatosDoc(Procesar aux) {
+        String[] linea = new String[3];
+        linea[0] = aux.getCodigo().replace("BOE-N-20", "").replace("-", "");
+        linea[1] = aux.getCodigo();
+        linea[2] = aux.getLink();
+
+        docData.add(linea);
+    }
+
     private String splitNBoe(String codigo) {
         String[] split = codigo.split("-");
-        return split[0] + "-" + split[1];
+        return split[0] + split[1];
     }
 
     private String getDataArchivos() {
         StringBuilder sb = new StringBuilder();
+
+        docData.stream().map((arr) -> {
+            sb.append(getLinea(arr));
+            return arr;
+        }).forEach((_item) -> {
+            sb.append(System.lineSeparator());
+        });
 
         for (int i = 0; i < data.size(); i++) {
             String[] arr = data.get(i);
@@ -125,6 +137,19 @@ public class BB1 {
             }
         }
 
+        return sb.toString();
+    }
+
+    private String getLinea(String[] linea) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < linea.length; i++) {
+            sb.append(linea[i]);
+
+            if (i != 25) {
+                sb.append("|");
+            }
+        }
         return sb.toString();
     }
 
