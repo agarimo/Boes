@@ -136,7 +136,7 @@ public class Archivos {
 
         buffer = new StringBuilder();
         buffer.append("BCN2 ");
-        buffer.append(aux.getLink());
+        buffer.append(aux.getCodigo().replace("BOE-N-20", "").replace("-", ""));
         buffer.append(System.getProperty("line.separator"));
         buffer.append(getFaseBoletin(aux.codigo.get()));
         buffer.append("BCN5 ");

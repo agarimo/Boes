@@ -124,7 +124,7 @@ public class BB1 {
         docData.stream().map((arr) -> {
             sb.append(getLinea(arr));
             return arr;
-        }).forEach((_item) -> {
+        }).forEach((item) -> {
             sb.append(System.lineSeparator());
         });
 
@@ -146,7 +146,7 @@ public class BB1 {
         for (int i = 0; i < linea.length; i++) {
             sb.append(linea[i]);
 
-            if (i != 25) {
+            if (i != linea.length-1) {
                 sb.append("|");
             }
         }
@@ -154,7 +154,7 @@ public class BB1 {
     }
 
     private void crearArchivos() {
-        File archivoBB1 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".bb1");
+        File archivoBB1 = new File(fichero, Dates.imprimeFechaSinFormato(fecha) + ".ins");
         Files.escribeArchivo(archivoBB1, getDataArchivos());
     }
 }
