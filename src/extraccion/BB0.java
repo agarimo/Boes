@@ -119,7 +119,7 @@ public final class BB0 {
             linea[19] = " ";
             linea[20] = multa.getReqObs();
             linea[21] = multa.getLocalidad();
-            linea[22] = pr.getCodigo().replace("BOE-N-2015-", "");
+            linea[22] = pr.getCodigo().replace("BOE-N-20", "").replace("-", "");
             linea[23] = multa.getLinea();
             linea[24] = pr.getLink();
             linea[25] = multa.getLocalidad();
@@ -139,8 +139,7 @@ public final class BB0 {
     }
 
     private String splitCodigoSancion(String codigo) {
-        String[] split = codigo.split("-");
-        return split[2];
+        return codigo.replace("-", "");
     }
 
     private String getDataArchivos(int tipo) {

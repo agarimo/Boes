@@ -270,7 +270,7 @@ public class XLSXProcess {
 
     private String getCodigoMulta() {
         String aux = this.ve.getCodigo().replace("BOE-N-20", "");
-        aux = aux + "-" + Integer.toString(contador);
+        aux = aux + "/" + Integer.toString(contador);
         contador++;
 
         return aux;
