@@ -143,7 +143,7 @@ public class XLSXProcess {
         multa.setPlazo(ve.getPlazo());
 
         if (sd.expediente != 0) {
-            multa.setExpediente(getCelda(linea, sd.expediente).trim().toUpperCase());
+            multa.setExpediente(getCelda(linea, sd.expediente).trim().toUpperCase().replace("\"", ""));
         } else {
             multa.setExpediente("");
         }
