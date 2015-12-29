@@ -43,7 +43,7 @@ public class Estructuras {
     }
 
     private List getEstructuras() {
-        return SqlBoe.listaEstructuras("SELECT * FROM boes.estructura");
+        return SqlBoe.listaEstructuras("SELECT * FROM boes.estructura order by estructura");
     }
 
     public List getBoletines() {
@@ -81,7 +81,6 @@ public class Estructuras {
 
             if (getDatos(id).contains(aux.getEstructura())) {
                 estructura = aux;
-                break;
             }
         }
         return estructura;

@@ -123,7 +123,7 @@ public class XLSXProcess {
         Multa multa = new Multa();
 
         if (sd.nif != 0) {
-            if(isFecha(getCelda(linea,sd.nif))){
+            if (isFecha(getCelda(linea, sd.nif))) {
                 casoMadrid = true;
             }
         }

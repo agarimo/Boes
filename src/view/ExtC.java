@@ -648,7 +648,8 @@ public class ExtC implements Initializable, ControlledScreen {
                                     lbProceso.setText("");
                                     mostrarPanel(this.wait_to_preview);
                                 });
-                            } catch (NullPointerException e) {
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
                                 Platform.runLater(() -> {
                                     piProgreso.setProgress(1);
@@ -658,7 +659,8 @@ public class ExtC implements Initializable, ControlledScreen {
                                     Alert alert = new Alert(Alert.AlertType.WARNING);
                                     alert.setTitle("ERROR");
                                     alert.setHeaderText("XLSX CON ERRORES");
-                                    alert.setContentText("El XLSX seleccionado contiene errores de estructura");
+                                    alert.setContentText("El XLSX seleccionado contiene errores de estructura \n"
+                                            + e.getMessage());
                                     alert.showAndWait();
 
                                     btPreview.setText("Previsualizar Extracción");
@@ -742,7 +744,9 @@ public class ExtC implements Initializable, ControlledScreen {
                             XLSXProcess.insertMultas(procesado);
                             pr.SQLSetEstado(Estado.PROCESADO_XLSX.getValue());
                         }
-                    } catch (NullPointerException e) {
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        System.out.println(aux.getCodigo());
                         pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
                     }
                 }
