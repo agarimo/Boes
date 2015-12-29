@@ -12,6 +12,7 @@ import extraccion.ScriptArticulo;
 import extraccion.ScriptExp;
 import extraccion.ScriptFase;
 import extraccion.ScriptOrigen;
+import extraccion.ScriptReq;
 import extraccion.XLSXProcess;
 import java.awt.Desktop;
 import java.io.File;
@@ -709,8 +710,22 @@ public class ExtC implements Initializable, ControlledScreen {
                     btGenerarPdf.setDisable(true);
                     piProgreso.setProgress(0);
                     lbProgreso.setText("");
+                    lbProceso.setText("PREPARANDO BBDD");
+                });
+                
+                try {
+                    Sql bd = new Sql(Var.con);
+                    bd.ejecutar("DELETE from boes.boe where DATEDIFF(curdate(),fecha)> 15");
+                    bd.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                Platform.runLater(() -> {
+                    lbProgreso.setText("");
                     lbProceso.setText("PROCESANDO BOLETINES");
                 });
+                
 
                 Extraccion ex = new Extraccion(fecha);
                 List<Multa> procesado;
@@ -750,21 +765,6 @@ public class ExtC implements Initializable, ControlledScreen {
                         pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
                     }
                 }
-
-                Platform.runLater(() -> {
-                    piProgreso.setProgress(-1);
-                    lbProgreso.setText("...");
-                    lbProceso.setText("EJECUTANDO SCRIPT BBDD");
-                });
-
-                ScriptExp se = new ScriptExp(fecha);
-                se.run();
-                ScriptFase sf = new ScriptFase();
-                sf.run();
-                ScriptOrigen so = new ScriptOrigen(fecha);
-                so.run();
-                ScriptArticulo sa = new ScriptArticulo();
-                sa.run();
 
                 Platform.runLater(() -> {
                     piProgreso.setProgress(1);
@@ -899,50 +899,33 @@ public class ExtC implements Initializable, ControlledScreen {
                     btReqObs.setDisable(true);
                     piProgreso.setProgress(-1);
                     lbProgreso.setText("");
-                    lbProceso.setText("PROCESANDO REQ/OBS");
+                    lbProceso.setText("EJECUTANDO SCRIPT REQ/OBS");
                 });
 
-                Sql bd;
-                ReqObs aux;
-                List<ReqObs> list = SqlBoe.listaReqObs("SELECT * FROM boes.reqobs WHERE idOrigen "
-                        + "in (select idOrganismo from boes.multa "
-                        + "WHERE fechaPublicacion=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + ")");
-                Iterator<ReqObs> it = list.iterator();
+                ScriptReq sr = new ScriptReq(fecha);
+                sr.run();
 
-                try {
-                    bd = new Sql(Var.con);
-
-                    while (it.hasNext()) {
-                        aux = it.next();
-                        bd.ejecutar(aux.SQLEjecutar());
-                    }
-
-                    bd.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(BB0.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
                 Platform.runLater(() -> {
                     lbProgreso.setText("");
                     lbProceso.setText("EJECUTANDO SCRIPT EXPEDIENTE");
                 });
                 ScriptExp se = new ScriptExp(fecha);
                 se.run();
-                
+
                 Platform.runLater(() -> {
                     lbProgreso.setText("");
                     lbProceso.setText("EJECUTANDO SCRIPT FASE");
                 });
                 ScriptFase sf = new ScriptFase();
                 sf.run();
-                
+
                 Platform.runLater(() -> {
                     lbProgreso.setText("");
                     lbProceso.setText("EJECUTANDO SCRIPT ORIGEN");
                 });
                 ScriptOrigen so = new ScriptOrigen(fecha);
                 so.run();
-                
+
                 Platform.runLater(() -> {
                     lbProgreso.setText("");
                     lbProceso.setText("EJECUTANDO SCRIPT ARTICULO");
