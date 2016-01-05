@@ -53,14 +53,22 @@ public class Boes extends Application {
     }
 
     public static void test() {
-        pruebas();
+        String codigoSancion = "15-294647/10";
+
+        System.out.println(pruebas(codigoSancion));
     }
 
-    public static void pruebas() {
-//        ScriptArticulo so= new ScriptArticulo();
-//        so.run();
+    public static String pruebas(String codigo) {
+        String aux;
+        String[] split = codigo.split("-");
+        aux = split[0] + split[1];
+        
+        split = aux.split("/");
+        aux= split[0];
+
+        return aux;
     }
-    
+
     public static Date getFecha() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);

@@ -114,8 +114,14 @@ public class BB1 {
     }
 
     private String splitNBoe(String codigo) {
+        String aux;
         String[] split = codigo.split("-");
-        return split[0] + split[1];
+        aux = split[0] + split[1];
+
+        split = aux.split("/");
+        aux = split[0];
+
+        return aux;
     }
 
     private String getDataArchivos() {
@@ -146,7 +152,7 @@ public class BB1 {
         for (int i = 0; i < linea.length; i++) {
             sb.append(linea[i]);
 
-            if (i != linea.length-1) {
+            if (i != linea.length - 1) {
                 sb.append("|");
             }
         }
