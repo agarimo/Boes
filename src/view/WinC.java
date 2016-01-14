@@ -515,6 +515,8 @@ public class WinC implements Initializable, ControlledScreen {
         cbAutoScroll.setSelected(autoScroll);
         mostrarPanel(2);
         setProcesandoC(false);
+        
+        myController.setScreen(Boes.screen4ID);
     }
 
     private void iniciaTablaBoes() {

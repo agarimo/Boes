@@ -19,6 +19,8 @@ public class Boes extends Application {
     public static String screen2File = "/view/Ext.fxml";
     public static String screen3ID = "Pattern";
     public static String screen3File = "/view/Pattern.fxml";
+    public static String screen4ID = "Clasificacion";
+    public static String screen4File = "/view/Clasificacion.fxml";
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -27,6 +29,7 @@ public class Boes extends Application {
         mainContainer.loadScreen(Boes.screen1ID, Boes.screen1File);
         mainContainer.loadScreen(Boes.screen2ID, Boes.screen2File);
         mainContainer.loadScreen(Boes.screen3ID, Boes.screen3File);
+        mainContainer.loadScreen(Boes.screen4ID, Boes.screen4File);
 
         mainContainer.setScreen(Boes.screen1ID);
 
