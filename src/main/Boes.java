@@ -24,6 +24,7 @@ public class Boes extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Var.inicializar();
 
         ScreensController mainContainer = new ScreensController();
         mainContainer.loadScreen(Boes.screen1ID, Boes.screen1File);
@@ -49,7 +50,6 @@ public class Boes extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Var.inicializar();
         launch(args);
 //        test();
 //        System.exit(0);
@@ -65,9 +65,9 @@ public class Boes extends Application {
         String aux;
         String[] split = codigo.split("-");
         aux = split[0] + split[1];
-        
+
         split = aux.split("/");
-        aux= split[0];
+        aux = split[0];
 
         return aux;
     }
