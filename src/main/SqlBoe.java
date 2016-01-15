@@ -608,9 +608,81 @@ public class SqlBoe {
         }
         return list;
     }
+    
+    public static List listaAlreadySelected() {
+        String query = "SELECT codigo FROM " + Var.nombreBD + ".boletin";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("codigo");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List listaAlreadyDuplicated() {
+        String query = "SELECT codigo FROM "+Var.nombreBDStats+".boletines_publicados where isSelected=0;";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("codigo");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public static List listaTextoDescartado() {
         String query = "SELECT * FROM " + Var.nombreBD + ".texto_descartado";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("texto");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public static List listaTextoSeleccionado() {
+        String query = "SELECT * FROM " + Var.nombreBD + ".texto_seleccionado";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;

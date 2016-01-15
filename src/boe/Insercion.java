@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.SqlBoe;
 import main.Var;
 import model.ModeloBoes;
 import util.Sql;
@@ -24,98 +25,65 @@ import util.Varios;
 public class Insercion {
 
     private Sql bd;
+    private List alreadySelected;
+    private List alreadyDiscarted;
 
     public Insercion() {
+        this.alreadySelected = SqlBoe.listaAlreadySelected();
+        this.alreadyDiscarted = SqlBoe.listaAlreadyDuplicated();
 
     }
 
     //<editor-fold defaultstate="collapsed" desc="Comprobar Selección">
-    public List limpiarDuplicadosLista(List list) {
+    public List cleanDuplicateS(List list) {
         List lista = new ArrayList();
         ModeloBoes aux;
         Iterator it = list.iterator();
 
-        try {
-            bd = new Sql(Var.con);
-
-            while (it.hasNext()) {
-                aux = (ModeloBoes) it.next();
-                if (!checkSelected(aux)) {
-                    lista.add(aux);
-                }
+        while (it.hasNext()) {
+            aux = (ModeloBoes) it.next();
+            if (!alreadySelected.contains(aux.getCodigo())) {
+                lista.add(aux);
             }
-
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return lista;
     }
-    
-    public List limpiarDuplicadosListaD(List list) {
+
+    public List cleanDuplicateD(List list) {
         List lista = new ArrayList();
         ModeloBoes aux;
         Iterator it = list.iterator();
 
-        try {
-            bd = new Sql(Var.con);
-
-            while (it.hasNext()) {
-                aux = (ModeloBoes) it.next();
-                if (!checkSelectedD(aux)) {
-                    lista.add(aux);
-                }
+        while (it.hasNext()) {
+            aux = (ModeloBoes) it.next();
+            if (!alreadyDiscarted.contains(aux.getCodigo())) {
+                lista.add(aux);
             }
-
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return lista;
-    }
-
-    private boolean checkSelected(ModeloBoes aux) throws SQLException {
-        boolean is = false;
-
-        int a = bd.buscar("SELECT * FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux.getCodigo()));
-
-        if (a > 0) {
-            is = true;
-        }
-
-        return is;
-    }
-    
-    private boolean checkSelectedD(ModeloBoes aux) throws SQLException {
-        boolean is = false;
-
-        int a = bd.buscar("SELECT * FROM stats.boletines_publicados where codigo=" + Varios.entrecomillar(aux.getCodigo()));
-
-        if (a > 0) {
-            is = true;
-        }
-
-        return is;
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Inserción">
     public void insertaBoletin(ModeloBoes aux) {
-        Boletin bl = new Boletin();
+        Boletin bol = new Boletin();
 
         try {
             bd = new Sql(Var.con);
 
-            bl.setIdOrigen(getIdOrigen(aux.getEntidad(), aux.getOrigen()));
-            bl.setIdBoe(getIdBoe(aux.getFecha()));
-            bl.setIdDescarga(getIdDescarga(aux.getCodigo(),aux.getLink()));
-            bl.setCodigo(aux.getCodigo());
-            bl.setTipo("*711*");
-            bl.setFase("BCN1");
-            bl.setIsFase(0);
-            bl.setIsEstructura(0);
-            bl.setIdioma(getIdioma(bl.getIdOrigen()));
+            bol.setIdOrigen(getIdOrigen(aux.getEntidad(), aux.getOrigen()));
+            bol.setIdBoe(getIdBoe(aux.getFecha()));
+            bol.setIdDescarga(getIdDescarga(aux.getCodigo(), aux.getLink()));
+            bol.setCodigo(aux.getCodigo());
+            bol.setTipo("*711*");
+            bol.setFase("BCN1");
+            bol.setIsFase(0);
+            bol.setIsEstructura(0);
+            bol.setIdioma(getIdioma(bol.getIdOrigen()));
 
-            bd.ejecutar(bl.SQLCrear());
+            bd.ejecutar(bol.SQLCrear());
             bd.close();
 
         } catch (SQLException ex) {
@@ -123,7 +91,6 @@ public class Insercion {
         }
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Inserción">
     private int getIdOrigen(String entidad, String origen) throws SQLException {
         int aux;
         Origen or = new Origen();
@@ -163,7 +130,7 @@ public class Insercion {
         return bd.getInt("SELECT idioma FROM " + Var.nombreBD + ".origen where id=" + idOrigen);
     }
 
-    private int getIdDescarga(String codigo,String link) throws SQLException {
+    private int getIdDescarga(String codigo, String link) throws SQLException {
         int aux;
         Descarga ds = new Descarga();
         ds.setCodigo(codigo);
@@ -201,7 +168,7 @@ public class Insercion {
                 bp.setCodigo(aux.getCodigo());
                 bp.setDescripcion(aux.getDescripcion().replace("'", "\\'"));
                 bp.setFecha(aux.getFecha());
-                bp.setTipo(0);
+                bp.setIsSelected(false);
 
                 bdd.ejecutar(bp.SQLCrear());
             }
@@ -228,7 +195,7 @@ public class Insercion {
                 bp.setCodigo(aux.getCodigo());
                 bp.setDescripcion(aux.getDescripcion().replace("'", "\\'"));
                 bp.setFecha(aux.getFecha());
-                bp.setTipo(1);
+                bp.setIsSelected(true);
 
                 bdd.ejecutar(bp.SQLCrear());
             }

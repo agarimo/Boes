@@ -13,6 +13,7 @@ public class Var {
 
     public static Conexion con;
     public static String nombreBD = "boes";
+    public static String nombreBDStats = "boes_stats";
     public static File ficheroPdf;
     public static File ficheroTxt;
     public static File ficheroBoe;
@@ -59,5 +60,27 @@ public class Var {
         con.setUsuario("admin");
         con.setPass("IkuinenK@@m.s84");
         con.setPuerto("3306");
+    }
+    
+    public enum Status {
+
+        USER {
+                    @Override
+                    public String toString() {
+                        return "USER";
+                    }
+                },
+        APP {
+                    @Override
+                    public String toString() {
+                        return "APP";
+                    }
+                },
+        DELETED {
+                    @Override
+                    public String toString() {
+                        return "DELETED";
+                    }
+                }
     }
 }

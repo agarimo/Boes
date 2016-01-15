@@ -1,11 +1,18 @@
 package main;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import util.Sql;
 
 /**
  *
@@ -51,14 +58,12 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-//        test();
-//        System.exit(0);
     }
 
     public static void test() {
-        String codigoSancion = "15-294647/10";
-
-        System.out.println(pruebas(codigoSancion));
+        System.out.println("iniciando");
+        List aux = listaAlreadyDuplicated();
+        System.out.println(aux.size());
     }
 
     public static String pruebas(String codigo) {
@@ -78,5 +83,28 @@ public class Boes extends Application {
         cal.set(Calendar.MONTH, Calendar.NOVEMBER);
         cal.set(Calendar.DAY_OF_MONTH, 16);
         return cal.getTime();
+    }
+
+    public static List listaAlreadyDuplicated() {
+        String query = "SELECT codigo FROM stats.boletines_publicados where tipo=0;";
+        List list = new ArrayList();
+        Sql bd;
+        ResultSet rs;
+        String aux;
+
+        try {
+            bd = new Sql(Var.con);
+            rs = bd.ejecutarQueryRs(query);
+
+            while (rs.next()) {
+                aux = rs.getString("codigo");
+                list.add(aux);
+            }
+            rs.close();
+            bd.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 }

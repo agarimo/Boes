@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #f2f2f2;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ClasificacionC">
+<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #f2f2f2;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ClasificacionC">
    <children>
       <ToolBar prefHeight="40.0" prefWidth="1000.0">
          <items>
@@ -35,7 +35,7 @@
                   </AnchorPane>
                </content>
             </TitledPane>
-            <TitledPane collapsible="false" layoutX="279.0" layoutY="322.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="189.0" prefWidth="262.0" text="Boletines Seleccionados" AnchorPane.bottomAnchor="15.0">
+            <TitledPane fx:id="tpSeleccionados" collapsible="false" layoutX="279.0" layoutY="322.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="189.0" prefWidth="262.0" text="Boletines Seleccionados" AnchorPane.bottomAnchor="15.0">
                <content>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="163.0" prefWidth="260.0">
                      <children>
@@ -56,7 +56,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </opaqueInsets>
             </TableView>
-            <Label fx:id="lbContadorT" alignment="CENTER_RIGHT" layoutX="945.0" layoutY="356.0" prefHeight="17.0" prefWidth="50.0" text="..." AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="356.0" />
+            <Label fx:id="lbContadorT" alignment="CENTER_RIGHT" layoutX="945.0" layoutY="356.0" prefHeight="17.0" prefWidth="50.0" text="..." AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="356.0" />
             <Label layoutX="854.0" layoutY="356.0" prefHeight="17.0" prefWidth="81.0" text="Total: " AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="356.0" />
             <CheckBox fx:id="cbAutoScroll" layoutX="727.0" layoutY="356.0" mnemonicParsing="false" onAction="#cambioEnCheckBox" prefHeight="17.0" prefWidth="81.0" selected="true" text="AutoScroll" AnchorPane.rightAnchor="192.0" />
             <Button fx:id="btSelectAll" layoutX="844.0" layoutY="442.0" mnemonicParsing="false" onAction="#selectAll" prefHeight="25.0" prefWidth="153.0" text="Seleccionar TODO" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="5.0" />

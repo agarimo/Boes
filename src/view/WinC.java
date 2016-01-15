@@ -478,7 +478,6 @@ public class WinC implements Initializable, ControlledScreen {
 
     //<editor-fold defaultstate="collapsed" desc="PANEL CLASIFICACION">
     private boolean autoScroll;
-    private boolean isInsercion;
 
     @FXML
     private Button btRecargarClasificacion;
@@ -509,562 +508,562 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     void iniciaClasificacion(ActionEvent event) {
-        iniciaTablaBoes();
-        limpiarClasificacion();
-        autoScroll = true;
-        cbAutoScroll.setSelected(autoScroll);
-        mostrarPanel(2);
-        setProcesandoC(false);
+//        iniciaTablaBoes();
+//        limpiarClasificacion();
+//        autoScroll = true;
+//        cbAutoScroll.setSelected(autoScroll);
+//        mostrarPanel(2);
+//        setProcesandoC(false);
         
         myController.setScreen(Boes.screen4ID);
     }
 
-    private void iniciaTablaBoes() {
-        origenCL.setCellValueFactory(new PropertyValueFactory<>("origen"));
-        origenCL.setCellFactory(new Callback<TableColumn<ModeloBoes, String>, TableCell<ModeloBoes, String>>() {
-            @Override
-            public TableCell<ModeloBoes, String> call(TableColumn<ModeloBoes, String> arg0) {
-                return new TableCell<ModeloBoes, String>() {
-                    private Text text;
+//    private void iniciaTablaBoes() {
+//        origenCL.setCellValueFactory(new PropertyValueFactory<>("origen"));
+//        origenCL.setCellFactory(new Callback<TableColumn<ModeloBoes, String>, TableCell<ModeloBoes, String>>() {
+//            @Override
+//            public TableCell<ModeloBoes, String> call(TableColumn<ModeloBoes, String> arg0) {
+//                return new TableCell<ModeloBoes, String>() {
+//                    private Text text;
+//
+//                    @Override
+//                    public void updateItem(String item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if (!isEmpty()) {
+//                            text = new Text(item);
+//                            text.setWrappingWidth(origenCL.getWidth() - 10);
+//                            this.setWrapText(true);
+//                            setGraphic(text);
+//                        } else {
+//                            text = new Text("");
+//                            setGraphic(text);
+//                        }
+//                    }
+//                };
+//            }
+//        });
+//        codigoCL.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+//        descripcionCL.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+//        descripcionCL.setCellFactory(new Callback<TableColumn<ModeloBoes, String>, TableCell<ModeloBoes, String>>() {
+//            @Override
+//            public TableCell<ModeloBoes, String> call(TableColumn<ModeloBoes, String> arg0) {
+//                return new TableCell<ModeloBoes, String>() {
+//                    private Text text;
+//
+//                    @Override
+//                    public void updateItem(String item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if (!isEmpty()) {
+//                            text = new Text(item);
+//                            text.setWrappingWidth(descripcionCL.getWidth() - 20);
+//                            this.setWrapText(true);
+//                            setGraphic(text);
+//                        } else {
+//                            text = new Text("");
+//                            setGraphic(text);
+//                        }
+//                    }
+//                };
+//            }
+//        });
+//
+//        publicacion = FXCollections.observableArrayList();
+//        tvBoes.setItems(publicacion);
+//        selectedList = FXCollections.observableArrayList();
+//        lvSelect.setItems(selectedList);
+//        discartedList = FXCollections.observableArrayList();
+//        lvDiscard.setItems(discartedList);
+//    }
 
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!isEmpty()) {
-                            text = new Text(item);
-                            text.setWrappingWidth(origenCL.getWidth() - 10);
-                            this.setWrapText(true);
-                            setGraphic(text);
-                        } else {
-                            text = new Text("");
-                            setGraphic(text);
-                        }
-                    }
-                };
-            }
-        });
-        codigoCL.setCellValueFactory(new PropertyValueFactory<>("codigo"));
-        descripcionCL.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        descripcionCL.setCellFactory(new Callback<TableColumn<ModeloBoes, String>, TableCell<ModeloBoes, String>>() {
-            @Override
-            public TableCell<ModeloBoes, String> call(TableColumn<ModeloBoes, String> arg0) {
-                return new TableCell<ModeloBoes, String>() {
-                    private Text text;
+//    private void cargarBoes(Boe boe) {
+//        origen_descartado = SqlBoe.listaOrigenDescartado();
+//        texto_descartado = SqlBoe.listaTextoDescartado();
+//        List bol = new ArrayList();
+//        boe.getBoletines();
+//
+//        Iterator it;
+//        Iterator it2;
+//        Publicacion pb;
+//        Pdf pd;
+//
+//        it = boe.getPb().iterator();
+//
+//        while (it.hasNext()) {
+//            pb = (Publicacion) it.next();
+//            it2 = pb.getPdfs().iterator();
+//
+//            while (it2.hasNext()) {
+//                pd = (Pdf) it2.next();
+//                bol.add(pd);
+//            }
+//        }
+//        cargarTablaBoes(bol);
+//    }
+//
+//    private void cargarTablaBoes(List lista) {
+//        publicacion.clear();
+//        Pdf aux;
+//        ModeloBoes model;
+//        Iterator it = lista.iterator();
+//
+//        while (it.hasNext()) {
+//            aux = (Pdf) it.next();
+//            model = new ModeloBoes();
+//            model.origen.set(aux.getOrigen());
+//            model.entidad.set(aux.getEntidad());
+//            model.fecha.set(Dates.imprimeFecha(aux.getFecha()));
+//            model.codigo.set(aux.getCodigo());
+//            model.descripcion.set(aux.getDescripcion());
+//            model.link.set(aux.getLink());
+//
+//            publicacion.add(model);
+//        }
+//        updateClasificacion();
+//    }
 
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!isEmpty()) {
-                            text = new Text(item);
-                            text.setWrappingWidth(descripcionCL.getWidth() - 20);
-                            this.setWrapText(true);
-                            setGraphic(text);
-                        } else {
-                            text = new Text("");
-                            setGraphic(text);
-                        }
-                    }
-                };
-            }
-        });
-
-        publicacion = FXCollections.observableArrayList();
-        tvBoes.setItems(publicacion);
-        selectedList = FXCollections.observableArrayList();
-        lvSelect.setItems(selectedList);
-        discartedList = FXCollections.observableArrayList();
-        lvDiscard.setItems(discartedList);
-    }
-
-    private void cargarBoes(Boe boe) {
-        origen_descartado = SqlBoe.listaOrigenDescartado();
-        texto_descartado = SqlBoe.listaTextoDescartado();
-        List bol = new ArrayList();
-        boe.getBoletines();
-
-        Iterator it;
-        Iterator it2;
-        Publicacion pb;
-        Pdf pd;
-
-        it = boe.getPb().iterator();
-
-        while (it.hasNext()) {
-            pb = (Publicacion) it.next();
-            it2 = pb.getPdfs().iterator();
-
-            while (it2.hasNext()) {
-                pd = (Pdf) it2.next();
-                bol.add(pd);
-            }
-        }
-        cargarTablaBoes(bol);
-    }
-
-    private void cargarTablaBoes(List lista) {
-        publicacion.clear();
-        Pdf aux;
-        ModeloBoes model;
-        Iterator it = lista.iterator();
-
-        while (it.hasNext()) {
-            aux = (Pdf) it.next();
-            model = new ModeloBoes();
-            model.origen.set(aux.getOrigen());
-            model.entidad.set(aux.getEntidad());
-            model.fecha.set(Dates.imprimeFecha(aux.getFecha()));
-            model.codigo.set(aux.getCodigo());
-            model.descripcion.set(aux.getDescripcion());
-            model.link.set(aux.getLink());
-
-            publicacion.add(model);
-        }
-        updateClasificacion();
-    }
-
-    private void getFocusTablaBoes() {
-        if (autoScroll) {
-            tvBoes.getSelectionModel().select(0);
-            tvBoes.scrollTo(0);
-            tvBoes.requestFocus();
-        }
-    }
+//    private void getFocusTablaBoes() {
+//        if (autoScroll) {
+//            tvBoes.getSelectionModel().select(0);
+//            tvBoes.scrollTo(0);
+//            tvBoes.requestFocus();
+//        }
+//    }
 
     @FXML
     void cambioEnDatePicker() {
-        lbContadorT.setText("...");
-        lbContadorD.setText("...");
-        lbContadorS.setText("...");
-        publicacion.clear();
-        selectedList.clear();
-        discartedList.clear();
-
-        Thread a = new Thread(() -> {
-
-            Platform.runLater(() -> {
-                rootPane.getScene().setCursor(Cursor.WAIT);
-            });
-
-            try {
-                Date aux = Dates.asDate(dpFechaC.getValue());
-
-                if (aux != null) {
-                    cargarBoes(SqlBoe.getBoe(aux));
-                    Var.isClasificando = true;
-                }
-            } catch (Exception ex) {
-                //
-            }
-
-            Platform.runLater(() -> {
-                rootPane.getScene().setCursor(Cursor.DEFAULT);
-            });
-        });
-        a.start();
+//        lbContadorT.setText("...");
+//        lbContadorD.setText("...");
+//        lbContadorS.setText("...");
+//        publicacion.clear();
+//        selectedList.clear();
+//        discartedList.clear();
+//
+//        Thread a = new Thread(() -> {
+//
+//            Platform.runLater(() -> {
+//                rootPane.getScene().setCursor(Cursor.WAIT);
+//            });
+//
+//            try {
+//                Date aux = Dates.asDate(dpFechaC.getValue());
+//
+//                if (aux != null) {
+//                    cargarBoes(SqlBoe.getBoe(aux));
+//                    Var.isClasificando = true;
+//                }
+//            } catch (Exception ex) {
+//                //
+//            }
+//
+//            Platform.runLater(() -> {
+//                rootPane.getScene().setCursor(Cursor.DEFAULT);
+//            });
+//        });
+//        a.start();
     }
 
     @FXML
     void cambioEnCheckBox(ActionEvent event) {
-        autoScroll = cbAutoScroll.isSelected();
+//        autoScroll = cbAutoScroll.isSelected();
     }
 
-    void updateClasificacion() {
-        ModeloBoes aux;
-        ObservableList<ModeloBoes> dList = FXCollections.observableArrayList();
-        ObservableList<ModeloBoes> sList = FXCollections.observableArrayList();
-        Iterator it = publicacion.iterator();
+//    void updateClasificacion() {
+//        ModeloBoes aux;
+//        ObservableList<ModeloBoes> dList = FXCollections.observableArrayList();
+//        ObservableList<ModeloBoes> sList = FXCollections.observableArrayList();
+//        Iterator it = publicacion.iterator();
+//
+//        try {
+//            bd = new Sql(Var.con);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        while (it.hasNext()) {
+//            aux = (ModeloBoes) it.next();
+//
+//            if (origen_descartado.contains(aux.getOrigen()) || textoDescartado(aux.getDescripcion())) {
+//                dList.add(aux);
+//            }
+//
+//            if (boletinProcesado(aux.getCodigo())) {
+//                sList.add(aux);
+//            }
+//        }
+//
+//        try {
+//            bd.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        it = dList.iterator();
+//
+//        while (it.hasNext()) {
+//            aux = (ModeloBoes) it.next();
+//
+//            if (publicacion.contains(aux)) {
+//                publicacion.remove(aux);
+//            }
+//        }
+//
+//        it = sList.iterator();
+//
+//        while (it.hasNext()) {
+//            aux = (ModeloBoes) it.next();
+//
+//            if (publicacion.contains(aux)) {
+//                publicacion.remove(aux);
+//            }
+//        }
+//
+//        Platform.runLater(() -> {
+//            getFocusTablaBoes();
+//            discartedList.clear();
+//            discartedList.addAll(dList);
+//            selectedList.clear();
+//            selectedList.addAll(sList);
+//            lbContadorT.setText(Integer.toString(publicacion.size()));
+//            lbContadorD.setText(Integer.toString(discartedList.size()));
+//            lbContadorS.setText(Integer.toString(selectedList.size()));
+//        });
+//    }
 
-        try {
-            bd = new Sql(Var.con);
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        while (it.hasNext()) {
-            aux = (ModeloBoes) it.next();
-
-            if (origen_descartado.contains(aux.getOrigen()) || textoDescartado(aux.getDescripcion())) {
-                dList.add(aux);
-            }
-
-            if (boletinProcesado(aux.getCodigo())) {
-                sList.add(aux);
-            }
-        }
-
-        try {
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        it = dList.iterator();
-
-        while (it.hasNext()) {
-            aux = (ModeloBoes) it.next();
-
-            if (publicacion.contains(aux)) {
-                publicacion.remove(aux);
-            }
-        }
-
-        it = sList.iterator();
-
-        while (it.hasNext()) {
-            aux = (ModeloBoes) it.next();
-
-            if (publicacion.contains(aux)) {
-                publicacion.remove(aux);
-            }
-        }
-
-        Platform.runLater(() -> {
-            getFocusTablaBoes();
-            discartedList.clear();
-            discartedList.addAll(dList);
-            selectedList.clear();
-            selectedList.addAll(sList);
-            lbContadorT.setText(Integer.toString(publicacion.size()));
-            lbContadorD.setText(Integer.toString(discartedList.size()));
-            lbContadorS.setText(Integer.toString(selectedList.size()));
-        });
-    }
-
-    boolean textoDescartado(String aux) {
-        boolean a = false;
-        String str;
-        Iterator it = texto_descartado.iterator();
-
-        while (it.hasNext()) {
-            str = (String) it.next();
-
-            if (aux.toUpperCase().contains(str.toUpperCase())) {
-                a = true;
-            }
-        }
-        return a;
-    }
-
-    boolean boletinProcesado(String aux) {
-        int a;
-        boolean is = false;
-
-        try {
-            a = bd.buscar("SELECT * FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
-            if (a > 0) {
-                is = true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return is;
-    }
+//    boolean textoDescartado(String aux) {
+//        boolean a = false;
+//        String str;
+//        Iterator it = texto_descartado.iterator();
+//
+//        while (it.hasNext()) {
+//            str = (String) it.next();
+//
+//            if (aux.toUpperCase().contains(str.toUpperCase())) {
+//                a = true;
+//            }
+//        }
+//        return a;
+//    }
+//
+//    boolean boletinProcesado(String aux) {
+//        int a;
+//        boolean is = false;
+//
+//        try {
+//            a = bd.buscar("SELECT * FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(aux));
+//            if (a > 0) {
+//                is = true;
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        return is;
+//    }
 
     @FXML
     void selectPdf() {
-        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
-
-        if (aux != null) {
-            selectedList.add(0, aux);
-            publicacion.remove(aux);
-            getFocusTablaBoes();
-            setContadores();
-        }
+//        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+//
+//        if (aux != null) {
+//            selectedList.add(0, aux);
+//            publicacion.remove(aux);
+//            getFocusTablaBoes();
+//            setContadores();
+//        }
     }
 
     @FXML
     void selectAll(ActionEvent event) {
-        ModeloBoes aux;
-        Iterator it;
-
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("SELECCIONAR TODOS");
-        alert.setHeaderText(null);
-        alert.setContentText("¿Desea SELECCIONAR TODOS?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == ButtonType.OK) {
-            it = publicacion.iterator();
-
-            while (it.hasNext()) {
-                aux = (ModeloBoes) it.next();
-                selectedList.add(0, aux);
-            }
-            publicacion.clear();
-            setContadores();
-        }
+//        ModeloBoes aux;
+//        Iterator it;
+//
+//        Alert alert = new Alert(AlertType.CONFIRMATION);
+//        alert.setTitle("SELECCIONAR TODOS");
+//        alert.setHeaderText(null);
+//        alert.setContentText("¿Desea SELECCIONAR TODOS?");
+//
+//        Optional<ButtonType> result = alert.showAndWait();
+//
+//        if (result.get() == ButtonType.OK) {
+//            it = publicacion.iterator();
+//
+//            while (it.hasNext()) {
+//                aux = (ModeloBoes) it.next();
+//                selectedList.add(0, aux);
+//            }
+//            publicacion.clear();
+//            setContadores();
+//        }
     }
 
     @FXML
     void discardPdf() {
-        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
-
-        if (aux != null) {
-            discartedList.add(0, aux);
-            publicacion.remove(aux);
-            getFocusTablaBoes();
-            setContadores();
-        }
+//        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+//
+//        if (aux != null) {
+//            discartedList.add(0, aux);
+//            publicacion.remove(aux);
+//            getFocusTablaBoes();
+//            setContadores();
+//        }
     }
 
     @FXML
     void recoverS() {
-        ModeloBoes aux = lvSelect.getSelectionModel().getSelectedItem();
-
-        if (aux != null) {
-            publicacion.add(0, aux);
-            selectedList.remove(aux);
-            getFocusTablaBoes();
-            setContadores();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("Debes seleccionar un elemento.");
-            alert.showAndWait();
-        }
+//        ModeloBoes aux = lvSelect.getSelectionModel().getSelectedItem();
+//
+//        if (aux != null) {
+//            publicacion.add(0, aux);
+//            selectedList.remove(aux);
+//            getFocusTablaBoes();
+//            setContadores();
+//        } else {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("ERROR");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Debes seleccionar un elemento.");
+//            alert.showAndWait();
+//        }
     }
 
     @FXML
     void recoverD() {
-        ModeloBoes aux = lvDiscard.getSelectionModel().getSelectedItem();
-
-        if (aux != null) {
-            publicacion.add(0, aux);
-            discartedList.remove(aux);
-            getFocusTablaBoes();
-            setContadores();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("Debes seleccionar un elemento.");
-            alert.showAndWait();
-        }
+//        ModeloBoes aux = lvDiscard.getSelectionModel().getSelectedItem();
+//
+//        if (aux != null) {
+//            publicacion.add(0, aux);
+//            discartedList.remove(aux);
+//            getFocusTablaBoes();
+//            setContadores();
+//        } else {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("ERROR");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Debes seleccionar un elemento.");
+//            alert.showAndWait();
+//        }
     }
 
-    void setContadores() {
-        Platform.runLater(() -> {
-            lbContadorT.setText(Integer.toString(publicacion.size()));
-            lbContadorD.setText(Integer.toString(discartedList.size()));
-            lbContadorS.setText(Integer.toString(selectedList.size()));
-        });
-    }
+//    void setContadores() {
+//        Platform.runLater(() -> {
+//            lbContadorT.setText(Integer.toString(publicacion.size()));
+//            lbContadorD.setText(Integer.toString(discartedList.size()));
+//            lbContadorS.setText(Integer.toString(selectedList.size()));
+//        });
+//    }
 
     @FXML
     void descartaOrigen(ActionEvent event) {
-        Sql bdd;
-        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
-
-        if (aux != null) {
-
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("DESCARTAR ORIGEN");
-            alert.setHeaderText(aux.getEntidad());
-            alert.setContentText("¿Desea DESCARTAR el ORIGEN " + aux.getOrigen());
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.get() == ButtonType.OK) {
-                try {
-                    bdd = new Sql(Var.con);
-                    bdd.ejecutar("INSERT into " + Var.nombreBD + ".origen_descartado (nombre) values("
-                            + Varios.entrecomillar(aux.getOrigen())
-                            + ");");
-                    bdd.close();
-                    origen_descartado.add(aux.getOrigen());
-                    updateClasificacion();
-                } catch (SQLException ex) {
-                    Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("Debes seleccionar un elemento.");
-            alert.showAndWait();
-        }
+//        Sql bdd;
+//        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+//
+//        if (aux != null) {
+//
+//            Alert alert = new Alert(AlertType.CONFIRMATION);
+//            alert.setTitle("DESCARTAR ORIGEN");
+//            alert.setHeaderText(aux.getEntidad());
+//            alert.setContentText("¿Desea DESCARTAR el ORIGEN " + aux.getOrigen());
+//
+//            Optional<ButtonType> result = alert.showAndWait();
+//
+//            if (result.get() == ButtonType.OK) {
+//                try {
+//                    bdd = new Sql(Var.con);
+//                    bdd.ejecutar("INSERT into " + Var.nombreBD + ".origen_descartado (nombre) values("
+//                            + Varios.entrecomillar(aux.getOrigen())
+//                            + ");");
+//                    bdd.close();
+//                    origen_descartado.add(aux.getOrigen());
+//                    updateClasificacion();
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        } else {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("ERROR");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Debes seleccionar un elemento.");
+//            alert.showAndWait();
+//        }
     }
 
-    void limpiarClasificacion() {
-        publicacion.clear();
-        discartedList.clear();
-        selectedList.clear();
-        dpFechaC.setValue(null);
-    }
+//    void limpiarClasificacion() {
+//        publicacion.clear();
+//        discartedList.clear();
+//        selectedList.clear();
+//        dpFechaC.setValue(null);
+//    }
 
-    private void setProcesandoC(boolean aux) {
-        lbClasificacion.setVisible(aux);
-        pbClasificacion.setVisible(aux);
-        btFinClas.setDisable(aux);
-        dpFecha.setDisable(aux);
-        btSelect.setDisable(aux);
-        btDiscard.setDisable(aux);
-        btVerWebC.setDisable(aux);
-        btDescartaOrigen.setDisable(aux);
-        btRecargarClasificacion.setDisable(aux);
-        btRecoverD.setDisable(aux);
-        btRecoverS.setDisable(aux);
-        btSelectAll.setDisable(aux);
-    }
+//    private void setProcesandoC(boolean aux) {
+//        lbClasificacion.setVisible(aux);
+//        pbClasificacion.setVisible(aux);
+//        btFinClas.setDisable(aux);
+//        dpFecha.setDisable(aux);
+//        btSelect.setDisable(aux);
+//        btDiscard.setDisable(aux);
+//        btVerWebC.setDisable(aux);
+//        btDescartaOrigen.setDisable(aux);
+//        btRecargarClasificacion.setDisable(aux);
+//        btRecoverD.setDisable(aux);
+//        btRecoverS.setDisable(aux);
+//        btSelectAll.setDisable(aux);
+//    }
 
     @FXML
     void finalizaClas() {
 
-        if (publicacion.isEmpty()) {
-            Var.isClasificando = false;
-            insercion();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ACEPTAR BOLETINES");
-            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
-            alert.setContentText("¿Desea CONTINUAR?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.get() == ButtonType.OK) {
-                Var.isClasificando = false;
-                insercion();
-            }
-        }
+//        if (publicacion.isEmpty()) {
+//            Var.isClasificando = false;
+//            insercion();
+//        } else {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("ACEPTAR BOLETINES");
+//            alert.setHeaderText("Todavía quedan Boletines sin clasificar");
+//            alert.setContentText("¿Desea CONTINUAR?");
+//
+//            Optional<ButtonType> result = alert.showAndWait();
+//
+//            if (result.get() == ButtonType.OK) {
+//                Var.isClasificando = false;
+//                insercion();
+//            }
+//        }
     }
 
-    void insercion() {
-        Thread a = new Thread(() -> {
-
-            Platform.runLater(() -> {
-                setProcesandoC(true);
-                pbClasificacion.setProgress(-1);
-                lbClasificacion.setText("INICIANDO");
-            });
-
-            ModeloBoes aux;
-            Insercion in = new Insercion();
-
-            Platform.runLater(() -> {
-                lbClasificacion.setText("LIMPIANDO DUPLICADOS (Selected)");
-            });
-            List list = in.limpiarDuplicadosLista(this.selectedList);
-
-            Platform.runLater(() -> {
-                lbClasificacion.setText("LIMPIANDO DUPLICADOS (Discarted)");
-            });
-            List listD = in.limpiarDuplicadosListaD(this.discartedList);
-
-            Platform.runLater(() -> {
-                lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Selected)");
-            });
-
-            in.guardaStatsS(list);
-
-            Platform.runLater(() -> {
-                lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Discarted)");
-            });
-
-            in.guardaStatsD(listD);
-
-            Platform.runLater(() -> {
-                pbClasificacion.setProgress(0);
-                lbClasificacion.setText("INICIANDO CARGA DE BOLETINES");
-            });
-
-            for (int i = 0; i < list.size(); i++) {
-                final int contador = i;
-                final int total = list.size();
-
-                Platform.runLater(() -> {
-                    int contadour = contador + 1;
-                    double counter = contador + 1;
-                    double toutal = total;
-                    lbClasificacion.setText("INSERTANDO BOLETÍN " + contadour + " de " + total);
-                    pbClasificacion.setProgress(counter / toutal);
-                });
-
-                aux = (ModeloBoes) list.get(i);
-                in.insertaBoletin(aux);
-            }
-
-            Platform.runLater(() -> {
-                lbClasificacion.setText("INSERCIÓN FINALIZADA");
-                pbClasificacion.setProgress(-1);
-                lbClasificacion.setText("INICIANDO DESCARGA");
-            });
-
-            Descarga des;
-            Download dw = new Download();
-            List listDes = dw.getListado();
-
-            for (int i = 0; i < listDes.size(); i++) {
-                final int contador = i;
-                final int total = listDes.size();
-                Platform.runLater(() -> {
-                    int contadour = contador + 1;
-                    double counter = contador + 1;
-                    double toutal = total;
-                    lbClasificacion.setText("DESCARGANDO ARCHIVO " + contadour + " de " + total);
-                    pbClasificacion.setProgress(counter / toutal);
-                });
-                des = (Descarga) listDes.get(i);
-                dw.descarga(des);
-            }
-
-            Platform.runLater(() -> {
-                lbClasificacion.setText("DESCARGA FINALIZADA");
-                pbClasificacion.setProgress(-1);
-                lbClasificacion.setText("INICIANDO");
-            });
-
-            Date fecha = Dates.asDate(dpFechaC.getValue());
-
-            if (fecha != null) {
-                Boletin bol;
-                Limpieza li;
-                List listLi = SqlBoe.listaBoletin("SELECT * FROM boes.boletin where idBoe="
-                        + "(SELECT id FROM boes.boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + ")");
-
-                for (int i = 0; i < listLi.size(); i++) {
-                    final int contador = i;
-                    final int total = listLi.size();
-                    Platform.runLater(() -> {
-                        int contadour = contador + 1;
-                        double counter = contador + 1;
-                        double toutal = total;
-                        lbClasificacion.setText("LIMPIANDO BOLETIN " + contadour + " de " + total);
-                        pbClasificacion.setProgress(counter / toutal);
-                    });
-                    bol = (Boletin) listLi.get(i);
-                    li = new Limpieza(bol);
-                    li.run();
-                }
-            }
-
-            Platform.runLater(() -> {
-                setProcesandoC(false);
-                lbClasificacion.setText("LIMPIEZA FINALIZADA");
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("COMPLETADO");
-                alert.setHeaderText("PROCESO FINALIZADO");
-                alert.setContentText("SE HA FINALIZADO LA INSERCIÓN, DESCARGA Y LIMPIEZA");
-                alert.showAndWait();
-
-                limpiarClasificacion();
-            });
-        });
-        a.start();
-    }
+//    void insercion() {
+//        Thread a = new Thread(() -> {
+//
+//            Platform.runLater(() -> {
+//                setProcesandoC(true);
+//                pbClasificacion.setProgress(-1);
+//                lbClasificacion.setText("INICIANDO");
+//            });
+//
+//            ModeloBoes aux;
+//            Insercion in = new Insercion();
+//
+//            Platform.runLater(() -> {
+//                lbClasificacion.setText("LIMPIANDO DUPLICADOS (Selected)");
+//            });
+//            List list = in.limpiarDuplicadosLista(this.selectedList);
+//
+//            Platform.runLater(() -> {
+//                lbClasificacion.setText("LIMPIANDO DUPLICADOS (Discarted)");
+//            });
+//            List listD = in.limpiarDuplicadosListaD(this.discartedList);
+//
+//            Platform.runLater(() -> {
+//                lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Selected)");
+//            });
+//
+//            in.guardaStatsS(list);
+//
+//            Platform.runLater(() -> {
+//                lbClasificacion.setText("GUARDANDO ESTADÍSTICAS (Discarted)");
+//            });
+//
+//            in.guardaStatsD(listD);
+//
+//            Platform.runLater(() -> {
+//                pbClasificacion.setProgress(0);
+//                lbClasificacion.setText("INICIANDO CARGA DE BOLETINES");
+//            });
+//
+//            for (int i = 0; i < list.size(); i++) {
+//                final int contador = i;
+//                final int total = list.size();
+//
+//                Platform.runLater(() -> {
+//                    int contadour = contador + 1;
+//                    double counter = contador + 1;
+//                    double toutal = total;
+//                    lbClasificacion.setText("INSERTANDO BOLETÍN " + contadour + " de " + total);
+//                    pbClasificacion.setProgress(counter / toutal);
+//                });
+//
+//                aux = (ModeloBoes) list.get(i);
+//                in.insertaBoletin(aux);
+//            }
+//
+//            Platform.runLater(() -> {
+//                lbClasificacion.setText("INSERCIÓN FINALIZADA");
+//                pbClasificacion.setProgress(-1);
+//                lbClasificacion.setText("INICIANDO DESCARGA");
+//            });
+//
+//            Descarga des;
+//            Download dw = new Download();
+//            List listDes = dw.getListado();
+//
+//            for (int i = 0; i < listDes.size(); i++) {
+//                final int contador = i;
+//                final int total = listDes.size();
+//                Platform.runLater(() -> {
+//                    int contadour = contador + 1;
+//                    double counter = contador + 1;
+//                    double toutal = total;
+//                    lbClasificacion.setText("DESCARGANDO ARCHIVO " + contadour + " de " + total);
+//                    pbClasificacion.setProgress(counter / toutal);
+//                });
+//                des = (Descarga) listDes.get(i);
+//                dw.descarga(des);
+//            }
+//
+//            Platform.runLater(() -> {
+//                lbClasificacion.setText("DESCARGA FINALIZADA");
+//                pbClasificacion.setProgress(-1);
+//                lbClasificacion.setText("INICIANDO");
+//            });
+//
+//            Date fecha = Dates.asDate(dpFechaC.getValue());
+//
+//            if (fecha != null) {
+//                Boletin bol;
+//                Limpieza li;
+//                List listLi = SqlBoe.listaBoletin("SELECT * FROM boes.boletin where idBoe="
+//                        + "(SELECT id FROM boes.boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + ")");
+//
+//                for (int i = 0; i < listLi.size(); i++) {
+//                    final int contador = i;
+//                    final int total = listLi.size();
+//                    Platform.runLater(() -> {
+//                        int contadour = contador + 1;
+//                        double counter = contador + 1;
+//                        double toutal = total;
+//                        lbClasificacion.setText("LIMPIANDO BOLETIN " + contadour + " de " + total);
+//                        pbClasificacion.setProgress(counter / toutal);
+//                    });
+//                    bol = (Boletin) listLi.get(i);
+//                    li = new Limpieza(bol);
+//                    li.run();
+//                }
+//            }
+//
+//            Platform.runLater(() -> {
+//                setProcesandoC(false);
+//                lbClasificacion.setText("LIMPIEZA FINALIZADA");
+//
+//                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                alert.setTitle("COMPLETADO");
+//                alert.setHeaderText("PROCESO FINALIZADO");
+//                alert.setContentText("SE HA FINALIZADO LA INSERCIÓN, DESCARGA Y LIMPIEZA");
+//                alert.showAndWait();
+//
+//                limpiarClasificacion();
+//            });
+//        });
+//        a.start();
+//    }
 
     @FXML
     void abrirWeb(ActionEvent event) {
-        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
-        try {
-            Desktop.getDesktop().browse(new URI(aux.getLink()));
-        } catch (IOException | URISyntaxException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
+//        try {
+//            Desktop.getDesktop().browse(new URI(aux.getLink()));
+//        } catch (IOException | URISyntaxException ex) {
+//            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 //</editor-fold>
 //</editor-fold>

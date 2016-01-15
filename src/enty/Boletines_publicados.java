@@ -1,5 +1,7 @@
 package enty;
 
+import main.Var;
+import main.Var.Status;
 import util.Varios;
 
 /**
@@ -7,43 +9,31 @@ import util.Varios;
  * @author Agarimo
  */
 public class Boletines_publicados {
+
     private int id;
+    private String fecha;
+    private String codigo;
+    private boolean isSelected;
+    private Status status;
     private String entidad;
     private String origen;
-    private String codigo;
     private String descripcion;
-    private String fecha;
-    private int tipo;
-    
-    public Boletines_publicados(){
-        
+    private String link;
+    private String cve;
+
+    public Boletines_publicados() {
     }
 
-    public Boletines_publicados(String entidad, String origen, String codigo, String descripcion, String fecha, int tipo) {
+    public Boletines_publicados(String fecha, String codigo, boolean isSelected, Status status, String entidad, String origen, String descripcion, String link, String cve) {
+        this.fecha = fecha;
+        this.codigo = codigo;
+        this.isSelected = isSelected;
+        this.status = status;
         this.entidad = entidad;
         this.origen = origen;
-        this.codigo = codigo;
         this.descripcion = descripcion;
-        this.fecha = fecha;
-        this.tipo = tipo;
-    }
-
-    public Boletines_publicados(int id, String entidad, String origen, String codigo, String descripcion, String fecha, int tipo) {
-        this.id = id;
-        this.entidad = entidad;
-        this.origen = origen;
-        this.codigo = codigo;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-        this.tipo = tipo;
-    }
-
-    public int getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
+        this.link = link;
+        this.cve = cve;
     }
 
     public int getId() {
@@ -52,6 +42,38 @@ public class Boletines_publicados {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public boolean isIsSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getEntidad() {
@@ -70,14 +92,6 @@ public class Boletines_publicados {
         this.origen = origen;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
@@ -86,23 +100,33 @@ public class Boletines_publicados {
         this.descripcion = descripcion;
     }
 
-    public String getFecha() {
-        return fecha;
+    public String getLink() {
+        return link;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setLink(String link) {
+        this.link = link;
     }
-    
-    
-    public String SQLCrear(){
-        return "INSERT into stats.boletines_publicados (entidad,origen,codigo,descripcion,fecha,tipo) values("
+
+    public String getCve() {
+        return cve;
+    }
+
+    public void setCve(String cve) {
+        this.cve = cve;
+    }
+
+    public String SQLCrear() {
+        return "INSERT into " + Var.nombreBDStats + ".boletines (fecha, codigo, isSelected, status, cve, entidad, origen, descripcion, link) values("
+                + Varios.entrecomillar(this.fecha) + ","
+                + Varios.entrecomillar(this.codigo) + ","
+                + this.isSelected + ","
+                + Varios.entrecomillar(this.status.toString()) + ","
+                + Varios.entrecomillar(this.cve) + ","
                 + Varios.entrecomillar(this.entidad) + ","
                 + Varios.entrecomillar(this.origen) + ","
-                + Varios.entrecomillar(this.codigo) + ","
                 + Varios.entrecomillar(this.descripcion) + ","
-                + Varios.entrecomillar(this.fecha) + ","
-                + this.tipo
+                + Varios.entrecomillar(this.link)
                 + ");";
     }
 }
