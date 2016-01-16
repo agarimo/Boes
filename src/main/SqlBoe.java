@@ -85,8 +85,8 @@ public class SqlBoe {
         Sql bd;
         try {
             bd = new Sql(Var.con);
-            bd.ejecutar("DELETE FROM boes.boletin where codigo=" + Varios.entrecomillar(codigo));
-            bd.ejecutarQueryRs("UPDATE stats.boletines_publicados SET tipo=0 where codigo=" + Varios.entrecomillar(codigo));
+            bd.ejecutar("DELETE FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(codigo));
+            bd.ejecutar("UPDATE " + Var.nombreBDStats + ".boletines set status='DELETED',isSelected=false where codigo=" + Varios.entrecomillar(codigo));
             bd.close();
         } catch (SQLException ex) {
             error(ex.getMessage());
@@ -608,7 +608,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaAlreadySelected() {
         String query = "SELECT codigo FROM " + Var.nombreBD + ".boletin";
         List list = new ArrayList();
@@ -632,9 +632,9 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaAlreadyDuplicated() {
-        String query = "SELECT codigo FROM "+Var.nombreBDStats+".boletines_publicados where isSelected=0;";
+        String query = "SELECT codigo FROM " + Var.nombreBDStats + ".boletines where isSelected=false;";
         List list = new ArrayList();
         Sql bd;
         ResultSet rs;
@@ -680,7 +680,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List listaTextoSeleccionado() {
         String query = "SELECT * FROM " + Var.nombreBD + ".texto_seleccionado";
         List list = new ArrayList();
@@ -1388,7 +1388,7 @@ public class SqlBoe {
         }
         return list;
     }
-    
+
     public static List<OrigenArticulo> listaOrigenArticulo() {
         String query = "SELECT * FROM " + Var.nombreBD + ".origen_articulo";
         List list = new ArrayList();

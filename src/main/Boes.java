@@ -44,6 +44,7 @@ public class Boes extends Application {
         Group root = new Group();
         root.getChildren().addAll(mainContainer);
         Scene scene = new Scene(root);
+//        scene.getStylesheets().setAll(getClass().getResource("/view/win7glass.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("BOEAPP");
         stage.setResizable(false);
@@ -58,53 +59,5 @@ public class Boes extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static void test() {
-        System.out.println("iniciando");
-        List aux = listaAlreadyDuplicated();
-        System.out.println(aux.size());
-    }
-
-    public static String pruebas(String codigo) {
-        String aux;
-        String[] split = codigo.split("-");
-        aux = split[0] + split[1];
-
-        split = aux.split("/");
-        aux = split[0];
-
-        return aux;
-    }
-
-    public static Date getFecha() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2015);
-        cal.set(Calendar.MONTH, Calendar.NOVEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 16);
-        return cal.getTime();
-    }
-
-    public static List listaAlreadyDuplicated() {
-        String query = "SELECT codigo FROM stats.boletines_publicados where tipo=0;";
-        List list = new ArrayList();
-        Sql bd;
-        ResultSet rs;
-        String aux;
-
-        try {
-            bd = new Sql(Var.con);
-            rs = bd.ejecutarQueryRs(query);
-
-            while (rs.next()) {
-                aux = rs.getString("codigo");
-                list.add(aux);
-            }
-            rs.close();
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
     }
 }

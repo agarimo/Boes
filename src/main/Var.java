@@ -61,13 +61,19 @@ public class Var {
         con.setPass("IkuinenK@@m.s84");
         con.setPuerto("3306");
     }
-    
+
     public enum Status {
 
         USER {
                     @Override
                     public String toString() {
                         return "USER";
+                    }
+                },
+        SOURCE {
+                    @Override
+                    public String toString() {
+                        return "SOURCE";
                     }
                 },
         APP {
@@ -80,6 +86,18 @@ public class Var {
                     @Override
                     public String toString() {
                         return "DELETED";
+                    }
+                },
+        DUPLICATED {
+                    @Override
+                    public String toString() {
+                        return "DUPLICATED";
+                    }
+                },
+        PENDING {
+                    @Override
+                    public String toString() {
+                        return "PENDING";
                     }
                 }
     }

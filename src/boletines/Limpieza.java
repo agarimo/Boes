@@ -24,6 +24,7 @@ import util.Varios;
  */
 public class Limpieza {
 
+    Sql bd;
     Boletin boletin;
     List cabeceras;
     String datos;
@@ -41,7 +42,6 @@ public class Limpieza {
     }
 
     private void cargarDatos() {
-        Sql bd;
         try {
             bd = new Sql(Var.con);
             datos = bd.getString("SELECT datos FROM " + Var.nombreBD + ".descarga where id=" + boletin.getIdDescarga());
@@ -68,7 +68,6 @@ public class Limpieza {
     }
 
     private void guardaDatos(String datos) {
-        Sql bd;
         datos = datos.replace("'", "\\'");
 
         try {

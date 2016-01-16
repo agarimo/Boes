@@ -1,6 +1,7 @@
 package model;
 
 import javafx.beans.property.SimpleStringProperty;
+import main.Var.Status;
 
 /**
  *
@@ -14,6 +15,7 @@ public class ModeloBoes {
     public SimpleStringProperty descripcion = new SimpleStringProperty();
     public SimpleStringProperty link = new SimpleStringProperty();
     public SimpleStringProperty fecha = new SimpleStringProperty();
+    public Status status = Status.PENDING;
 
     public String getOrigen() {
         return origen.get();
@@ -27,7 +29,7 @@ public class ModeloBoes {
         return descripcion.get();
     }
 
-    public String getEntidad(){
+    public String getEntidad() {
         return entidad.get();
     }
 
@@ -39,9 +41,17 @@ public class ModeloBoes {
         return fecha.get();
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return codigo.get();
+        return codigo.get()+" ["+this.status.toString()+"]";
     }
 
 }

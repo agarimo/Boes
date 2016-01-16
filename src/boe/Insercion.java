@@ -147,33 +147,35 @@ public class Insercion {
     }
 //</editor-fold>
 
-    public void marcarClasificado(Date fecha) throws SQLException {
-        Boe boe = new Boe(fecha);
-        bd.ejecutar(boe.SQLSetClas());
-    }
-
+//    public void marcarClasificado(Date fecha) throws SQLException {
+//        Boe boe = new Boe(fecha);
+//        bd.ejecutar(boe.SQLSetClas());
+//    }
     public void guardaStatsD(List lista) {
         Boletines_publicados bp;
         ModeloBoes aux;
         Iterator it = lista.iterator();
 
         try {
-            Sql bdd = new Sql(Var.con);
+            bd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
                 bp = new Boletines_publicados();
+                bp.setFecha(aux.getFecha());
+                bp.setCodigo(aux.getCodigo());
+                bp.setIsSelected(false);
+                bp.setStatus(aux.getStatus());
+                bp.setCve(null);
                 bp.setEntidad(aux.getEntidad().replace("'", "\\'"));
                 bp.setOrigen(aux.getOrigen().replace("'", "\\'"));
-                bp.setCodigo(aux.getCodigo());
                 bp.setDescripcion(aux.getDescripcion().replace("'", "\\'"));
-                bp.setFecha(aux.getFecha());
-                bp.setIsSelected(false);
+                bp.setLink(aux.getLink().replace("'", "\\'"));
 
-                bdd.ejecutar(bp.SQLCrear());
+                bd.ejecutar(bp.SQLCrear());
             }
 
-            bdd.close();
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -185,22 +187,25 @@ public class Insercion {
         Iterator it = lista.iterator();
 
         try {
-            Sql bdd = new Sql(Var.con);
+            bd = new Sql(Var.con);
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
                 bp = new Boletines_publicados();
+                bp.setFecha(aux.getFecha());
+                bp.setCodigo(aux.getCodigo());
+                bp.setIsSelected(true);
+                bp.setStatus(aux.getStatus());
+                bp.setCve(null);
                 bp.setEntidad(aux.getEntidad().replace("'", "\\'"));
                 bp.setOrigen(aux.getOrigen().replace("'", "\\'"));
-                bp.setCodigo(aux.getCodigo());
                 bp.setDescripcion(aux.getDescripcion().replace("'", "\\'"));
-                bp.setFecha(aux.getFecha());
-                bp.setIsSelected(true);
+                bp.setLink(aux.getLink().replace("'", "\\'"));
 
-                bdd.ejecutar(bp.SQLCrear());
+                bd.ejecutar(bp.SQLCrear());
             }
 
-            bdd.close();
+            bd.close();
         } catch (SQLException ex) {
             Logger.getLogger(Insercion.class.getName()).log(Level.SEVERE, null, ex);
         }
