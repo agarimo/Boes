@@ -13,7 +13,7 @@ and open the template in the editor.
      * text; selected items in menus, lists, trees, and tables; progress bars;
      * default buttons.
      */
-    -fx-accent: #0093ff;
+    -fx-accent: C390D4;
 
     /* A bright blue for the focus indicator of objects. Typically used as the
      * first color in -fx-background-color for the "focused" pseudo-class. Also
@@ -21,5 +21,5 @@ and open the template in the editor.
      *
      * TODO: should this be derived from -fx-accent?
      */
-    -fx-focus-color: #0093ff;
+    -fx-focus-color: C390D4;
 }

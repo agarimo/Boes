@@ -44,7 +44,7 @@ public class Boes extends Application {
         Group root = new Group();
         root.getChildren().addAll(mainContainer);
         Scene scene = new Scene(root);
-//        scene.getStylesheets().setAll(getClass().getResource("/view/win7glass.css").toExternalForm());
+        scene.getStylesheets().setAll(getClass().getResource("/css/Estilo.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("BOEAPP");
         stage.setResizable(false);
