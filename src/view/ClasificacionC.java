@@ -42,6 +42,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -130,6 +131,9 @@ public class ClasificacionC implements Initializable, ControlledScreen {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Tooltip a = new Tooltip();
+        a.setText("Seleccionar todos");
+        btSelectAll.setTooltip(a);
         initializeTable();
         initializeClear();
         autoScroll = true;
@@ -209,7 +213,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
                         super.updateItem(item, empty);
                         if (!isEmpty()) {
                             text = new Text(item);
-                            text.setWrappingWidth(descripcionCL.getWidth() - 20);
+                            text.setWrappingWidth(descripcionCL.getWidth() - 30);
                             this.setWrapText(true);
                             setGraphic(text);
                         } else {
