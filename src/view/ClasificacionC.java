@@ -266,12 +266,12 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     @FXML
     void keyPressed(KeyEvent event) {
         System.out.println(event.getCode());
-        
-        if (event.isControlDown()&& event.getCode() == KeyCode.S) {
+
+        if (event.isControlDown() && event.getCode() == KeyCode.S) {
             event.consume();
 //            System.out.println("Se ha pulsado CRTL + S");
             pdfSelect(new ActionEvent());
-        } else if (event.isControlDown()&& event.getCode() == KeyCode.D) {
+        } else if (event.isControlDown() && event.getCode() == KeyCode.D) {
             event.consume();
 //            System.out.println("Se ha pulsado CRTL + D");
             pdfDiscard(new ActionEvent());
@@ -293,8 +293,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void pdfDiscardSource(ActionEvent event
-    ) {
+    void pdfDiscardSource(ActionEvent event) {
         ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
@@ -329,8 +328,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void pdfRecoverD(ActionEvent event
-    ) {
+    void pdfRecoverD(ActionEvent event) {
         ModeloBoes aux = lvDiscard.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
@@ -349,8 +347,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void pdfRecoverS(ActionEvent event
-    ) {
+    void pdfRecoverS(ActionEvent event) {
         ModeloBoes aux = lvSelect.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
@@ -369,8 +366,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void pdfSelect(ActionEvent event
-    ) {
+    void pdfSelect(ActionEvent event) {
         ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
 
         if (aux != null) {
@@ -383,8 +379,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void pdfSelectAll(ActionEvent event
-    ) {
+    void pdfSelectAll(ActionEvent event) {
         ModeloBoes aux;
         Iterator it;
 
@@ -409,8 +404,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void pdfShowOnWeb(ActionEvent event
-    ) {
+    void pdfShowOnWeb(ActionEvent event) {
         ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
         try {
             Desktop.getDesktop().browse(new URI(aux.getLink()));
@@ -420,8 +414,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    void procesar(ActionEvent event
-    ) {
+    void procesar(ActionEvent event) {
         if (publicacion.isEmpty()) {
             Var.isClasificando = false;
             procesarTask();
@@ -573,8 +566,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
         });
     }
 
-    void setProcesandoC(boolean aux
-    ) {
+    void setProcesandoC(boolean aux) {
         lbClasificacion.setVisible(aux);
         pbClasificacion.setVisible(aux);
         btFinClas.setDisable(aux);
@@ -590,8 +582,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @Override
-    public void setScreenParent(ScreensController screenPage
-    ) {
+    public void setScreenParent(ScreensController screenPage) {
         myController = screenPage;
     }
 
@@ -603,8 +594,7 @@ public class ClasificacionC implements Initializable, ControlledScreen {
         }
     }
 
-    void tableLoadData(List lista
-    ) {
+    void tableLoadData(List lista) {
         publicacion.clear();
         Pdf aux;
         ModeloBoes model;
@@ -682,22 +672,19 @@ public class ClasificacionC implements Initializable, ControlledScreen {
     }
 
     @FXML
-    public void volverInicio(ActionEvent event
-    ) {
+    public void volverInicio(ActionEvent event) {
         myController.setScreen(Boes.screen1ID);
         initializeClear();
 
     }
 
     @FXML
-    void xLisCheckBox(ActionEvent event
-    ) {
+    void xLisCheckBox(ActionEvent event) {
         autoScroll = cbAutoScroll.isSelected();
     }
 
     @FXML
-    void xLisDatePicker(ActionEvent event
-    ) {
+    void xLisDatePicker(ActionEvent event) {
         lbContadorT.setText("...");
         tpDescartados.setText("Boletines Descartados");
         tpSeleccionados.setText("Boletines Seleccionados");
