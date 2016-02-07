@@ -105,10 +105,11 @@ public class BB1 {
     }
 
     private void getDatosDoc(Procesar aux) {
-        String[] linea = new String[3];
+        String[] linea = new String[4];
         linea[0] = aux.getCodigo().replace("BOE-N-20", "").replace("-", "");
-        linea[1] = aux.getCodigo();
-        linea[2] = aux.getLink();
+        linea[1] = Dates.imprimeFecha(aux.getFecha());
+        linea[2] = aux.getCodigo();
+        linea[3] = aux.getLink();
 
         docData.add(linea);
     }
