@@ -66,10 +66,15 @@ public class Fases {
 
             if (fase != null) {
                 aux.setTipo(fase.getCodigo());
-                aux.setFase(getBCN(aux.getIdOrigen(),aux.getIsEstructura()) + "-" + fase.toString());
-                aux.setIsFase(2);
+                aux.setFase(getBCN(aux.getIdOrigen(), aux.getIsEstructura()) + "-" + fase.toString());
+
+                if (fase.getCodigo().equals("*DSC*")) {
+                    aux.setIsFase(3);
+                } else {
+                    aux.setIsFase(2);
+                }
             } else {
-                aux.setFase(getBCN(aux.getIdOrigen(),aux.getIsEstructura()));
+                aux.setFase(getBCN(aux.getIdOrigen(), aux.getIsEstructura()));
                 aux.setIsFase(1);
             }
 

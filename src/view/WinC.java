@@ -10,7 +10,6 @@ import boletines.Fases;
 import boletines.Limpieza;
 import boletines.Union;
 import enty.Boletin;
-import enty.Cabecera;
 import enty.Descarga;
 import enty.Fase;
 import enty.Procesar;
@@ -68,7 +67,6 @@ import main.SqlBoe;
 import main.Var;
 import model.ModeloBoes;
 import model.ModeloBoletines;
-import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
 import util.Dates;
@@ -229,9 +227,9 @@ public class WinC implements Initializable, ControlledScreen {
     public void cargaExtraccion(ActionEvent event) {
         myController.setScreen(Boes.screen2ID);
     }
-    
+
     @FXML
-    public void cargaPatterns(ActionEvent event){
+    public void cargaPatterns(ActionEvent event) {
         myController.setScreen(Boes.screen3ID);
     }
 
@@ -245,12 +243,6 @@ public class WinC implements Initializable, ControlledScreen {
 
         final ObservableList<ModeloFases> ls3 = tvFases.getSelectionModel().getSelectedItems();
         ls3.addListener(selectorTablaFases);
-
-        final ObservableList<ModeloCabeceras> ls4 = tvCabeceras.getSelectionModel().getSelectedItems();
-        ls4.addListener(selectorTablaCabeceras);
-
-        final ObservableList<ModeloComboBox> ls5 = lvOrigenC.getSelectionModel().getSelectedItems();
-        ls5.addListener(selectorListaOrigenC);
     }
 
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
@@ -269,7 +261,7 @@ public class WinC implements Initializable, ControlledScreen {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
-                panelCabeceras.setVisible(false);
+//                panelCabeceras.setVisible(false);
                 break;
             case 1:
                 panelInicio.setVisible(false);
@@ -277,7 +269,7 @@ public class WinC implements Initializable, ControlledScreen {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
-                panelCabeceras.setVisible(false);
+//                panelCabeceras.setVisible(false);
                 break;
             case 2:
                 panelInicio.setVisible(false);
@@ -285,7 +277,7 @@ public class WinC implements Initializable, ControlledScreen {
                 panelClasificacion.setVisible(true);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
-                panelCabeceras.setVisible(false);
+//                panelCabeceras.setVisible(false);
                 break;
             case 3:
                 panelInicio.setVisible(false);
@@ -293,7 +285,7 @@ public class WinC implements Initializable, ControlledScreen {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(true);
                 panelFases.setVisible(false);
-                panelCabeceras.setVisible(false);
+//                panelCabeceras.setVisible(false);
                 break;
 
             case 4:
@@ -302,7 +294,7 @@ public class WinC implements Initializable, ControlledScreen {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(true);
-                panelCabeceras.setVisible(false);
+//                panelCabeceras.setVisible(false);
                 break;
 
             case 5:
@@ -311,7 +303,7 @@ public class WinC implements Initializable, ControlledScreen {
                 panelClasificacion.setVisible(false);
                 panelBoletines.setVisible(false);
                 panelFases.setVisible(false);
-                panelCabeceras.setVisible(true);
+//                panelCabeceras.setVisible(true);
                 break;
         }
     }
@@ -512,7 +504,7 @@ public class WinC implements Initializable, ControlledScreen {
 //        cbAutoScroll.setSelected(autoScroll);
 //        mostrarPanel(2);
 //        setProcesandoC(false);
-        
+
         myController.setScreen(Boes.screen4ID);
     }
 
@@ -572,7 +564,6 @@ public class WinC implements Initializable, ControlledScreen {
 //        discartedList = FXCollections.observableArrayList();
 //        lvDiscard.setItems(discartedList);
 //    }
-
 //    private void cargarBoes(Boe boe) {
 //        origen_descartado = SqlBoe.listaOrigenDescartado();
 //        texto_descartado = SqlBoe.listaTextoDescartado();
@@ -618,7 +609,6 @@ public class WinC implements Initializable, ControlledScreen {
 //        }
 //        updateClasificacion();
 //    }
-
 //    private void getFocusTablaBoes() {
 //        if (autoScroll) {
 //            tvBoes.getSelectionModel().select(0);
@@ -626,7 +616,6 @@ public class WinC implements Initializable, ControlledScreen {
 //            tvBoes.requestFocus();
 //        }
 //    }
-
     @FXML
     void cambioEnDatePicker() {
 //        lbContadorT.setText("...");
@@ -726,7 +715,6 @@ public class WinC implements Initializable, ControlledScreen {
 //            lbContadorS.setText(Integer.toString(selectedList.size()));
 //        });
 //    }
-
 //    boolean textoDescartado(String aux) {
 //        boolean a = false;
 //        String str;
@@ -757,7 +745,6 @@ public class WinC implements Initializable, ControlledScreen {
 //
 //        return is;
 //    }
-
     @FXML
     void selectPdf() {
 //        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
@@ -849,7 +836,6 @@ public class WinC implements Initializable, ControlledScreen {
 //            lbContadorS.setText(Integer.toString(selectedList.size()));
 //        });
 //    }
-
     @FXML
     void descartaOrigen(ActionEvent event) {
 //        Sql bdd;
@@ -892,7 +878,6 @@ public class WinC implements Initializable, ControlledScreen {
 //        selectedList.clear();
 //        dpFechaC.setValue(null);
 //    }
-
 //    private void setProcesandoC(boolean aux) {
 //        lbClasificacion.setVisible(aux);
 //        pbClasificacion.setVisible(aux);
@@ -907,7 +892,6 @@ public class WinC implements Initializable, ControlledScreen {
 //        btRecoverS.setDisable(aux);
 //        btSelectAll.setDisable(aux);
 //    }
-
     @FXML
     void finalizaClas() {
 
@@ -1053,7 +1037,6 @@ public class WinC implements Initializable, ControlledScreen {
 //        });
 //        a.start();
 //    }
-
     @FXML
     void abrirWeb(ActionEvent event) {
 //        ModeloBoes aux = tvBoes.getSelectionModel().getSelectedItem();
@@ -1090,6 +1073,9 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     Button btUnion;
+
+    @FXML
+    Button btEliminarDSC;
 
     @FXML
     SplitMenuButton btProcesar;
@@ -1164,6 +1150,10 @@ public class WinC implements Initializable, ControlledScreen {
                             case 2:
                                 setTextFill(Color.BLACK);
                                 setStyle("-fx-background-color: green");
+                                break;
+                            case 3:
+                                setTextFill(Color.BLACK);
+                                setStyle("-fx-background-color: blue");
                                 break;
                             default:
                                 setTextFill(Color.BLACK);
@@ -1477,6 +1467,23 @@ public class WinC implements Initializable, ControlledScreen {
             });
         });
         a.start();
+    }
+
+    @FXML
+    void eliminarDSC(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFechaB.getValue());
+
+        if (fecha != null) {
+            ModeloBoletines aux;
+            String query = "SELECT * FROM " + Var.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
+                    + "AND tipo='*DSC*'";
+            Iterator<ModeloBoletines> it = SqlBoe.listaModeloBoletines(query).iterator();
+
+            while (it.hasNext()) {
+                aux = it.next();
+                SqlBoe.eliminaBoletinFase(aux.getCodigo());
+            }
+        }
     }
 
     @FXML
@@ -1954,254 +1961,6 @@ public class WinC implements Initializable, ControlledScreen {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="CABECERAS">
-    //<editor-fold defaultstate="collapsed" desc="Variables FXML">
-    @FXML
-    private AnchorPane panelCabeceras;
-
-    @FXML
-    private ComboBox cbEntidadC;
-
-    @FXML
-    private ListView lvOrigenC;
-
-    @FXML
-    private TextField tfOrigenC;
-
-    @FXML
-    private Button btNuevaCabecera;
-
-    @FXML
-    private TableView<ModeloCabeceras> tvCabeceras;
-
-    @FXML
-    private TableColumn<ModeloCabeceras, String> idCLC;
-
-    @FXML
-    private TableColumn<ModeloCabeceras, String> cabeceraCLC;
-
-    @FXML
-    private TextArea taCabecera;
-
-    @FXML
-    private Button btEditaCabecera;
-
-    @FXML
-    private Button btBorraCabecera;
-
-    @FXML
-    private Button btGuardaCabecera;
-    //</editor-fold>
-
-    ObservableList<ModeloComboBox> comboEntidadesC;
-    ObservableList<ModeloComboBox> listOrigenesC;
-    ObservableList<ModeloCabeceras> tablaCabeceras;
-
-    //<editor-fold defaultstate="collapsed" desc="Métodos FXML">
-    @FXML
-    void iniciaCabeceras(ActionEvent event) {
-        mostrarPanel(5);
-        inicializaDatosCabeceras();
-        inicializaTablaCabeceras();
-        btGuardaCabecera.setVisible(false);
-        btBorraCabecera.setDisable(true);
-        btEditaCabecera.setDisable(true);
-    }
-
-    @FXML
-    void cargaOrigenCabecera(ActionEvent event) {
-        limpiaCabecera();
-        listOrigenesC.clear();
-        ModeloComboBox aux = (ModeloComboBox) cbEntidadC.getSelectionModel().getSelectedItem();
-        Iterator it = SqlBoe.listaModeloComboBoxOrigenes(aux.getId()).iterator();
-
-        while (it.hasNext()) {
-            aux = (ModeloComboBox) it.next();
-            listOrigenesC.add(aux);
-        }
-        lvOrigenC.setItems(listOrigenesC);
-        lvOrigenC.setVisible(false);
-        lvOrigenC.setVisible(true);
-    }
-
-    @FXML
-    void nuevaCabecera(ActionEvent event) {
-        btNuevaCabecera.setDisable(true);
-        ModeloComboBox origen = (ModeloComboBox) lvOrigenC.getSelectionModel().getSelectedItem();
-        btGuardaCabecera.setVisible(true);
-        ModeloCabeceras aux = new ModeloCabeceras();
-        aux.id.set(0);
-        aux.idOrigen.set(origen.getId());
-        aux.cabecera.set(null);
-        aux.tipo.set(1);
-
-        tablaCabeceras.add(0, aux);
-        btBorraCabecera.setVisible(false);
-        btEditaCabecera.setVisible(false);
-        taCabecera.setText("");
-
-        tvCabeceras.getSelectionModel().select(0);
-        tvCabeceras.scrollTo(0);
-        tvCabeceras.requestFocus();
-    }
-
-    @FXML
-    void editaCabecera(ActionEvent event) {
-        Cabecera aux = getDatosCabecera();
-
-        try {
-            bd = new Sql(Var.con);
-            bd.ejecutar(aux.SQLEditar());
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        btGuardaCabecera.setVisible(false);
-        btBorraCabecera.setVisible(true);
-        btEditaCabecera.setVisible(true);
-        btNuevaCabecera.setDisable(false);
-
-        limpiaCabecera();
-        cargaCabecerasOrigen();
-    }
-
-    @FXML
-    void borraCabecera(ActionEvent event) {
-        Cabecera aux = getDatosCabecera();
-
-        try {
-            bd = new Sql(Var.con);
-            bd.ejecutar(aux.SQLBorrar());
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        btGuardaCabecera.setVisible(false);
-        btBorraCabecera.setVisible(true);
-        btEditaCabecera.setVisible(true);
-        btNuevaCabecera.setDisable(false);
-
-        limpiaCabecera();
-        cargaCabecerasOrigen();
-    }
-
-    @FXML
-    void guardaCabecera(ActionEvent event) {
-        Cabecera aux = getDatosCabecera();
-
-        try {
-            bd = new Sql(Var.con);
-            bd.ejecutar(aux.SQLCrear());
-            bd.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WinC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        btGuardaCabecera.setVisible(false);
-        btBorraCabecera.setVisible(true);
-        btEditaCabecera.setVisible(true);
-        btNuevaCabecera.setDisable(false);
-
-        limpiaCabecera();
-        cargaCabecerasOrigen();
-    }
-    //</editor-fold>
-
-    private void limpiaCabecera() {
-        taCabecera.setText(null);
-        tfOrigenC.setText(null);
-    }
-
-    private void inicializaDatosCabeceras() {
-        comboEntidadesC = FXCollections.observableArrayList();
-        cbEntidadC.setItems(comboEntidadesC);
-        listOrigenesC = FXCollections.observableArrayList();
-        lvOrigenC.setItems(listOrigenesC);
-
-        lvOrigenC.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> list) {
-                final ListCell cell = new ListCell() {
-                    private Text text;
-
-                    @Override
-                    public void updateItem(Object item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!isEmpty()) {
-                            text = new Text(item.toString());
-                            text.setWrappingWidth(lvOrigenC.getPrefWidth() - 30);
-                            setGraphic(text);
-                        } else {
-                            text = new Text("");
-                            setGraphic(text);
-                        }
-                    }
-                };
-
-                return cell;
-            }
-        });
-
-        ModeloComboBox aux;
-        Iterator it = SqlBoe.listaModeloComboBoxEntidades().iterator();
-
-        while (it.hasNext()) {
-            aux = (ModeloComboBox) it.next();
-            comboEntidadesC.add(aux);
-        }
-    }
-
-    private void inicializaTablaCabeceras() {
-        idCLC.setCellValueFactory(new PropertyValueFactory<>("id"));
-        cabeceraCLC.setCellValueFactory(new PropertyValueFactory<>("cabecera"));
-
-        tablaCabeceras = FXCollections.observableArrayList();
-        tvCabeceras.setItems(tablaCabeceras);
-    }
-
-    private void cargaCabecerasOrigen() {
-        limpiaCabecera();
-        tablaCabeceras.clear();
-        ModeloCabeceras mf;
-        ModeloComboBox aux = (ModeloComboBox) lvOrigenC.getSelectionModel().getSelectedItem();
-        tfOrigenC.setText(aux.getNombre());
-        Iterator it = SqlBoe.listaModeloCabeceras(aux.getId()).iterator();
-
-        while (it.hasNext()) {
-            mf = (ModeloCabeceras) it.next();
-            tablaCabeceras.add(mf);
-        }
-
-        btBorraCabecera.setDisable(true);
-        btEditaCabecera.setDisable(true);
-    }
-
-    private void cargaDatosCabecera() {
-        ModeloCabeceras aux = (ModeloCabeceras) tvCabeceras.getSelectionModel().getSelectedItem();
-
-        if (aux != null) {
-            taCabecera.setText(aux.getCabecera());
-        }
-
-        btBorraCabecera.setDisable(false);
-        btEditaCabecera.setDisable(false);
-    }
-
-    private Cabecera getDatosCabecera() {
-        ModeloCabeceras mc = tvCabeceras.getSelectionModel().getSelectedItem();
-        Cabecera aux = new Cabecera();
-
-        aux.setId(mc.getId());
-        aux.setIdOrigen(mc.getIdOrigen());
-        aux.setCabecera(taCabecera.getText());
-        aux.setTipo(mc.getTipo());
-
-        return aux;
-    }
-//</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="LISTENERS">
     /**
      * Listener de la lista multasAvg
@@ -2225,22 +1984,6 @@ public class WinC implements Initializable, ControlledScreen {
     private final ListChangeListener<ModeloFases> selectorTablaFases
             = (ListChangeListener.Change<? extends ModeloFases> c) -> {
                 cargaDatosFase();
-            };
-
-    /**
-     * Listener de la lista OrigenFase
-     */
-    private final ListChangeListener<ModeloComboBox> selectorListaOrigenC
-            = (ListChangeListener.Change<? extends ModeloComboBox> c) -> {
-                cargaCabecerasOrigen();
-            };
-
-    /**
-     * Listener de la Tabla Cabeceras
-     */
-    private final ListChangeListener<ModeloCabeceras> selectorTablaCabeceras
-            = (ListChangeListener.Change<? extends ModeloCabeceras> c) -> {
-                cargaDatosCabecera();
             };
 //</editor-fold>
 }

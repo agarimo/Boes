@@ -1,13 +1,11 @@
 package boletines;
 
 import enty.Boletin;
-import enty.Cabecera;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,18 +78,6 @@ public class Limpieza {
     }
 
     public void runSingle() {
-        cabeceras = SqlBoe.listaCabeceras(boletin.getIdOrigen(), 1);
-        Cabecera aux;
-        Iterator it = cabeceras.iterator();
-
-        while (it.hasNext()) {
-            aux = (Cabecera) it.next();
-
-            if (datos.contains(aux.getCabecera())) {
-                lector(aux.getCabecera());
-                break;
-            }
-        }
     }
     
     private void lector(String cabecera) {

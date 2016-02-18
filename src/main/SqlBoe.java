@@ -2,7 +2,6 @@ package main;
 
 import boe.Boe;
 import enty.Boletin;
-import enty.Cabecera;
 import enty.Descarga;
 import enty.Estructura;
 import enty.Fase;
@@ -26,7 +25,6 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import model.ModeloBoletines;
-import model.ModeloCabeceras;
 import model.ModeloComboBox;
 import model.ModeloFases;
 import model.ModeloUnion;
@@ -93,6 +91,20 @@ public class SqlBoe {
             Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static void eliminaBoletinFase(String codigo) {
+        Sql bd;
+        try {
+            bd = new Sql(Var.con);
+            bd.ejecutar("DELETE FROM " + Var.nombreBD + ".boletin where codigo=" + Varios.entrecomillar(codigo));
+            bd.ejecutar("UPDATE " + Var.nombreBDStats + ".boletines set status='FASE',isSelected=false where codigo=" + Varios.entrecomillar(codigo));
+            bd.close();
+        } catch (SQLException ex) {
+            error(ex.getMessage());
+            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
     public static Boe getBoe(Date fecha) {
         Sql bd;
@@ -807,34 +819,6 @@ public class SqlBoe {
         return list;
     }
 
-    public static List<ModeloCabeceras> listaModeloCabeceras(int id) {
-        String query = "SELECT * FROM " + Var.nombreBD + ".cabeceras where idOrigen=" + id;
-        List list = new ArrayList();
-        Sql bd;
-        ResultSet rs;
-        ModeloCabeceras aux;
-
-        try {
-            bd = new Sql(Var.con);
-            rs = bd.ejecutarQueryRs(query);
-
-            while (rs.next()) {
-                aux = new ModeloCabeceras();
-                aux.id.set(rs.getInt("id"));
-                aux.idOrigen.set(rs.getInt("idOrigen"));
-                aux.cabecera.set(rs.getString("cabecera"));
-                aux.tipo.set(rs.getInt("tipo"));
-                list.add(aux);
-            }
-            rs.close();
-            bd.close();
-        } catch (SQLException ex) {
-            error(ex.getMessage());
-            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
-
     public static List<ModeloFases> listaModeloFases(int id) {
         String query = "SELECT * FROM " + Var.nombreBD + ".fase where idOrigen=" + id;
         List list = new ArrayList();
@@ -918,30 +902,6 @@ public class SqlBoe {
                 aux.setTexto2(rs.getString("texto2"));
                 aux.setTexto3(rs.getString("texto3"));
                 aux.setDias(rs.getInt("dias"));
-                list.add(aux);
-            }
-            rs.close();
-            bd.close();
-        } catch (SQLException ex) {
-            error(ex.getMessage());
-            Logger.getLogger(SqlBoe.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
-
-    public static List<Cabecera> listaCabeceras(int idOrigen, int tipo) {
-        String query = "SELECT * FROM boes.cabeceras where idOrigen=" + idOrigen + " and tipo=" + tipo;
-        List<Cabecera> list = new ArrayList();
-        Sql bd;
-        ResultSet rs;
-        Cabecera aux;
-
-        try {
-            bd = new Sql(Var.con);
-            rs = bd.ejecutarQueryRs(query);
-
-            while (rs.next()) {
-                aux = new Cabecera(rs.getInt("id"), rs.getInt("idOrigen"), rs.getString("cabecera"), rs.getInt("tipo"));
                 list.add(aux);
             }
             rs.close();
