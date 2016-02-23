@@ -295,7 +295,7 @@ public class XLSXProcess {
             sb.append(celda.getStringCellValue());
             sb.append(" ");
         }
-        return sb.toString().trim().replace("'", "\\'");
+        return clean(sb.toString());
     }
 
     private boolean isFecha(String fecha) {
