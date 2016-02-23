@@ -1369,6 +1369,7 @@ public class WinC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     btDescargaBoletines.setDisable(true);
                     btComprobarFases.setDisable(true);
+                    btEliminarDSC.setDisable(true);
                     pbEstado.setVisible(true);
                     pbEstado.setProgress(0);
                     lbEstado.setText("DESCARGANDO BOLETINES");
@@ -1396,6 +1397,7 @@ public class WinC implements Initializable, ControlledScreen {
                     lbEstado.setText("COMPROBACIÓN FINALIZADA");
                     btDescargaBoletines.setDisable(false);
                     btComprobarFases.setDisable(false);
+                    btEliminarDSC.setDisable(false);
                     pbEstado.setProgress(1);
                     pbEstado.setVisible(false);
                     lbEstado.setText("");
@@ -1474,15 +1476,40 @@ public class WinC implements Initializable, ControlledScreen {
         Date fecha = Dates.asDate(dpFechaB.getValue());
 
         if (fecha != null) {
-            ModeloBoletines aux;
-            String query = "SELECT * FROM " + Var.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
-                    + "AND tipo='*DSC*'";
-            Iterator<ModeloBoletines> it = SqlBoe.listaModeloBoletines(query).iterator();
+            Thread a = new Thread(() -> {
 
-            while (it.hasNext()) {
-                aux = it.next();
-                SqlBoe.eliminaBoletinFase(aux.getCodigo());
-            }
+                Platform.runLater(() -> {
+                    btDescargaBoletines.setDisable(true);
+                    btComprobarFases.setDisable(true);
+                    btEliminarDSC.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(-1);
+                    lbEstado.setText("ELIMINANDO DESCARTADOS");
+                });
+
+                ModeloBoletines aux;
+                String query = "SELECT * FROM " + Var.nombreBD + ".vista_boletines where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(fecha)) + " "
+                        + "AND tipo='*DSC*'";
+                Iterator<ModeloBoletines> it = SqlBoe.listaModeloBoletines(query).iterator();
+
+                while (it.hasNext()) {
+                    aux = it.next();
+                    SqlBoe.eliminaBoletinFase(aux.getCodigo());
+                }
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("PROCESO FINALIZADO");
+                    btDescargaBoletines.setDisable(false);
+                    btComprobarFases.setDisable(false);
+                    btEliminarDSC.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    recargarBoletines();
+                });
+            });
+            a.start();
         }
     }
 

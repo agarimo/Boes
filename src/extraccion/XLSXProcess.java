@@ -265,7 +265,15 @@ public class XLSXProcess {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         sb.append(cell.getStringCellValue());
 
-        return sb.toString().trim().replace("'", "\\'");
+        return clean(sb.toString());
+    }
+    
+    private String clean(String str){
+        String aux=str.trim();
+        aux=aux.replace("'", "\\'");
+        aux=aux.replace("|", "");
+        
+        return aux;
     }
 
     private String getCodigoMulta() {
