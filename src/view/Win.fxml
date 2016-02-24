@@ -140,6 +140,7 @@
                         <SplitMenuButton fx:id="btProcesar" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#procesarBoletines" popupSide="RIGHT" prefHeight="30.0" prefWidth="150.0" text="PROCESAR">
                           <items>
                             <MenuItem fx:id="miEstructuras" mnemonicParsing="false" onAction="#comprobarEstructuras" text="Procesar Estructuras" />
+                              <MenuItem fx:id="miEstructurasP" mnemonicParsing="false" onAction="#comprobarEstructurasP" text="Procesar Estructuras Pendientes" />
                             <MenuItem fx:id="miFases" mnemonicParsing="false" onAction="#comprobarFases" text="Procesar Fases" />
                           </items>
                         </SplitMenuButton>

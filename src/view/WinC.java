@@ -1082,6 +1082,9 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     MenuItem miEstructuras;
+    
+    @FXML
+    MenuItem miEstructurasP;
 
     @FXML
     MenuItem miFases;
@@ -1240,6 +1243,7 @@ public class WinC implements Initializable, ControlledScreen {
                 Platform.runLater(() -> {
                     btProcesar.setDisable(true);
                     miEstructuras.setDisable(true);
+                    miEstructurasP.setDisable(true);
                     miFases.setDisable(true);
                     btUnion.setDisable(true);
                     pbEstado.setVisible(true);
@@ -1248,7 +1252,7 @@ public class WinC implements Initializable, ControlledScreen {
                 });
 
                 Boletin aux;
-                Estructuras es = new Estructuras(fecha);
+                Estructuras es = new Estructuras(fecha,false);
                 es.limpiarEstructuras();
                 List list = es.getBoletines();
 
@@ -1289,6 +1293,7 @@ public class WinC implements Initializable, ControlledScreen {
                     lbEstado.setText("COMPROBACIÓN FINALIZADA");
                     btProcesar.setDisable(false);
                     miEstructuras.setDisable(false);
+                    miEstructurasP.setDisable(false);
                     miFases.setDisable(false);
                     btUnion.setDisable(false);
                     pbEstado.setProgress(1);
@@ -1324,7 +1329,58 @@ public class WinC implements Initializable, ControlledScreen {
                 });
 
                 Boletin aux;
-                Estructuras es = new Estructuras(fecha);
+                Estructuras es = new Estructuras(fecha,false);
+                es.limpiarEstructuras();
+                List list = es.getBoletines();
+
+                for (int i = 0; i < list.size(); i++) {
+                    final int contador = i;
+                    final int total = list.size();
+                    Platform.runLater(() -> {
+                        int contadour = contador + 1;
+                        double counter = contador + 1;
+                        double toutal = total;
+                        lbEstado.setText("COMPROBANDO ESTRUCTURAS " + contadour + " de " + total);
+                        pbEstado.setProgress(counter / toutal);
+                    });
+                    aux = (Boletin) list.get(i);
+                    es.run(aux);
+                }
+
+                trasvaseEx(fecha);
+
+                Platform.runLater(() -> {
+                    lbEstado.setText("COMPROBACIÓN FINALIZADA");
+                    btDescargaBoletines.setDisable(false);
+                    btComprobarFases.setDisable(false);
+                    pbEstado.setProgress(1);
+                    pbEstado.setVisible(false);
+                    lbEstado.setText("");
+
+                    recargarBoletines();
+                });
+            });
+            a.start();
+        }
+    }
+    
+    @FXML
+    void comprobarEstructurasP(ActionEvent event) {
+        Date fecha = Dates.asDate(dpFechaB.getValue());
+
+        if (fecha != null) {
+            Thread a = new Thread(() -> {
+
+                Platform.runLater(() -> {
+                    btDescargaBoletines.setDisable(true);
+                    btComprobarFases.setDisable(true);
+                    pbEstado.setVisible(true);
+                    pbEstado.setProgress(0);
+                    lbEstado.setText("INICIANDO ESTRUCTURAS");
+                });
+
+                Boletin aux;
+                Estructuras es = new Estructuras(fecha,true);
                 es.limpiarEstructuras();
                 List list = es.getBoletines();
 

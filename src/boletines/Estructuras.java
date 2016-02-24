@@ -31,15 +31,20 @@ public class Estructuras {
         this.estructuras = getEstructuras();
     }
 
-    public Estructuras(Date fecha) {
+    public Estructuras(Date fecha, boolean pendientes) {
         this.fecha = fecha;
-        this.boletines = getBol();
+        this.boletines = getBol(pendientes);
         this.estructuras = getEstructuras();
     }
 
-    private List getBol() {
-        return SqlBoe.listaBoletin("SELECT * FROM " + Var.nombreBD + ".boletin where idBoe in "
-                + "(SELECT id FROM " + Var.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
+    private List getBol(boolean pendientes) {
+        if (pendientes) {
+            return SqlBoe.listaBoletin("SELECT * FROM " + Var.nombreBD + ".boletin where isEstructura<1 and idBoe in "
+                    + "(SELECT id FROM " + Var.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
+        } else {
+            return SqlBoe.listaBoletin("SELECT * FROM " + Var.nombreBD + ".boletin where idBoe in "
+                    + "(SELECT id FROM " + Var.nombreBD + ".boe where fecha=" + Varios.entrecomillar(Dates.imprimeFecha(this.fecha)) + ")");
+        }
     }
 
     private List getEstructuras() {
