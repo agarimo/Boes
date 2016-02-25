@@ -286,10 +286,12 @@ public class ExtC implements Initializable, ControlledScreen {
             pr = SqlBoe.getProcesar(aux.getCodigo());
 
             try {
+                SqlBoe.eliminarMultasBoletin(aux.getCodigo());
                 XLSXProcess.insertMultas(list);
                 pr.SQLSetEstado(Estado.PROCESADO_XLSX.getValue());
             } catch (Exception e) {
                 pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
+                e.printStackTrace();
             }
 
             Platform.runLater(() -> {
@@ -712,7 +714,7 @@ public class ExtC implements Initializable, ControlledScreen {
                     lbProgreso.setText("");
                     lbProceso.setText("PREPARANDO BBDD");
                 });
-                
+
                 try {
                     Sql bd = new Sql(Var.con);
                     bd.ejecutar("DELETE from boes.boe where DATEDIFF(curdate(),fecha)> 15");
@@ -720,12 +722,11 @@ public class ExtC implements Initializable, ControlledScreen {
                 } catch (SQLException ex) {
                     Logger.getLogger(ExtC.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 Platform.runLater(() -> {
                     lbProgreso.setText("");
                     lbProceso.setText("PROCESANDO BOLETINES");
                 });
-                
 
                 Extraccion ex = new Extraccion(fecha);
                 List<Multa> procesado;
@@ -763,6 +764,7 @@ public class ExtC implements Initializable, ControlledScreen {
                         System.out.println(e.getMessage());
                         System.out.println(aux.getCodigo());
                         pr.SQLSetEstado(Estado.ERROR_PROCESAR.getValue());
+                        e.printStackTrace();
                     }
                 }
 

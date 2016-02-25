@@ -87,24 +87,19 @@ public class XLSXProcess {
         return multas;
     }
 
-    public static void insertMultas(List<Multa> multas) {
+    public static void insertMultas(List<Multa> multas) throws SQLException {
         Sql bd;
         Multa multa;
         Iterator<Multa> it = multas.iterator();
 
-        try {
-            bd = new Sql(Var.con);
+        bd = new Sql(Var.con);
 
-            while (it.hasNext()) {
-                multa = it.next();
-                bd.ejecutar(multa.SQLCrear());
-            }
-
-            bd.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(XLSXProcess.class.getName()).log(Level.SEVERE, null, ex);
+        while (it.hasNext()) {
+            multa = it.next();
+            bd.ejecutar(multa.SQLCrear());
         }
+
+        bd.close();
     }
 
     private List<Multa> clearMultas(List<Multa> multas) {
@@ -267,12 +262,12 @@ public class XLSXProcess {
 
         return clean(sb.toString());
     }
-    
-    private String clean(String str){
-        String aux=str.trim();
-        aux=aux.replace("'", "\\'");
-        aux=aux.replace("|", "");
-        
+
+    private String clean(String str) {
+        String aux = str.trim();
+        aux = aux.replace("'", "\\'");
+        aux = aux.replace("|", "");
+
         return aux;
     }
 

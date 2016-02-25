@@ -8,7 +8,7 @@ import util.Varios;
  *
  * @author Agarimo
  */
-public class Boletines_publicados {
+public class Stats {
 
     private int id;
     private String fecha;
@@ -21,10 +21,10 @@ public class Boletines_publicados {
     private String link;
     private String cve;
 
-    public Boletines_publicados() {
+    public Stats() {
     }
 
-    public Boletines_publicados(String fecha, String codigo, boolean isSelected, Status status, String entidad, String origen, String descripcion, String link, String cve) {
+    public Stats(String fecha, String codigo, boolean isSelected, Status status, String entidad, String origen, String descripcion, String link, String cve) {
         this.fecha = fecha;
         this.codigo = codigo;
         this.isSelected = isSelected;

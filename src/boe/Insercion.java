@@ -1,7 +1,7 @@
 package boe;
 
 import enty.Boletin;
-import enty.Boletines_publicados;
+import enty.Stats;
 import enty.Descarga;
 import enty.Entidad;
 import enty.Origen;
@@ -151,7 +151,7 @@ public class Insercion {
 //        bd.ejecutar(boe.SQLSetClas());
 //    }
     public void guardaStatsD(List lista) {
-        Boletines_publicados bp;
+        Stats bp;
         ModeloBoes aux;
         Iterator it = lista.iterator();
 
@@ -160,7 +160,7 @@ public class Insercion {
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
-                bp = new Boletines_publicados();
+                bp = new Stats();
                 bp.setFecha(aux.getFecha());
                 bp.setCodigo(aux.getCodigo());
                 bp.setIsSelected(false);
@@ -181,7 +181,7 @@ public class Insercion {
     }
 
     public void guardaStatsS(List lista) {
-        Boletines_publicados bp;
+        Stats bp;
         ModeloBoes aux;
         Iterator it = lista.iterator();
 
@@ -190,7 +190,7 @@ public class Insercion {
 
             while (it.hasNext()) {
                 aux = (ModeloBoes) it.next();
-                bp = new Boletines_publicados();
+                bp = new Stats();
                 bp.setFecha(aux.getFecha());
                 bp.setCodigo(aux.getCodigo());
                 bp.setIsSelected(true);
