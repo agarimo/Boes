@@ -1082,7 +1082,7 @@ public class WinC implements Initializable, ControlledScreen {
 
     @FXML
     MenuItem miEstructuras;
-    
+
     @FXML
     MenuItem miEstructurasP;
 
@@ -1252,7 +1252,7 @@ public class WinC implements Initializable, ControlledScreen {
                 });
 
                 Boletin aux;
-                Estructuras es = new Estructuras(fecha,false);
+                Estructuras es = new Estructuras(fecha, false);
                 es.limpiarEstructuras();
                 List list = es.getBoletines();
 
@@ -1329,7 +1329,7 @@ public class WinC implements Initializable, ControlledScreen {
                 });
 
                 Boletin aux;
-                Estructuras es = new Estructuras(fecha,false);
+                Estructuras es = new Estructuras(fecha, false);
                 es.limpiarEstructuras();
                 List list = es.getBoletines();
 
@@ -1363,7 +1363,7 @@ public class WinC implements Initializable, ControlledScreen {
             a.start();
         }
     }
-    
+
     @FXML
     void comprobarEstructurasP(ActionEvent event) {
         Date fecha = Dates.asDate(dpFechaB.getValue());
@@ -1380,7 +1380,7 @@ public class WinC implements Initializable, ControlledScreen {
                 });
 
                 Boletin aux;
-                Estructuras es = new Estructuras(fecha,true);
+                Estructuras es = new Estructuras(fecha, true);
                 es.limpiarEstructuras();
                 List list = es.getBoletines();
 
